@@ -6,12 +6,18 @@ doc2mcp runs four stages. Each stage reads the previous stage's artifact from di
 
 | Stage | Reads | Writes |
 | --- | --- | --- |
-| ingest | OpenAPI file or docs URL | `endpoints.json` |
+| ingest | OpenAPI file or URL | `endpoints.json` |
 | curate | `endpoints.json` | `tools.yaml` |
 | emit | `tools.yaml` and `endpoints.json` | `generated/` |
 | verify | `generated/` and `tests/` | `report/` |
 
 `ingest` is the only stage that reads an external spec. The other inputs are artifacts under `--out`. The primary command `doc2mcp SPEC` runs the stages in that order.
+
+Ingest writes `endpoints.json` as version `endpoint-v1`. Later stages read that file and do not convert schema dialects again. Every schema in the file is JSON Schema 2020-12. Shared and recursive schemas are stored once under `defs`, and a schema refers to one with `$ref: "#/defs/{name}"`.
+
+`endpoint-v1` changes only by adding fields. A change that is not additive is published as `endpoint-v2`. `docs/schemas/endpoint-v1.json` is generated from the models, and the test suite fails when the two drift.
+
+The artifact is deterministic. Endpoints are ordered by path and method, object keys are sorted, and the file is UTF-8 with LF line endings. For a local spec, `source.uri` is the file name without its directory, and `source.sha256` is the digest of the raw input bytes. Copying the spec to another directory does not change the artifact when the file name stays the same.
 
 `.doc2mcp/` is the local cache. It is not a stage artifact, and it is gitignored. Stage artifacts are whatever `--out` points at.
 

@@ -17,8 +17,9 @@ _DESCRIPTION = (
     "then verify every generated tool against the real API."
 )
 _STAGES = frozenset({"ingest", "curate", "emit", "verify"})
-_VALUE_FLAGS = frozenset({"--out"})
-_BOOL_FLAGS = frozenset({"--json", "--quiet", "--verbose"})
+_VALUE_FLAGS = frozenset({"--out", "--allow-ref-host"})
+_BOOL_FLAGS = frozenset({"--json", "--quiet", "--verbose", "--offline"})
+_EQUALS_FLAGS = ("--out=", "--allow-ref-host=")
 _ENDPOINTS = "endpoints.json"
 _TOOLS = "tools.yaml"
 _GENERATED = "generated"
@@ -40,6 +41,12 @@ class UsageError(Exception):
         self.message = message
 
 
+class UpstreamError(Exception):
+    def __init__(self, message: str) -> None:
+        super().__init__(message)
+        self.message = message
+
+
 class ErrorReport(TypedDict):
     ok: bool
     exit_code: int
@@ -52,6 +59,8 @@ class RunOptions:
     as_json: bool
     quiet: bool
     verbose: bool
+    offline: bool
+    allow_ref_hosts: tuple[str, ...]
 
 
 @runtime_checkable
@@ -79,6 +88,9 @@ def main(argv: list[str] | None = None) -> int:
     except UsageError as exc:
         _emit_error(exc.message, ExitCode.USAGE, as_json=_json_requested(args))
         return ExitCode.USAGE
+    except UpstreamError as exc:
+        _emit_error(exc.message, ExitCode.UPSTREAM, as_json=_json_requested(args))
+        return ExitCode.UPSTREAM
     except typer.TyperException as exc:
         return _parser_exit(exc)
     except Exception as exc:
@@ -118,6 +130,14 @@ def _root(
     ] = False,
     quiet: Annotated[bool, typer.Option("--quiet", help="Show errors only.")] = False,
     verbose: Annotated[bool, typer.Option("--verbose", help="Show debug logs.")] = False,
+    offline: Annotated[
+        bool,
+        typer.Option("--offline", help="Read local files only."),
+    ] = False,
+    allow_ref_host: Annotated[
+        list[str] | None,
+        typer.Option("--allow-ref-host", help="Host allowed for remote reference fetches."),
+    ] = None,
     _version: Annotated[
         bool,
         typer.Option(
@@ -136,6 +156,8 @@ def _root(
         as_json=as_json,
         quiet=quiet,
         verbose=verbose,
+        offline=offline,
+        allow_ref_hosts=tuple(allow_ref_host or ()),
     )
     if ctx.invoked_subcommand is None:
         raise UsageError("missing spec")
@@ -144,15 +166,18 @@ def _root(
 @app.command("run", hidden=True)
 def _run(
     ctx: typer.Context,
-    spec: Annotated[str, typer.Argument(help="OpenAPI file or docs URL.")],
+    spec: Annotated[str, typer.Argument(help="OpenAPI file path or URL.")],
 ) -> None:
-    _ingest(spec, _options(ctx))
+    options = _options(ctx)
+    _ingest(spec, options)
+    _require_file(options.out / _ENDPOINTS)
+    _unwritten(options.out / _TOOLS)
 
 
-@app.command(help="Read an OpenAPI file or docs URL and write endpoints.json.")
+@app.command(help="Read an OpenAPI file path or URL and write endpoints.json.")
 def ingest(
     ctx: typer.Context,
-    spec: Annotated[str, typer.Argument(help="OpenAPI file or docs URL.")],
+    spec: Annotated[str, typer.Argument(help="OpenAPI file path or URL.")],
 ) -> None:
     _ingest(spec, _options(ctx))
 
@@ -194,7 +219,7 @@ def _normalize_argv(argv: list[str]) -> list[str]:
             hoisted.extend((token, argv[index + 1]))
             index += 2
             continue
-        if token.startswith("--out="):
+        if token.startswith(_EQUALS_FLAGS):
             hoisted.append(token)
             index += 1
             continue
@@ -217,8 +242,15 @@ def _options(ctx: typer.Context) -> RunOptions:
 
 
 def _ingest(spec: str, options: RunOptions) -> None:
-    _require_file(Path(spec))
-    _unwritten(options.out / _ENDPOINTS)
+    from doc2mcp.ingest import ingest as load_spec
+    from doc2mcp.ingest import write_endpoints
+
+    loaded = load_spec(
+        spec,
+        offline=options.offline,
+        allow_ref_hosts=options.allow_ref_hosts,
+    )
+    write_endpoints(loaded, options.out)
 
 
 def _require_file(path: Path) -> None:

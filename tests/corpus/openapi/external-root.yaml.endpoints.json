@@ -1,0 +1,73 @@
+{
+  "defs": {
+    "external-schemas.yaml__components_schemas_Pet": {
+      "properties": {
+        "name": {
+          "enum": [
+            "cat",
+            "dog"
+          ],
+          "examples": [
+            "cat"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "name"
+      ],
+      "type": "object"
+    }
+  },
+  "endpoints": [
+    {
+      "deprecated": false,
+      "id": "GET /pets",
+      "method": "GET",
+      "operation_id": "listPets",
+      "parameters": [
+        {
+          "description": "Maximum number of results",
+          "explode": true,
+          "in": "query",
+          "name": "limit",
+          "required": false,
+          "schema": {
+            "default": 20,
+            "format": "int32",
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "style": "form"
+        }
+      ],
+      "path": "/pets",
+      "provenance": "/paths/~1pets/get",
+      "responses": {
+        "200": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/external-schemas.yaml__components_schemas_Pet"
+          }
+        }
+      },
+      "security": []
+    }
+  ],
+  "findings": [],
+  "model_version": "endpoint-v1",
+  "security_schemes": {},
+  "servers": [
+    {
+      "url": "https://example.test"
+    }
+  ],
+  "source": {
+    "kind": "openapi",
+    "sha256": "d41515f955923a6d0b70c403508c0b476c130166d999ac1ad468423f64387327",
+    "uri": "external-root.yaml"
+  },
+  "title": "External",
+  "version": "1.0.0"
+}

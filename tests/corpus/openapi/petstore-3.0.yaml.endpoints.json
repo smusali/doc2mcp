@@ -1,0 +1,183 @@
+{
+  "defs": {
+    "components_schemas_Error": {
+      "properties": {
+        "code": {
+          "format": "int32",
+          "type": "integer"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "message"
+      ],
+      "type": "object"
+    },
+    "components_schemas_Pet": {
+      "properties": {
+        "id": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        },
+        "tag": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "type": "object"
+    },
+    "components_schemas_Pets": {
+      "items": {
+        "$ref": "#/defs/components_schemas_Pet"
+      },
+      "type": "array"
+    }
+  },
+  "endpoints": [
+    {
+      "deprecated": false,
+      "id": "GET /pets",
+      "method": "GET",
+      "operation_id": "listPets",
+      "parameters": [
+        {
+          "description": "How many items to return at one time (max 100)",
+          "explode": true,
+          "in": "query",
+          "name": "limit",
+          "required": false,
+          "schema": {
+            "format": "int32",
+            "type": "integer"
+          },
+          "style": "form"
+        }
+      ],
+      "path": "/pets",
+      "provenance": "/paths/~1pets/get",
+      "responses": {
+        "200": {
+          "content_type": "application/json",
+          "headers": {
+            "x-next": {
+              "description": "A link to the next page of responses",
+              "required": false,
+              "schema": {
+                "type": "string"
+              }
+            }
+          },
+          "schema": {
+            "$ref": "#/defs/components_schemas_Pets"
+          }
+        },
+        "default": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        }
+      },
+      "security": [],
+      "summary": "List all pets",
+      "tags": [
+        "pets"
+      ]
+    },
+    {
+      "deprecated": false,
+      "id": "POST /pets",
+      "method": "POST",
+      "operation_id": "createPets",
+      "parameters": [],
+      "path": "/pets",
+      "provenance": "/paths/~1pets/post",
+      "responses": {
+        "201": {},
+        "default": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        }
+      },
+      "security": [],
+      "summary": "Create a pet",
+      "tags": [
+        "pets"
+      ]
+    },
+    {
+      "deprecated": false,
+      "id": "GET /pets/{petId}",
+      "method": "GET",
+      "operation_id": "showPetById",
+      "parameters": [
+        {
+          "description": "The id of the pet to retrieve",
+          "explode": false,
+          "in": "path",
+          "name": "petId",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "style": "simple"
+        }
+      ],
+      "path": "/pets/{petId}",
+      "provenance": "/paths/~1pets~1{petId}/get",
+      "responses": {
+        "200": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Pet"
+          }
+        },
+        "default": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        }
+      },
+      "security": [],
+      "summary": "Info for a specific pet",
+      "tags": [
+        "pets"
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "code": "no-response-schema",
+      "endpoint_id": "POST /pets",
+      "message": "success response has no schema",
+      "pointer": "/paths/~1pets/post",
+      "severity": "warning"
+    }
+  ],
+  "model_version": "endpoint-v1",
+  "security_schemes": {},
+  "servers": [
+    {
+      "url": "http://petstore.swagger.io/v1"
+    }
+  ],
+  "source": {
+    "kind": "openapi",
+    "sha256": "ab60f59da478d4ac312cd9fabcc6cbd06f8f975ab8a1a0c2029b2a41f65fedd5",
+    "uri": "petstore-3.0.yaml"
+  },
+  "title": "Swagger Petstore",
+  "version": "1.0.0"
+}

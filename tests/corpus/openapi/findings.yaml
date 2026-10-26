@@ -1,0 +1,81 @@
+openapi: 3.0.3
+info:
+  title: Findings
+  version: "1.0.0"
+paths:
+  /missing-id:
+    get:
+      responses:
+        "204":
+          description: No content
+  /dup-a:
+    get:
+      operationId: same
+      responses:
+        "404":
+          description: Missing
+  /dup-b:
+    post:
+      operationId: same
+      responses:
+        "200":
+          description: No schema
+  /form:
+    post:
+      operationId: upload
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+      responses:
+        "200":
+          description: Uploaded
+          content:
+            application/json:
+              schema:
+                type: object
+  /bad-ref:
+    get:
+      operationId: badRef
+      responses:
+        "200":
+          description: Missing schema
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Missing"
+  /secure:
+    get:
+      operationId: secure
+      security:
+        - missingScheme: []
+      responses:
+        "200":
+          description: Hidden
+          content:
+            application/json:
+              schema:
+                type: string
+  /callback:
+    get:
+      operationId: callback
+      callbacks:
+        ping: {}
+      responses:
+        "200":
+          description: Linked
+          links:
+            next:
+              operationId: secure
+          content:
+            application/json:
+              schema:
+                type: string
+webhooks:
+  hook:
+    post:
+      responses:
+        "200":
+          description: Hook

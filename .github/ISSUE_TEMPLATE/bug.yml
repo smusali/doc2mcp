@@ -20,7 +20,7 @@ body:
     id: input
     attributes:
       label: Input
-      description: Spec path or docs URL. Redact private URLs.
+      description: OpenAPI file path or URL. Redact private URLs.
     validations:
       required: true
   - type: textarea

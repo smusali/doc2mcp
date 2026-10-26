@@ -1,0 +1,28 @@
+openapi: 3.0.3
+info:
+  title: Recursive
+  version: "1.0.0"
+servers:
+  - url: https://example.test
+paths:
+  /nodes:
+    get:
+      operationId: listNodes
+      responses:
+        "200":
+          description: A node
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Node"
+components:
+  schemas:
+    Node:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: string
+        child:
+          $ref: "#/components/schemas/Node"

@@ -1,0 +1,53 @@
+{
+  "defs": {
+    "components_schemas_Node": {
+      "properties": {
+        "child": {
+          "$ref": "#/defs/components_schemas_Node"
+        },
+        "id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id"
+      ],
+      "type": "object"
+    }
+  },
+  "endpoints": [
+    {
+      "deprecated": false,
+      "id": "GET /nodes",
+      "method": "GET",
+      "operation_id": "listNodes",
+      "parameters": [],
+      "path": "/nodes",
+      "provenance": "/paths/~1nodes/get",
+      "responses": {
+        "200": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Node"
+          }
+        }
+      },
+      "security": []
+    }
+  ],
+  "findings": [],
+  "model_version": "endpoint-v1",
+  "security_schemes": {},
+  "servers": [
+    {
+      "url": "https://example.test"
+    }
+  ],
+  "source": {
+    "kind": "openapi",
+    "sha256": "e668ced36af80abb9ddba0f89788491840897b9d7933f1e14175e930881a2de7",
+    "uri": "recursive.yaml"
+  },
+  "title": "Recursive",
+  "version": "1.0.0"
+}
