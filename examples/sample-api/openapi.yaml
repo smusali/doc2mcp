@@ -1,0 +1,1353 @@
+openapi: "3.1.0"
+jsonSchemaDialect: https://json-schema.org/draft/2020-12/schema
+info:
+  title: Shelf
+  version: "1.0.0"
+  description: Small library circulation API used as the doc2mcp sample.
+servers:
+  - url: http://127.0.0.1:8765
+    description: In-memory reference server
+tags:
+  - name: books
+    description: Catalog records
+  - name: copies
+    description: Physical copies
+  - name: reviews
+    description: Patron reviews
+  - name: patrons
+    description: Library patrons
+  - name: holds
+    description: Wait list
+  - name: loans
+    description: Checked-out copies
+  - name: uploads
+    description: File upload sessions
+  - name: admin
+    description: Operator-only operations
+security:
+  - apiKeyAuth: []
+paths:
+  /books:
+    get:
+      tags: [books]
+      operationId: listBooks
+      summary: List books
+      parameters:
+        - $ref: "#/components/parameters/Cursor"
+        - $ref: "#/components/parameters/Limit"
+      responses:
+        "200":
+          description: A page of books
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookPage"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+    post:
+      tags: [books]
+      operationId: createBook
+      summary: Create a book
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BookCreate"
+      responses:
+        "201":
+          description: Created book
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Book"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /books/{book_id}:
+    parameters:
+      - $ref: "#/components/parameters/BookId"
+    get:
+      tags: [books]
+      operationId: getBook
+      summary: Read a book
+      responses:
+        "200":
+          description: Book
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Book"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    patch:
+      tags: [books]
+      operationId: updateBook
+      summary: Update a book
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BookUpdate"
+      responses:
+        "200":
+          description: Updated book
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Book"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      tags: [books]
+      operationId: deleteBook
+      summary: Delete a book
+      responses:
+        "200":
+          description: Deleted book
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Deletion"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /books/{book_id}/stats:
+    get:
+      tags: [books]
+      operationId: getBookStats
+      summary: Read book statistics
+      parameters:
+        - $ref: "#/components/parameters/BookId"
+      responses:
+        "200":
+          description: Book statistics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookStats"
+              example:
+                book_id: book_001
+                page_count: 320
+                word_count: 84000
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /books/{book_id}/page-count:
+    get:
+      tags: [books]
+      operationId: getBookPageCount
+      summary: Read a book's page count
+      description: Superseded by getBookStats.
+      deprecated: true
+      parameters:
+        - $ref: "#/components/parameters/BookId"
+      responses:
+        "200":
+          description: Page count
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookPageCount"
+              example:
+                book_id: book_001
+                page_count: 320
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /books/{book_id}/copies:
+    get:
+      tags: [copies]
+      operationId: listCopies
+      summary: List copies of a book
+      parameters:
+        - $ref: "#/components/parameters/BookId"
+        - $ref: "#/components/parameters/Cursor"
+        - $ref: "#/components/parameters/Limit"
+      responses:
+        "200":
+          description: A page of copies
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CopyPage"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    post:
+      tags: [copies]
+      operationId: createCopy
+      summary: Add a copy of a book
+      parameters:
+        - $ref: "#/components/parameters/BookId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CopyCreate"
+      responses:
+        "201":
+          description: Created copy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Copy"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /books/{book_id}/file:
+    put:
+      tags: [books]
+      operationId: attachBookFile
+      summary: Attach a completed upload to a book
+      parameters:
+        - $ref: "#/components/parameters/BookId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BookFileAttach"
+      responses:
+        "200":
+          description: Attached file
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BookFile"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /books/{book_id}/reviews:
+    get:
+      tags: [reviews]
+      operationId: listReviews
+      summary: List reviews of a book
+      parameters:
+        - $ref: "#/components/parameters/BookId"
+        - $ref: "#/components/parameters/Cursor"
+        - $ref: "#/components/parameters/Limit"
+      responses:
+        "200":
+          description: A page of reviews
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ReviewPage"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    post:
+      tags: [reviews]
+      operationId: createReview
+      summary: Review a book
+      parameters:
+        - $ref: "#/components/parameters/BookId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReviewCreate"
+      responses:
+        "201":
+          description: Created review
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Review"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /books/{book_id}/loans:
+    get:
+      tags: [loans]
+      operationId: listBookLoans
+      summary: List loans of a book
+      parameters:
+        - $ref: "#/components/parameters/BookId"
+        - $ref: "#/components/parameters/Cursor"
+        - $ref: "#/components/parameters/Limit"
+      responses:
+        "200":
+          description: A page of loans
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoanPage"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /copies/{copy_id}:
+    parameters:
+      - $ref: "#/components/parameters/CopyId"
+    get:
+      tags: [copies]
+      operationId: getCopy
+      summary: Read a copy
+      responses:
+        "200":
+          description: Copy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Copy"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    patch:
+      tags: [copies]
+      operationId: updateCopy
+      summary: Update a copy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CopyUpdate"
+      responses:
+        "200":
+          description: Updated copy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Copy"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      tags: [copies]
+      operationId: deleteCopy
+      summary: Delete a copy
+      responses:
+        "200":
+          description: Deleted copy
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Deletion"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /reviews/{review_id}:
+    parameters:
+      - $ref: "#/components/parameters/ReviewId"
+    get:
+      tags: [reviews]
+      operationId: getReview
+      summary: Read a review
+      responses:
+        "200":
+          description: Review
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Review"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    patch:
+      tags: [reviews]
+      operationId: updateReview
+      summary: Update a review
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReviewUpdate"
+      responses:
+        "200":
+          description: Updated review
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Review"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      tags: [reviews]
+      operationId: deleteReview
+      summary: Delete a review
+      responses:
+        "200":
+          description: Deleted review
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Deletion"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /patrons:
+    get:
+      tags: [patrons]
+      operationId: listPatrons
+      summary: List patrons
+      parameters:
+        - $ref: "#/components/parameters/Cursor"
+        - $ref: "#/components/parameters/Limit"
+      responses:
+        "200":
+          description: A page of patrons
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PatronPage"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+    post:
+      tags: [patrons]
+      operationId: createPatron
+      summary: Create a patron
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatronCreate"
+      responses:
+        "201":
+          description: Created patron
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Patron"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /patrons/{patron_id}:
+    parameters:
+      - $ref: "#/components/parameters/PatronId"
+    get:
+      tags: [patrons]
+      operationId: getPatron
+      summary: Read a patron
+      responses:
+        "200":
+          description: Patron
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Patron"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    patch:
+      tags: [patrons]
+      operationId: updatePatron
+      summary: Update a patron
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PatronUpdate"
+      responses:
+        "200":
+          description: Updated patron
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Patron"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    delete:
+      tags: [patrons]
+      operationId: deletePatron
+      summary: Delete a patron
+      responses:
+        "200":
+          description: Deleted patron
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Deletion"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /patrons/{patron_id}/holds:
+    get:
+      tags: [holds]
+      operationId: listHolds
+      summary: List holds for a patron
+      parameters:
+        - $ref: "#/components/parameters/PatronId"
+        - $ref: "#/components/parameters/Cursor"
+        - $ref: "#/components/parameters/Limit"
+      responses:
+        "200":
+          description: A page of holds
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HoldPage"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    post:
+      tags: [holds]
+      operationId: createHold
+      summary: Place a hold
+      parameters:
+        - $ref: "#/components/parameters/PatronId"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/HoldCreate"
+      responses:
+        "201":
+          description: Created hold
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Hold"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /patrons/{patron_id}/loans:
+    get:
+      tags: [loans]
+      operationId: listPatronLoans
+      summary: List loans for a patron
+      parameters:
+        - $ref: "#/components/parameters/PatronId"
+        - $ref: "#/components/parameters/Cursor"
+        - $ref: "#/components/parameters/Limit"
+      responses:
+        "200":
+          description: A page of loans
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoanPage"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /holds/{hold_id}:
+    delete:
+      tags: [holds]
+      operationId: deleteHold
+      summary: Cancel a hold
+      parameters:
+        - $ref: "#/components/parameters/HoldId"
+      responses:
+        "200":
+          description: Deleted hold
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Deletion"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /loans:
+    get:
+      tags: [loans]
+      operationId: listLoans
+      summary: List loans
+      parameters:
+        - $ref: "#/components/parameters/Cursor"
+        - $ref: "#/components/parameters/Limit"
+      responses:
+        "200":
+          description: A page of loans
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoanPage"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+    post:
+      tags: [loans]
+      operationId: createLoan
+      summary: Check out a copy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoanCreate"
+      responses:
+        "201":
+          description: Created loan
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Loan"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /loans/{loan_id}:
+    get:
+      tags: [loans]
+      operationId: getLoan
+      summary: Read a loan
+      parameters:
+        - $ref: "#/components/parameters/LoanId"
+      responses:
+        "200":
+          description: Loan
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Loan"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /loans/{loan_id}/return:
+    post:
+      tags: [loans]
+      operationId: returnLoan
+      summary: Return a loan
+      parameters:
+        - $ref: "#/components/parameters/LoanId"
+      responses:
+        "200":
+          description: Returned loan
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Loan"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /loans/{loan_id}/renew:
+    post:
+      tags: [loans]
+      operationId: renewLoan
+      summary: Renew a loan
+      parameters:
+        - $ref: "#/components/parameters/LoanId"
+      responses:
+        "200":
+          description: Renewed loan
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Loan"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /uploads:
+    post:
+      tags: [uploads]
+      operationId: createUpload
+      summary: Create an upload session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UploadCreate"
+      responses:
+        "201":
+          description: Created upload session
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Upload"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /uploads/{upload_id}/parts/{part_number}:
+    put:
+      tags: [uploads]
+      operationId: uploadPart
+      summary: Upload one part
+      parameters:
+        - $ref: "#/components/parameters/UploadId"
+        - $ref: "#/components/parameters/PartNumber"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UploadPartCreate"
+      responses:
+        "200":
+          description: Stored part
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UploadPart"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /uploads/{upload_id}/complete:
+    post:
+      tags: [uploads]
+      operationId: completeUpload
+      summary: Complete an upload session
+      parameters:
+        - $ref: "#/components/parameters/UploadId"
+      responses:
+        "200":
+          description: Completed upload
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Upload"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /admin/audit-events:
+    get:
+      tags: [admin]
+      operationId: listAuditEvents
+      summary: List audit events
+      parameters:
+        - $ref: "#/components/parameters/Cursor"
+        - $ref: "#/components/parameters/Limit"
+      responses:
+        "200":
+          description: A page of audit events
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AuditPage"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+  /admin/patrons/{patron_id}/suspend:
+    post:
+      tags: [admin]
+      operationId: suspendPatron
+      summary: Suspend a patron
+      parameters:
+        - $ref: "#/components/parameters/PatronId"
+      responses:
+        "200":
+          description: Suspended patron
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Patron"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /admin/patrons/{patron_id}/reinstate:
+    post:
+      tags: [admin]
+      operationId: reinstatePatron
+      summary: Reinstate a patron
+      parameters:
+        - $ref: "#/components/parameters/PatronId"
+      responses:
+        "200":
+          description: Reinstated patron
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Patron"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /admin/circulation:
+    get:
+      tags: [admin]
+      operationId: getCirculation
+      summary: Read circulation counts
+      responses:
+        "200":
+          description: Circulation counts
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Circulation"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+components:
+  securitySchemes:
+    apiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+      description: Send the sample key in this header.
+  parameters:
+    Cursor:
+      name: cursor
+      in: query
+      required: false
+      description: Opaque id of the last item on the previous page. Omit it to read the first page.
+      schema:
+        type: string
+    Limit:
+      name: limit
+      in: query
+      required: false
+      description: Maximum number of items to return.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 2
+    BookId:
+      name: book_id
+      in: path
+      required: true
+      schema:
+        type: string
+    CopyId:
+      name: copy_id
+      in: path
+      required: true
+      schema:
+        type: string
+    ReviewId:
+      name: review_id
+      in: path
+      required: true
+      schema:
+        type: string
+    PatronId:
+      name: patron_id
+      in: path
+      required: true
+      schema:
+        type: string
+    HoldId:
+      name: hold_id
+      in: path
+      required: true
+      schema:
+        type: string
+    LoanId:
+      name: loan_id
+      in: path
+      required: true
+      schema:
+        type: string
+    UploadId:
+      name: upload_id
+      in: path
+      required: true
+      schema:
+        type: string
+    PartNumber:
+      name: part_number
+      in: path
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+  responses:
+    BadRequest:
+      description: The request was not valid.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    Unauthorized:
+      description: The API key header is missing or wrong.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    NotFound:
+      description: The resource was not found.
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+  schemas:
+    Error:
+      type: object
+      additionalProperties: false
+      required: [error]
+      properties:
+        error:
+          type: string
+    Deletion:
+      type: object
+      additionalProperties: false
+      required: [id, deleted]
+      properties:
+        id:
+          type: string
+        deleted:
+          type: boolean
+          const: true
+    Page:
+      type: object
+      required: [has_more, next_cursor]
+      properties:
+        has_more:
+          type: boolean
+        next_cursor:
+          type: ["string", "null"]
+    Book:
+      type: object
+      additionalProperties: false
+      required: [id, title, author, created_at, file_id]
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        author:
+          type: string
+        created_at:
+          type: string
+        file_id:
+          type: ["string", "null"]
+    BookPage:
+      allOf:
+        - $ref: "#/components/schemas/Page"
+        - type: object
+          required: [data]
+          properties:
+            data:
+              type: array
+              items:
+                $ref: "#/components/schemas/Book"
+      unevaluatedProperties: false
+    BookCreate:
+      type: object
+      additionalProperties: false
+      required: [title, author]
+      properties:
+        title:
+          type: string
+        author:
+          type: string
+    BookUpdate:
+      type: object
+      additionalProperties: false
+      minProperties: 1
+      properties:
+        title:
+          type: string
+        author:
+          type: string
+    BookStats:
+      type: object
+      additionalProperties: false
+      required: [book_id, page_count, word_count]
+      properties:
+        book_id:
+          type: string
+        page_count:
+          type: integer
+          description: Number of pages.
+          examples: [320]
+        word_count:
+          type: integer
+          description: Number of words.
+    BookPageCount:
+      type: object
+      additionalProperties: false
+      required: [book_id, page_count]
+      properties:
+        book_id:
+          type: string
+        page_count:
+          type: integer
+          description: Number of pages.
+    BookFile:
+      type: object
+      additionalProperties: false
+      required: [book_id, file_id]
+      properties:
+        book_id:
+          type: string
+        file_id:
+          type: string
+    BookFileAttach:
+      type: object
+      additionalProperties: false
+      required: [upload_id]
+      properties:
+        upload_id:
+          type: string
+    Copy:
+      type: object
+      additionalProperties: false
+      required: [id, book_id, barcode, status, created_at]
+      properties:
+        id:
+          type: string
+        book_id:
+          type: string
+        barcode:
+          type: string
+        status:
+          type: string
+          enum: [available, on_loan]
+        created_at:
+          type: string
+    CopyPage:
+      allOf:
+        - $ref: "#/components/schemas/Page"
+        - type: object
+          required: [data]
+          properties:
+            data:
+              type: array
+              items:
+                $ref: "#/components/schemas/Copy"
+      unevaluatedProperties: false
+    CopyCreate:
+      type: object
+      additionalProperties: false
+      required: [barcode]
+      properties:
+        barcode:
+          type: string
+    CopyUpdate:
+      type: object
+      additionalProperties: false
+      minProperties: 1
+      properties:
+        barcode:
+          type: string
+    Review:
+      type: object
+      additionalProperties: false
+      required: [id, book_id, patron_id, rating, body, created_at]
+      properties:
+        id:
+          type: string
+        book_id:
+          type: string
+        patron_id:
+          type: string
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+        body:
+          type: string
+        created_at:
+          type: string
+    ReviewPage:
+      allOf:
+        - $ref: "#/components/schemas/Page"
+        - type: object
+          required: [data]
+          properties:
+            data:
+              type: array
+              items:
+                $ref: "#/components/schemas/Review"
+      unevaluatedProperties: false
+    ReviewCreate:
+      type: object
+      additionalProperties: false
+      required: [patron_id, rating, body]
+      properties:
+        patron_id:
+          type: string
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+        body:
+          type: string
+    ReviewUpdate:
+      type: object
+      additionalProperties: false
+      minProperties: 1
+      properties:
+        rating:
+          type: integer
+          minimum: 1
+          maximum: 5
+        body:
+          type: string
+    Patron:
+      type: object
+      additionalProperties: false
+      required: [id, name, email, status, created_at]
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+        status:
+          type: string
+          enum: [active, suspended]
+        created_at:
+          type: string
+    PatronPage:
+      allOf:
+        - $ref: "#/components/schemas/Page"
+        - type: object
+          required: [data]
+          properties:
+            data:
+              type: array
+              items:
+                $ref: "#/components/schemas/Patron"
+      unevaluatedProperties: false
+    PatronCreate:
+      type: object
+      additionalProperties: false
+      required: [name, email]
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+    PatronUpdate:
+      type: object
+      additionalProperties: false
+      minProperties: 1
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+    Hold:
+      type: object
+      additionalProperties: false
+      required: [id, book_id, patron_id, created_at]
+      properties:
+        id:
+          type: string
+        book_id:
+          type: string
+        patron_id:
+          type: string
+        created_at:
+          type: string
+    HoldPage:
+      allOf:
+        - $ref: "#/components/schemas/Page"
+        - type: object
+          required: [data]
+          properties:
+            data:
+              type: array
+              items:
+                $ref: "#/components/schemas/Hold"
+      unevaluatedProperties: false
+    HoldCreate:
+      type: object
+      additionalProperties: false
+      required: [book_id]
+      properties:
+        book_id:
+          type: string
+    Loan:
+      type: object
+      additionalProperties: false
+      required: [id, copy_id, book_id, patron_id, status, due_at, renew_count, created_at]
+      properties:
+        id:
+          type: string
+        copy_id:
+          type: string
+        book_id:
+          type: string
+        patron_id:
+          type: string
+        status:
+          type: string
+          enum: [active, returned]
+        due_at:
+          type: string
+        renew_count:
+          type: integer
+          minimum: 0
+        created_at:
+          type: string
+    LoanPage:
+      allOf:
+        - $ref: "#/components/schemas/Page"
+        - type: object
+          required: [data]
+          properties:
+            data:
+              type: array
+              items:
+                $ref: "#/components/schemas/Loan"
+      unevaluatedProperties: false
+    LoanCreate:
+      type: object
+      additionalProperties: false
+      required: [copy_id, patron_id]
+      properties:
+        copy_id:
+          type: string
+        patron_id:
+          type: string
+    Upload:
+      type: object
+      additionalProperties: false
+      required: [id, filename, content_type, status, part_count, byte_count, created_at]
+      properties:
+        id:
+          type: string
+        filename:
+          type: string
+        content_type:
+          type: string
+        status:
+          type: string
+          enum: [open, complete]
+        part_count:
+          type: integer
+          minimum: 0
+        byte_count:
+          type: integer
+          minimum: 0
+        created_at:
+          type: string
+    UploadCreate:
+      type: object
+      additionalProperties: false
+      required: [filename, content_type]
+      properties:
+        filename:
+          type: string
+        content_type:
+          type: string
+    UploadPart:
+      type: object
+      additionalProperties: false
+      required: [upload_id, part_number, size]
+      properties:
+        upload_id:
+          type: string
+        part_number:
+          type: integer
+          minimum: 1
+        size:
+          type: integer
+          minimum: 0
+    UploadPartCreate:
+      type: object
+      additionalProperties: false
+      required: [data]
+      properties:
+        data:
+          type: string
+          contentEncoding: base64
+    AuditEvent:
+      type: object
+      additionalProperties: false
+      required: [id, action, created_at]
+      properties:
+        id:
+          type: string
+        action:
+          type: string
+        created_at:
+          type: string
+    AuditPage:
+      allOf:
+        - $ref: "#/components/schemas/Page"
+        - type: object
+          required: [data]
+          properties:
+            data:
+              type: array
+              items:
+                $ref: "#/components/schemas/AuditEvent"
+      unevaluatedProperties: false
+    Circulation:
+      type: object
+      additionalProperties: false
+      required: [active_loans, open_holds]
+      properties:
+        active_loans:
+          type: integer
+          minimum: 0
+        open_holds:
+          type: integer
+          minimum: 0

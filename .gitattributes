@@ -1,2 +1,3 @@
 tests/corpus/** text eol=lf
 docs/schemas/** text eol=lf
+examples/sample-api/** text eol=lf
