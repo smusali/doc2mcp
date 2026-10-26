@@ -1,0 +1,98 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "doc2mcp"
+dynamic = ["version"]
+description = "Turn API docs into a working MCP server, then verify every generated tool against the real API."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Samir Musali", email = "samir.musali@gmail.com" }]
+keywords = [
+    "mcp",
+    "model-context-protocol",
+    "ai-agents",
+    "agentic-ai",
+    "code-generation",
+    "openapi",
+    "llm",
+    "ai-infrastructure",
+    "developer-tools",
+    "python",
+    "cli",
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: 3.15",
+    "Topic :: Software Development :: Code Generators",
+    "Topic :: Software Development :: Testing",
+    "Typing :: Typed",
+]
+dependencies = [
+    "anthropic>=2,<3",
+    "mcp>=2.3,<3",
+    "httpx2>=2.10,<3",
+    "pydantic>=2.14,<3",
+    "jinja2>=3.1,<4",
+    "pyyaml>=6,<7",
+    "jsonschema>=4.23,<5",
+    "typer>=0.27,<1",
+    "rich>=13.8,<16",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=9,<10",
+    "pytest-socket>=0.8,<1",
+    "hypothesis>=6,<7",
+    "ruff>=0.17.2,<1",
+    "mypy>=2.4,<3",
+    "pre-commit>=4,<5",
+    "build>=1,<2",
+]
+
+[project.urls]
+Homepage = "https://github.com/smusali/doc2mcp"
+Repository = "https://github.com/smusali/doc2mcp"
+Issues = "https://github.com/smusali/doc2mcp/issues"
+Changelog = "https://github.com/smusali/doc2mcp/blob/main/CHANGELOG.md"
+
+[project.scripts]
+doc2mcp = "doc2mcp.cli:main"
+
+[tool.hatch.version]
+path = "doc2mcp/__init__.py"
+
+[tool.hatch.build.targets.wheel]
+packages = ["doc2mcp"]
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+src = ["doc2mcp", "tests", "tools"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM", "ANN", "RUF"]
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.mypy]
+strict = true
+python_version = "3.11"
+files = ["doc2mcp"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = ["--disable-socket", "--allow-unix-socket"]

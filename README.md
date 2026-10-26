@@ -1,2 +1,2 @@
 # doc2mcp
-Turn API Docs into a working MCP Server
+Turn API docs into a working MCP server, then verify every generated tool against the real API.
