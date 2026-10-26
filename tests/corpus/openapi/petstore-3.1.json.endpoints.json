@@ -1,0 +1,354 @@
+{
+  "defs": {
+    "components_schemas_Category": {
+      "$id": "/api/v31/components/schemas/category",
+      "description": "Category",
+      "properties": {
+        "id": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "Category"
+      }
+    },
+    "components_schemas_Pet": {
+      "$schema": "https://json-schema.org/draft/2020-12/schema",
+      "description": "Pet",
+      "properties": {
+        "availableInstances": {
+          "examples": [
+            "7"
+          ],
+          "exclusiveMaximum": 10,
+          "exclusiveMinimum": 1,
+          "format": "int32",
+          "swagger-extension": true,
+          "type": "integer"
+        },
+        "category": {
+          "allOf": [
+            {
+              "$ref": "#/defs/components_schemas_Category"
+            },
+            {
+              "description": "Pet Category"
+            }
+          ]
+        },
+        "id": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "name": {
+          "examples": [
+            "doggie"
+          ],
+          "type": "string"
+        },
+        "petDetails": true,
+        "petDetailsId": {
+          "allOf": [
+            true,
+            {
+              "format": "int64",
+              "type": "integer"
+            }
+          ]
+        },
+        "photoUrls": {
+          "items": {
+            "type": "string",
+            "xml": {
+              "name": "photoUrl"
+            }
+          },
+          "type": "array",
+          "xml": {
+            "wrapped": true
+          }
+        },
+        "status": {
+          "description": "pet status in the store",
+          "enum": [
+            "available",
+            "pending",
+            "sold"
+          ],
+          "type": "string"
+        },
+        "tags": {
+          "items": {
+            "$ref": "#/defs/components_schemas_Tag"
+          },
+          "type": "array",
+          "xml": {
+            "wrapped": true
+          }
+        }
+      },
+      "required": [
+        "name",
+        "photoUrls"
+      ],
+      "xml": {
+        "name": "Pet"
+      }
+    },
+    "components_schemas_Tag": {
+      "$id": "/api/v31/components/schemas/tag",
+      "properties": {
+        "id": {
+          "format": "int64",
+          "type": "integer"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "xml": {
+        "name": "Tag"
+      }
+    }
+  },
+  "endpoints": [
+    {
+      "deprecated": false,
+      "description": "Add a new pet to the store.",
+      "id": "POST /pet",
+      "method": "POST",
+      "operation_id": "addPet",
+      "parameters": [],
+      "path": "/pet",
+      "provenance": "/paths/~1pet/post",
+      "request_body": {
+        "content_type": "application/json",
+        "required": true,
+        "schema": {
+          "allOf": [
+            {
+              "$ref": "#/defs/components_schemas_Pet"
+            },
+            {
+              "description": "A Pet in JSON Format",
+              "required": [
+                "id"
+              ],
+              "writeOnly": true
+            }
+          ]
+        }
+      },
+      "responses": {
+        "200": {
+          "content_type": "application/json",
+          "schema": {
+            "allOf": [
+              {
+                "$ref": "#/defs/components_schemas_Pet"
+              },
+              {
+                "description": "A Pet in JSON format",
+                "readOnly": true
+              }
+            ]
+          }
+        },
+        "405": {},
+        "default": {}
+      },
+      "security": [
+        {
+          "petstore_auth": [
+            "write:pets",
+            "read:pets"
+          ]
+        }
+      ],
+      "summary": "Add a new pet to the store.",
+      "tags": [
+        "pet"
+      ]
+    },
+    {
+      "deprecated": false,
+      "description": "Update an existing pet by Id.",
+      "id": "PUT /pet",
+      "method": "PUT",
+      "operation_id": "updatePet",
+      "parameters": [],
+      "path": "/pet",
+      "provenance": "/paths/~1pet/put",
+      "request_body": {
+        "content_type": "application/json",
+        "required": true,
+        "schema": {
+          "allOf": [
+            {
+              "$ref": "#/defs/components_schemas_Pet"
+            },
+            {
+              "description": "A Pet in JSON Format",
+              "required": [
+                "id"
+              ],
+              "writeOnly": true
+            }
+          ]
+        }
+      },
+      "responses": {
+        "200": {
+          "content_type": "application/json",
+          "schema": {
+            "allOf": [
+              {
+                "$ref": "#/defs/components_schemas_Pet"
+              },
+              {
+                "description": "A Pet in JSON Format",
+                "readOnly": true
+              }
+            ]
+          }
+        },
+        "400": {},
+        "404": {},
+        "405": {},
+        "default": {}
+      },
+      "security": [
+        {
+          "petstore_auth": [
+            "write:pets",
+            "read:pets"
+          ]
+        }
+      ],
+      "summary": "Update an existing pet.",
+      "tags": [
+        "pet"
+      ]
+    },
+    {
+      "deprecated": false,
+      "description": "Returns a pet when 0 < ID <= 10.  ID > 10 or non-integers will simulate API error conditions.",
+      "id": "GET /pet/{petId}",
+      "method": "GET",
+      "operation_id": "getPetById",
+      "parameters": [
+        {
+          "description": "ID of pet that needs to be fetched",
+          "explode": false,
+          "in": "path",
+          "name": "petId",
+          "required": true,
+          "schema": {
+            "description": "param ID of pet that needs to be fetched",
+            "exclusiveMaximum": 10,
+            "exclusiveMinimum": 1,
+            "format": "int64",
+            "type": "integer"
+          },
+          "style": "simple"
+        }
+      ],
+      "path": "/pet/{petId}",
+      "provenance": "/paths/~1pet~1{petId}/get",
+      "responses": {
+        "200": {
+          "content_type": "application/json",
+          "schema": {
+            "allOf": [
+              {
+                "$ref": "#/defs/components_schemas_Pet"
+              },
+              {
+                "description": "A Pet in JSON format"
+              }
+            ]
+          }
+        },
+        "400": {},
+        "404": {},
+        "default": {}
+      },
+      "security": [
+        {
+          "petstore_auth": [
+            "write:pets",
+            "read:pets"
+          ]
+        },
+        {
+          "api_key": []
+        }
+      ],
+      "summary": "Find pet by it's identifier.",
+      "tags": [
+        "pet"
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "code": "unresolvable-ref",
+      "endpoint_id": "PUT /pet",
+      "message": "cannot resolve /api/v31/components/schemas/petdetails",
+      "pointer": "/components/schemas/Pet/properties/petDetails",
+      "severity": "error"
+    },
+    {
+      "code": "unresolvable-ref",
+      "endpoint_id": "PUT /pet",
+      "message": "cannot resolve /api/v31/components/schemas/petdetails#pet_details_id",
+      "pointer": "/components/schemas/Pet/properties/petDetailsId",
+      "severity": "error"
+    },
+    {
+      "code": "unsupported-feature",
+      "message": "webhooks are not modelled",
+      "pointer": "/webhooks",
+      "severity": "info"
+    }
+  ],
+  "model_version": "endpoint-v1",
+  "security_schemes": {
+    "api_key": {
+      "in": "header",
+      "name": "api_key",
+      "type": "apiKey"
+    },
+    "mutual_tls": {
+      "type": "mutualTLS"
+    },
+    "petstore_auth": {
+      "flows": {
+        "implicit": {
+          "authorizationUrl": "https://petstore31.swagger.io/oauth/authorize",
+          "scopes": {
+            "read:pets": "read your pets",
+            "write:pets": "modify pets in your account"
+          }
+        }
+      },
+      "type": "oauth2"
+    }
+  },
+  "servers": [
+    {
+      "url": "/api/v31"
+    }
+  ],
+  "source": {
+    "kind": "openapi",
+    "sha256": "b493226aa87181e5de361eb453a2daedd869b715b9112a9cd9a73ea362882409",
+    "uri": "petstore-3.1.json"
+  },
+  "title": "Swagger Petstore - OpenAPI 3.1",
+  "version": "1.0.10"
+}

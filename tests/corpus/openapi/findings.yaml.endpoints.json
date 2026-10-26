@@ -1,0 +1,267 @@
+{
+  "defs": {},
+  "endpoints": [
+    {
+      "deprecated": false,
+      "id": "GET /bad-ref",
+      "method": "GET",
+      "operation_id": "badRef",
+      "parameters": [],
+      "path": "/bad-ref",
+      "provenance": "/paths/~1bad-ref/get",
+      "responses": {
+        "200": {
+          "content_type": "application/json",
+          "schema": true
+        }
+      },
+      "security": []
+    },
+    {
+      "deprecated": false,
+      "id": "GET /callback",
+      "method": "GET",
+      "operation_id": "callback",
+      "parameters": [],
+      "path": "/callback",
+      "provenance": "/paths/~1callback/get",
+      "responses": {
+        "200": {
+          "content_type": "application/json",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "security": []
+    },
+    {
+      "deprecated": false,
+      "id": "GET /dup-a",
+      "method": "GET",
+      "operation_id": "same",
+      "parameters": [],
+      "path": "/dup-a",
+      "provenance": "/paths/~1dup-a/get",
+      "responses": {
+        "404": {}
+      },
+      "security": []
+    },
+    {
+      "deprecated": false,
+      "id": "POST /dup-b",
+      "method": "POST",
+      "operation_id": "same",
+      "parameters": [],
+      "path": "/dup-b",
+      "provenance": "/paths/~1dup-b/post",
+      "responses": {
+        "200": {}
+      },
+      "security": []
+    },
+    {
+      "deprecated": false,
+      "id": "POST /form",
+      "method": "POST",
+      "operation_id": "upload",
+      "parameters": [],
+      "path": "/form",
+      "provenance": "/paths/~1form/post",
+      "request_body": {
+        "content_type": "multipart/form-data",
+        "required": true,
+        "schema": {
+          "type": "object"
+        }
+      },
+      "responses": {
+        "200": {
+          "content_type": "application/json",
+          "schema": {
+            "type": "object"
+          }
+        }
+      },
+      "security": []
+    },
+    {
+      "deprecated": false,
+      "id": "GET /missing-id",
+      "method": "GET",
+      "parameters": [],
+      "path": "/missing-id",
+      "provenance": "/paths/~1missing-id/get",
+      "responses": {
+        "204": {}
+      },
+      "security": []
+    },
+    {
+      "deprecated": false,
+      "id": "GET /secure",
+      "method": "GET",
+      "operation_id": "secure",
+      "parameters": [],
+      "path": "/secure",
+      "provenance": "/paths/~1secure/get",
+      "responses": {
+        "200": {
+          "content_type": "application/json",
+          "schema": {
+            "type": "string"
+          }
+        }
+      },
+      "security": [
+        {
+          "missingScheme": []
+        }
+      ]
+    }
+  ],
+  "findings": [
+    {
+      "code": "duplicate-operation-id",
+      "endpoint_id": "GET /dup-a",
+      "message": "operationId same is duplicated",
+      "pointer": "/paths/~1dup-a/get",
+      "severity": "warning"
+    },
+    {
+      "code": "duplicate-operation-id",
+      "endpoint_id": "POST /dup-b",
+      "message": "operationId same is duplicated",
+      "pointer": "/paths/~1dup-b/post",
+      "severity": "warning"
+    },
+    {
+      "code": "invalid-against-spec",
+      "message": "Additional properties are not allowed ('webhooks' was unexpected)",
+      "pointer": "/",
+      "severity": "error"
+    },
+    {
+      "code": "missing-operation-id",
+      "endpoint_id": "GET /missing-id",
+      "message": "operationId is missing",
+      "pointer": "/paths/~1missing-id/get",
+      "severity": "warning"
+    },
+    {
+      "code": "missing-server",
+      "endpoint_id": "GET /bad-ref",
+      "message": "no server URL",
+      "pointer": "/paths/~1bad-ref/get",
+      "severity": "warning"
+    },
+    {
+      "code": "missing-server",
+      "endpoint_id": "GET /callback",
+      "message": "no server URL",
+      "pointer": "/paths/~1callback/get",
+      "severity": "warning"
+    },
+    {
+      "code": "missing-server",
+      "endpoint_id": "GET /dup-a",
+      "message": "no server URL",
+      "pointer": "/paths/~1dup-a/get",
+      "severity": "warning"
+    },
+    {
+      "code": "missing-server",
+      "endpoint_id": "POST /dup-b",
+      "message": "no server URL",
+      "pointer": "/paths/~1dup-b/post",
+      "severity": "warning"
+    },
+    {
+      "code": "missing-server",
+      "endpoint_id": "POST /form",
+      "message": "no server URL",
+      "pointer": "/paths/~1form/post",
+      "severity": "warning"
+    },
+    {
+      "code": "missing-server",
+      "endpoint_id": "GET /missing-id",
+      "message": "no server URL",
+      "pointer": "/paths/~1missing-id/get",
+      "severity": "warning"
+    },
+    {
+      "code": "missing-server",
+      "endpoint_id": "GET /secure",
+      "message": "no server URL",
+      "pointer": "/paths/~1secure/get",
+      "severity": "warning"
+    },
+    {
+      "code": "no-response-schema",
+      "endpoint_id": "POST /dup-b",
+      "message": "success response has no schema",
+      "pointer": "/paths/~1dup-b/post",
+      "severity": "warning"
+    },
+    {
+      "code": "no-success-response",
+      "endpoint_id": "GET /dup-a",
+      "message": "no 2xx response",
+      "pointer": "/paths/~1dup-a/get",
+      "severity": "warning"
+    },
+    {
+      "code": "non-json-body",
+      "endpoint_id": "POST /form",
+      "message": "request body is multipart/form-data",
+      "pointer": "/paths/~1form/post/requestBody",
+      "severity": "warning"
+    },
+    {
+      "code": "undocumented-security",
+      "endpoint_id": "GET /secure",
+      "message": "security scheme missingScheme is not defined",
+      "pointer": "/paths/~1secure/get",
+      "severity": "warning"
+    },
+    {
+      "code": "unresolvable-ref",
+      "endpoint_id": "GET /bad-ref",
+      "message": "cannot resolve #/components/schemas/Missing",
+      "pointer": "/paths/~1bad-ref/get/responses/200/content",
+      "severity": "error"
+    },
+    {
+      "code": "unsupported-feature",
+      "endpoint_id": "GET /callback",
+      "message": "callbacks are not modelled",
+      "pointer": "/paths/~1callback/get/callbacks",
+      "severity": "info"
+    },
+    {
+      "code": "unsupported-feature",
+      "endpoint_id": "GET /callback",
+      "message": "links are not modelled",
+      "pointer": "/paths/~1callback/get/responses/200/links",
+      "severity": "info"
+    },
+    {
+      "code": "unsupported-feature",
+      "message": "webhooks are not modelled",
+      "pointer": "/webhooks",
+      "severity": "info"
+    }
+  ],
+  "model_version": "endpoint-v1",
+  "security_schemes": {},
+  "servers": [],
+  "source": {
+    "kind": "openapi",
+    "sha256": "c361fd3609896ec786f0bb70efb801bce6c4e61b3fd77044cd4f423e7dd1663d",
+    "uri": "findings.yaml"
+  },
+  "title": "Findings",
+  "version": "1.0.0"
+}

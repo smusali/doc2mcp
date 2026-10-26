@@ -2,6 +2,8 @@
 
 doc2mcp is not a general code generator, an API gateway, or a hosted service.
 
-The commands check their inputs. They do not fetch documentation, call a model, generate a server, or call an API.
+Ingest accepts OpenAPI 3.0, 3.1, and 3.2, and Swagger 2.0, as a local file or a URL. An HTML page is rejected. Pass the URL of the OpenAPI document itself.
 
-A run does not exit 0. Exit 0 means every generated tool verified, and this build has not verified a tool.
+Callbacks, links, and webhooks are reported as findings and are not part of the endpoint model. When a media type has both `schema` and `itemSchema`, the schema for the complete content is the one kept.
+
+Curate, emit, and verify still only check that their inputs exist. A full run stops at the first stage that cannot write its artifact, so exit 0 stays reserved for a run that verified every generated tool.

@@ -1,0 +1,62 @@
+{
+  "defs": {},
+  "endpoints": [
+    {
+      "deprecated": false,
+      "id": "QUERY /search",
+      "method": "QUERY",
+      "operation_id": "search",
+      "parameters": [],
+      "path": "/search",
+      "provenance": "/paths/~1search/query",
+      "request_body": {
+        "content_type": "application/json",
+        "required": true,
+        "schema": {
+          "properties": {
+            "q": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "q"
+          ],
+          "type": "object"
+        }
+      },
+      "responses": {
+        "200": {
+          "content_type": "application/jsonl",
+          "schema": {
+            "properties": {
+              "id": {
+                "format": "uuid",
+                "type": "string"
+              }
+            },
+            "required": [
+              "id"
+            ],
+            "type": "object"
+          }
+        }
+      },
+      "security": []
+    }
+  ],
+  "findings": [],
+  "model_version": "endpoint-v1",
+  "security_schemes": {},
+  "servers": [
+    {
+      "url": "https://example.test"
+    }
+  ],
+  "source": {
+    "kind": "openapi",
+    "sha256": "c45087b7155a23d64b64f664255995068c098dc50f27fda8310f1fc397650bf2",
+    "uri": "stream.yaml"
+  },
+  "title": "Stream",
+  "version": "1.0.0"
+}

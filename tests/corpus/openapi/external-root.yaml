@@ -1,0 +1,19 @@
+openapi: 3.0.3
+info:
+  title: External
+  version: "1.0.0"
+servers:
+  - url: https://example.test
+paths:
+  /pets:
+    get:
+      operationId: listPets
+      parameters:
+        - $ref: external-schemas.yaml#/parameters/Limit
+      responses:
+        "200":
+          description: Pets
+          content:
+            application/json:
+              schema:
+                $ref: external-schemas.yaml#/components/schemas/Pet

@@ -18,6 +18,10 @@ def test_help_lists_stages(capsys: pytest.CaptureFixture[str]) -> None:
     output = capsys.readouterr().out
     for name in ("ingest", "curate", "emit", "verify"):
         assert name in output
+    assert "OpenAPI file path or URL" in output
+    assert "docs URL" not in output
+    assert "--offline" in output
+    assert "--allow-ref-host" in output
 
 
 def test_unknown_flag_exits_usage() -> None:
