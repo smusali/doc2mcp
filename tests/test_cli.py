@@ -1,11 +1,14 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
 import pytest
 from doc2mcp import __version__
 from doc2mcp.cli import ExitCode, main
+
+_ANSI = re.compile(r"\x1b\[[0-9;]*m")
 
 
 def test_version(capsys: pytest.CaptureFixture[str]) -> None:
@@ -15,7 +18,7 @@ def test_version(capsys: pytest.CaptureFixture[str]) -> None:
 
 def test_help_lists_stages(capsys: pytest.CaptureFixture[str]) -> None:
     assert main(["--help"]) == ExitCode.VERIFIED
-    output = capsys.readouterr().out
+    output = _ANSI.sub("", capsys.readouterr().out)
     for name in ("ingest", "curate", "emit", "verify"):
         assert name in output
     assert "OpenAPI file path or URL" in output
