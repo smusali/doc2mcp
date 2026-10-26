@@ -4,10 +4,12 @@ import importlib.util
 import subprocess
 import sys
 import tomllib
+from collections.abc import Callable
 from dataclasses import dataclass
 from pathlib import Path
 from types import ModuleType
 
+import pytest
 from doc2mcp.ingest import _load_yaml, ingest
 from doc2mcp.model import JsonObject, JsonValue
 from jsonschema import Draft202012Validator
@@ -215,6 +217,13 @@ def test_deliberate_traits() -> None:
     assert isinstance(example[_MISMATCH_FIELD], int)
 
 
+def _windows_loopback(test: Callable[[], None]) -> Callable[[], None]:
+    if sys.platform != "win32":
+        return test
+    return pytest.mark.allow_hosts(["127.0.0.1"])(test)
+
+
+@_windows_loopback
 def test_every_operation_matches_its_schema() -> None:
     document = _document()
     operations = {item.operation_id: item for item in _operations(document)}
@@ -253,6 +262,7 @@ def test_every_operation_matches_its_schema() -> None:
     assert rejected.content == missing.content
 
 
+@_windows_loopback
 def test_responses_are_deterministic() -> None:
     server = _server()
     assert _bodies(server) == _bodies(server)
