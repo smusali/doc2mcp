@@ -1,0 +1,60 @@
+name: A generated tool is wrong, or a run fails
+description: A generated tool is wrong, or a run fails.
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Use this form when a generated tool is wrong or a run fails.
+        For questions, use Discussions. For vulnerabilities, use a security advisory.
+  - type: input
+    id: version
+    attributes:
+      label: doc2mcp version
+      description: Output of `doc2mcp --version`.
+      placeholder: doc2mcp 0.1.0
+    validations:
+      required: true
+  - type: textarea
+    id: input
+    attributes:
+      label: Input
+      description: Spec path or docs URL. Redact private URLs.
+    validations:
+      required: true
+  - type: textarea
+    id: command
+    attributes:
+      label: Exact command
+      description: The command you ran.
+      render: shell
+    validations:
+      required: true
+  - type: textarea
+    id: report
+    attributes:
+      label: Failing rows of report/verification.json
+      description: Paste the failing rows. Redact secrets.
+      render: json
+    validations:
+      required: true
+  - type: input
+    id: environment
+    attributes:
+      label: Python version and OS
+      placeholder: Python 3.13 on macOS
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected
+    validations:
+      required: true
+  - type: textarea
+    id: observed
+    attributes:
+      label: Observed
+    validations:
+      required: true
