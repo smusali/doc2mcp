@@ -68,6 +68,7 @@ def test_corpus_emit_is_stable(tmp_path: Path) -> None:
         assert _tree_digest(out / "generated") == digest
 
 
+@pytest.mark.enable_socket
 @settings(max_examples=20, deadline=None)
 @given(
     suffix=st.text(alphabet="abcdefghij", min_size=3, max_size=6),
@@ -318,20 +319,24 @@ def _record(generated: Path, rel: str, payload: bytes) -> None:
     if not isinstance(files, dict):
         raise TypeError("ledger files are missing")
     files[rel] = hashlib.sha256(payload).hexdigest()
-    ledger.write_text(json.dumps(loaded, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+    _write_text(ledger, json.dumps(loaded, indent=2, sort_keys=True) + "\n")
+
+
+def _write_text(path: Path, text: str) -> None:
+    path.write_bytes(text.encode("utf-8"))
 
 
 def _curate_spec(out: Path, spec: Path) -> None:
     out.mkdir(parents=True, exist_ok=True)
     loaded = ingest(str(spec), offline=True, allow_ref_hosts=())
-    (out / "endpoints.json").write_text(dump_endpoints(loaded), encoding="utf-8")
+    _write_text(out / "endpoints.json", dump_endpoints(loaded))
     curate(out, CurationOptions(mode="heuristic", offline=True))
 
 
 def _curate_document(out: Path, document: JsonObject) -> None:
     out.mkdir(parents=True, exist_ok=True)
     spec = out / "api.json"
-    spec.write_text(json.dumps(document), encoding="utf-8")
+    _write_text(spec, json.dumps(document))
     _curate_spec(out, spec)
 
 
