@@ -101,4 +101,5 @@ files = ["doc2mcp"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = ["--disable-socket", "--allow-unix-socket"]
+addopts = ["--disable-socket", "--allow-unix-socket", "-m", "not eval"]
+markers = ["eval: live model curation, excluded from the default run"]

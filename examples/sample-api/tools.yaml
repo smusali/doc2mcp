@@ -1,0 +1,1161 @@
+manifest_version: manifest-v1
+api:
+  title: Shelf
+  base_url: http://127.0.0.1:8765
+  namespace: ''
+tools:
+- name: add_copy
+  title: Add Copy
+  description: Add a copy of a book.
+  intent: Add a copy
+  annotations:
+    readOnlyHint: false
+    destructiveHint: false
+    idempotentHint: false
+    openWorldHint: true
+  inputs:
+  - name: barcode
+    schema:
+      type: string
+    description: barcode
+    required: true
+    maps_to:
+      endpoint_id: POST /books/{book_id}/copies
+      param: barcode
+      in: body
+  - name: book_id
+    schema:
+      type: string
+    description: book id
+    required: true
+    maps_to:
+      endpoint_id: POST /books/{book_id}/copies
+      param: book_id
+      in: path
+  fixed: []
+  steps:
+  - endpoint_id: POST /books/{book_id}/copies
+    bind: []
+  output:
+    from_step: 0
+    fields:
+    - barcode
+    - book_id
+    - created_at
+    - id
+    - status
+    schema:
+      additionalProperties: false
+      properties:
+        barcode:
+          type: string
+        book_id:
+          type: string
+        created_at:
+          type: string
+        id:
+          type: string
+        status:
+          enum:
+          - available
+          - on_loan
+          type: string
+      type: object
+      required:
+      - barcode
+      - book_id
+      - created_at
+      - id
+      - status
+  verify:
+    example_args:
+      barcode: example
+      book_id: example
+    depends_on: []
+  rationale: Add Copy is a primary Shelf action.
+- name: checkout_copy
+  title: Checkout Copy
+  description: Check out a copy.
+  intent: Check out a copy
+  annotations:
+    readOnlyHint: false
+    destructiveHint: false
+    idempotentHint: false
+    openWorldHint: true
+  inputs:
+  - name: copy_id
+    schema:
+      type: string
+    description: copy id
+    required: true
+    maps_to:
+      endpoint_id: POST /loans
+      param: copy_id
+      in: body
+  - name: patron_id
+    schema:
+      type: string
+    description: patron id
+    required: true
+    maps_to:
+      endpoint_id: POST /loans
+      param: patron_id
+      in: body
+  fixed: []
+  steps:
+  - endpoint_id: POST /loans
+    bind: []
+  output:
+    from_step: 0
+    fields:
+    - book_id
+    - copy_id
+    - created_at
+    - due_at
+    - id
+    - patron_id
+    - renew_count
+    - status
+    schema:
+      additionalProperties: false
+      properties:
+        book_id:
+          type: string
+        copy_id:
+          type: string
+        created_at:
+          type: string
+        due_at:
+          type: string
+        id:
+          type: string
+        patron_id:
+          type: string
+        renew_count:
+          minimum: 0
+          type: integer
+        status:
+          enum:
+          - active
+          - returned
+          type: string
+      type: object
+      required:
+      - book_id
+      - copy_id
+      - created_at
+      - due_at
+      - id
+      - patron_id
+      - renew_count
+      - status
+  verify:
+    example_args:
+      copy_id: example
+      patron_id: example
+    depends_on: []
+  rationale: Checkout Copy is a primary Shelf action.
+- name: create_book
+  title: Create Book
+  description: Create a book.
+  intent: Create a book
+  annotations:
+    readOnlyHint: false
+    destructiveHint: false
+    idempotentHint: false
+    openWorldHint: true
+  inputs:
+  - name: author
+    schema:
+      type: string
+    description: author
+    required: true
+    maps_to:
+      endpoint_id: POST /books
+      param: author
+      in: body
+  - name: title
+    schema:
+      type: string
+    description: title
+    required: true
+    maps_to:
+      endpoint_id: POST /books
+      param: title
+      in: body
+  fixed: []
+  steps:
+  - endpoint_id: POST /books
+    bind: []
+  output:
+    from_step: 0
+    fields:
+    - author
+    - created_at
+    - file_id
+    - id
+    - title
+    schema:
+      additionalProperties: false
+      properties:
+        author:
+          type: string
+        created_at:
+          type: string
+        file_id:
+          type:
+          - string
+          - 'null'
+        id:
+          type: string
+        title:
+          type: string
+      type: object
+      required:
+      - author
+      - created_at
+      - file_id
+      - id
+      - title
+  verify:
+    example_args:
+      author: example
+      title: example
+    depends_on: []
+  rationale: Create Book is a primary Shelf action.
+- name: delete_book
+  title: Delete Book
+  description: Delete a book.
+  intent: Delete a book
+  annotations:
+    readOnlyHint: false
+    destructiveHint: true
+    idempotentHint: true
+    openWorldHint: true
+  inputs:
+  - name: book_id
+    schema:
+      type: string
+    description: book id
+    required: true
+    maps_to:
+      endpoint_id: DELETE /books/{book_id}
+      param: book_id
+      in: path
+  fixed: []
+  steps:
+  - endpoint_id: DELETE /books/{book_id}
+    bind: []
+  output:
+    from_step: 0
+    fields:
+    - deleted
+    - id
+    schema:
+      additionalProperties: false
+      properties:
+        deleted:
+          const: true
+          type: boolean
+        id:
+          type: string
+      type: object
+      required:
+      - deleted
+      - id
+  verify:
+    example_args:
+      book_id: example
+    depends_on: []
+  rationale: Delete Book is a primary Shelf action.
+- name: get_book
+  title: Get Book
+  description: Fetch a book and its stats.
+  intent: Get a book
+  annotations:
+    readOnlyHint: true
+    destructiveHint: false
+    idempotentHint: true
+    openWorldHint: true
+  inputs:
+  - name: book_id
+    schema:
+      type: string
+    description: book id
+    required: true
+    maps_to:
+      endpoint_id: GET /books/{book_id}
+      param: book_id
+      in: path
+  fixed: []
+  steps:
+  - endpoint_id: GET /books/{book_id}
+    bind: []
+  - endpoint_id: GET /books/{book_id}/stats
+    bind:
+    - param: book_id
+      in: path
+      ref: $input.book_id
+  output:
+    from_step: 0
+    fields:
+    - author
+    - created_at
+    - file_id
+    - id
+    - title
+    schema:
+      additionalProperties: false
+      properties:
+        author:
+          type: string
+        created_at:
+          type: string
+        file_id:
+          type:
+          - string
+          - 'null'
+        id:
+          type: string
+        title:
+          type: string
+      type: object
+      required:
+      - author
+      - created_at
+      - file_id
+      - id
+      - title
+  verify:
+    example_args:
+      book_id: example
+    depends_on: []
+  rationale: Get Book is a primary Shelf action.
+- name: get_patron
+  title: Get Patron
+  description: Fetch a patron.
+  intent: Get a patron
+  annotations:
+    readOnlyHint: true
+    destructiveHint: false
+    idempotentHint: true
+    openWorldHint: true
+  inputs:
+  - name: patron_id
+    schema:
+      type: string
+    description: patron id
+    required: true
+    maps_to:
+      endpoint_id: GET /patrons/{patron_id}
+      param: patron_id
+      in: path
+  fixed: []
+  steps:
+  - endpoint_id: GET /patrons/{patron_id}
+    bind: []
+  output:
+    from_step: 0
+    fields:
+    - created_at
+    - email
+    - id
+    - name
+    - status
+    schema:
+      additionalProperties: false
+      properties:
+        created_at:
+          type: string
+        email:
+          type: string
+        id:
+          type: string
+        name:
+          type: string
+        status:
+          enum:
+          - active
+          - suspended
+          type: string
+      type: object
+      required:
+      - created_at
+      - email
+      - id
+      - name
+      - status
+  verify:
+    example_args:
+      patron_id: example
+    depends_on: []
+  rationale: Get Patron is a primary Shelf action.
+- name: list_copies
+  title: List Copies
+  description: List copies of a book. Returns the first page.
+  intent: List copies
+  annotations:
+    readOnlyHint: true
+    destructiveHint: false
+    idempotentHint: true
+    openWorldHint: true
+  inputs:
+  - name: book_id
+    schema:
+      type: string
+    description: book id
+    required: true
+    maps_to:
+      endpoint_id: GET /books/{book_id}/copies
+      param: book_id
+      in: path
+  fixed:
+  - endpoint_id: GET /books/{book_id}/copies
+    param: cursor
+    in: query
+    value: null
+    reason: first page
+  - endpoint_id: GET /books/{book_id}/copies
+    param: limit
+    in: query
+    value: 2
+    reason: hidden plumbing
+  steps:
+  - endpoint_id: GET /books/{book_id}/copies
+    bind: []
+  output:
+    from_step: 0
+    fields:
+    - has_more
+    - next_cursor
+    - data
+    schema:
+      additionalProperties: false
+      properties:
+        has_more:
+          type: boolean
+        next_cursor:
+          type:
+          - string
+          - 'null'
+        data:
+          items:
+            $ref: '#/$defs/components_schemas_Copy'
+          type: array
+      type: object
+      required:
+      - has_more
+      - next_cursor
+      - data
+      $defs:
+        components_schemas_Copy:
+          additionalProperties: false
+          properties:
+            barcode:
+              type: string
+            book_id:
+              type: string
+            created_at:
+              type: string
+            id:
+              type: string
+            status:
+              enum:
+              - available
+              - on_loan
+              type: string
+          required:
+          - id
+          - book_id
+          - barcode
+          - status
+          - created_at
+          type: object
+  verify:
+    example_args:
+      book_id: example
+    depends_on: []
+  rationale: List Copies is a primary Shelf action.
+- name: place_hold
+  title: Place Hold
+  description: Place a hold on a book.
+  intent: Place a hold
+  annotations:
+    readOnlyHint: false
+    destructiveHint: false
+    idempotentHint: false
+    openWorldHint: true
+  inputs:
+  - name: book_id
+    schema:
+      type: string
+    description: book id
+    required: true
+    maps_to:
+      endpoint_id: POST /patrons/{patron_id}/holds
+      param: book_id
+      in: body
+  - name: patron_id
+    schema:
+      type: string
+    description: patron id
+    required: true
+    maps_to:
+      endpoint_id: POST /patrons/{patron_id}/holds
+      param: patron_id
+      in: path
+  fixed: []
+  steps:
+  - endpoint_id: POST /patrons/{patron_id}/holds
+    bind: []
+  output:
+    from_step: 0
+    fields:
+    - book_id
+    - created_at
+    - id
+    - patron_id
+    schema:
+      additionalProperties: false
+      properties:
+        book_id:
+          type: string
+        created_at:
+          type: string
+        id:
+          type: string
+        patron_id:
+          type: string
+      type: object
+      required:
+      - book_id
+      - created_at
+      - id
+      - patron_id
+  verify:
+    example_args:
+      book_id: example
+      patron_id: example
+    depends_on: []
+  rationale: Place Hold is a primary Shelf action.
+- name: register_patron
+  title: Register Patron
+  description: Register a patron.
+  intent: Register a patron
+  annotations:
+    readOnlyHint: false
+    destructiveHint: false
+    idempotentHint: false
+    openWorldHint: true
+  inputs:
+  - name: email
+    schema:
+      type: string
+    description: email
+    required: true
+    maps_to:
+      endpoint_id: POST /patrons
+      param: email
+      in: body
+  - name: name
+    schema:
+      type: string
+    description: name
+    required: true
+    maps_to:
+      endpoint_id: POST /patrons
+      param: name
+      in: body
+  fixed: []
+  steps:
+  - endpoint_id: POST /patrons
+    bind: []
+  output:
+    from_step: 0
+    fields:
+    - created_at
+    - email
+    - id
+    - name
+    - status
+    schema:
+      additionalProperties: false
+      properties:
+        created_at:
+          type: string
+        email:
+          type: string
+        id:
+          type: string
+        name:
+          type: string
+        status:
+          enum:
+          - active
+          - suspended
+          type: string
+      type: object
+      required:
+      - created_at
+      - email
+      - id
+      - name
+      - status
+  verify:
+    example_args:
+      email: example
+      name: example
+    depends_on: []
+  rationale: Register Patron is a primary Shelf action.
+- name: renew_loan
+  title: Renew Loan
+  description: Renew a loan.
+  intent: Renew a loan
+  annotations:
+    readOnlyHint: false
+    destructiveHint: false
+    idempotentHint: false
+    openWorldHint: true
+  inputs:
+  - name: loan_id
+    schema:
+      type: string
+    description: loan id
+    required: true
+    maps_to:
+      endpoint_id: POST /loans/{loan_id}/renew
+      param: loan_id
+      in: path
+  fixed: []
+  steps:
+  - endpoint_id: POST /loans/{loan_id}/renew
+    bind: []
+  output:
+    from_step: 0
+    fields:
+    - book_id
+    - copy_id
+    - created_at
+    - due_at
+    - id
+    - patron_id
+    - renew_count
+    - status
+    schema:
+      additionalProperties: false
+      properties:
+        book_id:
+          type: string
+        copy_id:
+          type: string
+        created_at:
+          type: string
+        due_at:
+          type: string
+        id:
+          type: string
+        patron_id:
+          type: string
+        renew_count:
+          minimum: 0
+          type: integer
+        status:
+          enum:
+          - active
+          - returned
+          type: string
+      type: object
+      required:
+      - book_id
+      - copy_id
+      - created_at
+      - due_at
+      - id
+      - patron_id
+      - renew_count
+      - status
+  verify:
+    example_args:
+      loan_id: example
+    depends_on: []
+  rationale: Renew Loan is a primary Shelf action.
+- name: return_loan
+  title: Return Loan
+  description: Return a loan.
+  intent: Return a loan
+  annotations:
+    readOnlyHint: false
+    destructiveHint: false
+    idempotentHint: false
+    openWorldHint: true
+  inputs:
+  - name: loan_id
+    schema:
+      type: string
+    description: loan id
+    required: true
+    maps_to:
+      endpoint_id: POST /loans/{loan_id}/return
+      param: loan_id
+      in: path
+  fixed: []
+  steps:
+  - endpoint_id: POST /loans/{loan_id}/return
+    bind: []
+  output:
+    from_step: 0
+    fields:
+    - book_id
+    - copy_id
+    - created_at
+    - due_at
+    - id
+    - patron_id
+    - renew_count
+    - status
+    schema:
+      additionalProperties: false
+      properties:
+        book_id:
+          type: string
+        copy_id:
+          type: string
+        created_at:
+          type: string
+        due_at:
+          type: string
+        id:
+          type: string
+        patron_id:
+          type: string
+        renew_count:
+          minimum: 0
+          type: integer
+        status:
+          enum:
+          - active
+          - returned
+          type: string
+      type: object
+      required:
+      - book_id
+      - copy_id
+      - created_at
+      - due_at
+      - id
+      - patron_id
+      - renew_count
+      - status
+  verify:
+    example_args:
+      loan_id: example
+    depends_on: []
+  rationale: Return Loan is a primary Shelf action.
+- name: review_book
+  title: Review Book
+  description: Review a book.
+  intent: Review a book
+  annotations:
+    readOnlyHint: false
+    destructiveHint: false
+    idempotentHint: false
+    openWorldHint: true
+  inputs:
+  - name: body
+    schema:
+      type: string
+    description: body
+    required: true
+    maps_to:
+      endpoint_id: POST /books/{book_id}/reviews
+      param: body
+      in: body
+  - name: book_id
+    schema:
+      type: string
+    description: book id
+    required: true
+    maps_to:
+      endpoint_id: POST /books/{book_id}/reviews
+      param: book_id
+      in: path
+  - name: patron_id
+    schema:
+      type: string
+    description: patron id
+    required: true
+    maps_to:
+      endpoint_id: POST /books/{book_id}/reviews
+      param: patron_id
+      in: body
+  - name: rating
+    schema:
+      maximum: 5
+      minimum: 1
+      type: integer
+    description: rating
+    required: true
+    maps_to:
+      endpoint_id: POST /books/{book_id}/reviews
+      param: rating
+      in: body
+  fixed: []
+  steps:
+  - endpoint_id: POST /books/{book_id}/reviews
+    bind: []
+  output:
+    from_step: 0
+    fields:
+    - body
+    - book_id
+    - created_at
+    - id
+    - patron_id
+    - rating
+    schema:
+      additionalProperties: false
+      properties:
+        body:
+          type: string
+        book_id:
+          type: string
+        created_at:
+          type: string
+        id:
+          type: string
+        patron_id:
+          type: string
+        rating:
+          maximum: 5
+          minimum: 1
+          type: integer
+      type: object
+      required:
+      - body
+      - book_id
+      - created_at
+      - id
+      - patron_id
+      - rating
+  verify:
+    example_args:
+      body: example
+      book_id: example
+      patron_id: example
+      rating: 1
+    depends_on: []
+  rationale: Review Book is a primary Shelf action.
+- name: search_books
+  title: Search Books
+  description: Search the catalog. Returns the first page.
+  intent: Search books
+  annotations:
+    readOnlyHint: true
+    destructiveHint: false
+    idempotentHint: true
+    openWorldHint: true
+  inputs: []
+  fixed:
+  - endpoint_id: GET /books
+    param: cursor
+    in: query
+    value: null
+    reason: first page
+  - endpoint_id: GET /books
+    param: limit
+    in: query
+    value: 2
+    reason: hidden plumbing
+  steps:
+  - endpoint_id: GET /books
+    bind: []
+  output:
+    from_step: 0
+    fields:
+    - has_more
+    - next_cursor
+    - data
+    schema:
+      additionalProperties: false
+      properties:
+        has_more:
+          type: boolean
+        next_cursor:
+          type:
+          - string
+          - 'null'
+        data:
+          items:
+            $ref: '#/$defs/components_schemas_Book'
+          type: array
+      type: object
+      required:
+      - has_more
+      - next_cursor
+      - data
+      $defs:
+        components_schemas_Book:
+          additionalProperties: false
+          properties:
+            author:
+              type: string
+            created_at:
+              type: string
+            file_id:
+              type:
+              - string
+              - 'null'
+            id:
+              type: string
+            title:
+              type: string
+          required:
+          - id
+          - title
+          - author
+          - created_at
+          - file_id
+          type: object
+  verify:
+    example_args: {}
+    depends_on: []
+  rationale: Search Books is a primary Shelf action.
+- name: update_book
+  title: Update Book
+  description: Update a book's title or author.
+  intent: Update a book
+  annotations:
+    readOnlyHint: false
+    destructiveHint: false
+    idempotentHint: false
+    openWorldHint: true
+  inputs:
+  - name: book_id
+    schema:
+      type: string
+    description: book id
+    required: true
+    maps_to:
+      endpoint_id: PATCH /books/{book_id}
+      param: book_id
+      in: path
+  - name: title
+    schema:
+      type: string
+    description: title
+    required: true
+    maps_to:
+      endpoint_id: PATCH /books/{book_id}
+      param: title
+      in: body
+  fixed: []
+  steps:
+  - endpoint_id: PATCH /books/{book_id}
+    bind: []
+  output:
+    from_step: 0
+    fields:
+    - author
+    - created_at
+    - file_id
+    - id
+    - title
+    schema:
+      additionalProperties: false
+      properties:
+        author:
+          type: string
+        created_at:
+          type: string
+        file_id:
+          type:
+          - string
+          - 'null'
+        id:
+          type: string
+        title:
+          type: string
+      type: object
+      required:
+      - author
+      - created_at
+      - file_id
+      - id
+      - title
+  verify:
+    example_args:
+      book_id: example
+      title: example
+    depends_on: []
+  rationale: Update Book is a primary Shelf action.
+- name: upload_book_file
+  title: Upload Book File
+  description: Upload a file and attach it to a book.
+  intent: Upload a book file
+  annotations:
+    readOnlyHint: false
+    destructiveHint: false
+    idempotentHint: false
+    openWorldHint: true
+  inputs:
+  - name: book_id
+    schema:
+      type: string
+    description: book id
+    required: true
+    maps_to:
+      endpoint_id: PUT /books/{book_id}/file
+      param: book_id
+      in: path
+  - name: content_type
+    schema:
+      type: string
+    description: content type
+    required: true
+    maps_to:
+      endpoint_id: POST /uploads
+      param: content_type
+      in: body
+  - name: data
+    schema:
+      contentEncoding: base64
+      type: string
+    description: data
+    required: true
+    maps_to:
+      endpoint_id: PUT /uploads/{upload_id}/parts/{part_number}
+      param: data
+      in: body
+  - name: filename
+    schema:
+      type: string
+    description: filename
+    required: true
+    maps_to:
+      endpoint_id: POST /uploads
+      param: filename
+      in: body
+  fixed:
+  - endpoint_id: PUT /uploads/{upload_id}/parts/{part_number}
+    param: part_number
+    in: path
+    value: 1
+    reason: single part
+  steps:
+  - endpoint_id: POST /uploads
+    bind: []
+  - endpoint_id: PUT /uploads/{upload_id}/parts/{part_number}
+    bind:
+    - param: upload_id
+      in: path
+      ref: $steps[0].body.id
+  - endpoint_id: POST /uploads/{upload_id}/complete
+    bind:
+    - param: upload_id
+      in: path
+      ref: $steps[0].body.id
+  - endpoint_id: PUT /books/{book_id}/file
+    bind:
+    - param: upload_id
+      in: body
+      ref: $steps[0].body.id
+  output:
+    from_step: 3
+    fields:
+    - book_id
+    - file_id
+    schema:
+      additionalProperties: false
+      properties:
+        book_id:
+          type: string
+        file_id:
+          type: string
+      type: object
+      required:
+      - book_id
+      - file_id
+  verify:
+    example_args:
+      book_id: example
+      content_type: example
+      data: example
+      filename: example
+    depends_on: []
+  rationale: Upload Book File is a primary Shelf action.
+excluded:
+- endpoint_id: DELETE /copies/{copy_id}
+  reason: low-value
+  note: Omitted because it does not map to a primary user intent.
+- endpoint_id: DELETE /holds/{hold_id}
+  reason: low-value
+  note: Omitted because it does not map to a primary user intent.
+- endpoint_id: DELETE /patrons/{patron_id}
+  reason: low-value
+  note: Omitted because it does not map to a primary user intent.
+- endpoint_id: DELETE /reviews/{review_id}
+  reason: low-value
+  note: Omitted because it does not map to a primary user intent.
+- endpoint_id: GET /admin/audit-events
+  reason: admin
+  note: Admin operations are excluded unless the matching tag is included.
+- endpoint_id: GET /admin/circulation
+  reason: admin
+  note: Admin operations are excluded unless the matching tag is included.
+- endpoint_id: GET /books/{book_id}/loans
+  reason: low-value
+  note: Omitted because it does not map to a primary user intent.
+- endpoint_id: GET /books/{book_id}/page-count
+  reason: deprecated
+  note: Deprecated operations are excluded unless the matching tag is included.
+- endpoint_id: GET /books/{book_id}/reviews
+  reason: low-value
+  note: Omitted because it does not map to a primary user intent.
+- endpoint_id: GET /copies/{copy_id}
+  reason: low-value
+  note: Omitted because it does not map to a primary user intent.
+- endpoint_id: GET /loans
+  reason: low-value
+  note: Omitted because it does not map to a primary user intent.
+- endpoint_id: GET /loans/{loan_id}
+  reason: low-value
+  note: Omitted because it does not map to a primary user intent.
+- endpoint_id: GET /patrons
+  reason: low-value
+  note: Omitted because it does not map to a primary user intent.
+- endpoint_id: GET /patrons/{patron_id}/holds
+  reason: low-value
+  note: Omitted because it does not map to a primary user intent.
+- endpoint_id: GET /patrons/{patron_id}/loans
+  reason: low-value
+  note: Omitted because it does not map to a primary user intent.
+- endpoint_id: GET /reviews/{review_id}
+  reason: low-value
+  note: Omitted because it does not map to a primary user intent.
+- endpoint_id: PATCH /copies/{copy_id}
+  reason: low-value
+  note: Omitted because it does not map to a primary user intent.
+- endpoint_id: PATCH /patrons/{patron_id}
+  reason: low-value
+  note: Omitted because it does not map to a primary user intent.
+- endpoint_id: PATCH /reviews/{review_id}
+  reason: low-value
+  note: Omitted because it does not map to a primary user intent.
+- endpoint_id: POST /admin/patrons/{patron_id}/reinstate
+  reason: admin
+  note: Admin operations are excluded unless the matching tag is included.
+- endpoint_id: POST /admin/patrons/{patron_id}/suspend
+  reason: admin
+  note: Admin operations are excluded unless the matching tag is included.
+curation:
+  mode: agent
+  model: claude-opus-5-5
+  criteria_version: criteria-v1
+  input_hash: 4dfdadd5dee3a7f77acc44b1831143475bcfb567cf87f73160c100e2af1e35af
+  usage:
+    input_tokens: 1600
+    output_tokens: 320
+    cache_read_input_tokens: 0
+    cache_write_input_tokens: 0
+    estimated_usd: 0.0128
+  fallback_tools: []

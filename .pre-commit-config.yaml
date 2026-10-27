@@ -13,6 +13,7 @@ repos:
         pass_filenames: false
         args: [--strict, doc2mcp]
         additional_dependencies:
+          - anthropic==2.3.0
           - typer==0.27.3
           - pydantic==2.14.1
           - PyYAML==6.0.3

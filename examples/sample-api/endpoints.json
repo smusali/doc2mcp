@@ -1,0 +1,3100 @@
+{
+  "defs": {
+    "components_schemas_AuditEvent": {
+      "additionalProperties": false,
+      "properties": {
+        "action": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "action",
+        "created_at"
+      ],
+      "type": "object"
+    },
+    "components_schemas_AuditPage": {
+      "allOf": [
+        {
+          "$ref": "#/defs/components_schemas_Page"
+        },
+        {
+          "properties": {
+            "data": {
+              "items": {
+                "$ref": "#/defs/components_schemas_AuditEvent"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "type": "object"
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "components_schemas_Book": {
+      "additionalProperties": false,
+      "properties": {
+        "author": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "file_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "id": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "title",
+        "author",
+        "created_at",
+        "file_id"
+      ],
+      "type": "object"
+    },
+    "components_schemas_BookCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "author": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "title",
+        "author"
+      ],
+      "type": "object"
+    },
+    "components_schemas_BookFile": {
+      "additionalProperties": false,
+      "properties": {
+        "book_id": {
+          "type": "string"
+        },
+        "file_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "book_id",
+        "file_id"
+      ],
+      "type": "object"
+    },
+    "components_schemas_BookFileAttach": {
+      "additionalProperties": false,
+      "properties": {
+        "upload_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "upload_id"
+      ],
+      "type": "object"
+    },
+    "components_schemas_BookPage": {
+      "allOf": [
+        {
+          "$ref": "#/defs/components_schemas_Page"
+        },
+        {
+          "properties": {
+            "data": {
+              "items": {
+                "$ref": "#/defs/components_schemas_Book"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "type": "object"
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "components_schemas_BookPageCount": {
+      "additionalProperties": false,
+      "properties": {
+        "book_id": {
+          "type": "string"
+        },
+        "page_count": {
+          "description": "Number of pages.",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "book_id",
+        "page_count"
+      ],
+      "type": "object"
+    },
+    "components_schemas_BookStats": {
+      "additionalProperties": false,
+      "properties": {
+        "book_id": {
+          "type": "string"
+        },
+        "page_count": {
+          "description": "Number of pages.",
+          "examples": [
+            320
+          ],
+          "type": "integer"
+        },
+        "word_count": {
+          "description": "Number of words.",
+          "type": "integer"
+        }
+      },
+      "required": [
+        "book_id",
+        "page_count",
+        "word_count"
+      ],
+      "type": "object"
+    },
+    "components_schemas_BookUpdate": {
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "author": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "components_schemas_Circulation": {
+      "additionalProperties": false,
+      "properties": {
+        "active_loans": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "open_holds": {
+          "minimum": 0,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "active_loans",
+        "open_holds"
+      ],
+      "type": "object"
+    },
+    "components_schemas_Copy": {
+      "additionalProperties": false,
+      "properties": {
+        "barcode": {
+          "type": "string"
+        },
+        "book_id": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "available",
+            "on_loan"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "book_id",
+        "barcode",
+        "status",
+        "created_at"
+      ],
+      "type": "object"
+    },
+    "components_schemas_CopyCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "barcode": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "barcode"
+      ],
+      "type": "object"
+    },
+    "components_schemas_CopyPage": {
+      "allOf": [
+        {
+          "$ref": "#/defs/components_schemas_Page"
+        },
+        {
+          "properties": {
+            "data": {
+              "items": {
+                "$ref": "#/defs/components_schemas_Copy"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "type": "object"
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "components_schemas_CopyUpdate": {
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "barcode": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "components_schemas_Deletion": {
+      "additionalProperties": false,
+      "properties": {
+        "deleted": {
+          "const": true,
+          "type": "boolean"
+        },
+        "id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "deleted"
+      ],
+      "type": "object"
+    },
+    "components_schemas_Error": {
+      "additionalProperties": false,
+      "properties": {
+        "error": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "error"
+      ],
+      "type": "object"
+    },
+    "components_schemas_Hold": {
+      "additionalProperties": false,
+      "properties": {
+        "book_id": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "patron_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "book_id",
+        "patron_id",
+        "created_at"
+      ],
+      "type": "object"
+    },
+    "components_schemas_HoldCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "book_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "book_id"
+      ],
+      "type": "object"
+    },
+    "components_schemas_HoldPage": {
+      "allOf": [
+        {
+          "$ref": "#/defs/components_schemas_Page"
+        },
+        {
+          "properties": {
+            "data": {
+              "items": {
+                "$ref": "#/defs/components_schemas_Hold"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "type": "object"
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "components_schemas_Loan": {
+      "additionalProperties": false,
+      "properties": {
+        "book_id": {
+          "type": "string"
+        },
+        "copy_id": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "due_at": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "patron_id": {
+          "type": "string"
+        },
+        "renew_count": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "status": {
+          "enum": [
+            "active",
+            "returned"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "copy_id",
+        "book_id",
+        "patron_id",
+        "status",
+        "due_at",
+        "renew_count",
+        "created_at"
+      ],
+      "type": "object"
+    },
+    "components_schemas_LoanCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "copy_id": {
+          "type": "string"
+        },
+        "patron_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "copy_id",
+        "patron_id"
+      ],
+      "type": "object"
+    },
+    "components_schemas_LoanPage": {
+      "allOf": [
+        {
+          "$ref": "#/defs/components_schemas_Page"
+        },
+        {
+          "properties": {
+            "data": {
+              "items": {
+                "$ref": "#/defs/components_schemas_Loan"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "type": "object"
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "components_schemas_Page": {
+      "properties": {
+        "has_more": {
+          "type": "boolean"
+        },
+        "next_cursor": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "has_more",
+        "next_cursor"
+      ],
+      "type": "object"
+    },
+    "components_schemas_Patron": {
+      "additionalProperties": false,
+      "properties": {
+        "created_at": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "status": {
+          "enum": [
+            "active",
+            "suspended"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "email",
+        "status",
+        "created_at"
+      ],
+      "type": "object"
+    },
+    "components_schemas_PatronCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "email"
+      ],
+      "type": "object"
+    },
+    "components_schemas_PatronPage": {
+      "allOf": [
+        {
+          "$ref": "#/defs/components_schemas_Page"
+        },
+        {
+          "properties": {
+            "data": {
+              "items": {
+                "$ref": "#/defs/components_schemas_Patron"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "type": "object"
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "components_schemas_PatronUpdate": {
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "email": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "components_schemas_Review": {
+      "additionalProperties": false,
+      "properties": {
+        "body": {
+          "type": "string"
+        },
+        "book_id": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "patron_id": {
+          "type": "string"
+        },
+        "rating": {
+          "maximum": 5,
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "id",
+        "book_id",
+        "patron_id",
+        "rating",
+        "body",
+        "created_at"
+      ],
+      "type": "object"
+    },
+    "components_schemas_ReviewCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "body": {
+          "type": "string"
+        },
+        "patron_id": {
+          "type": "string"
+        },
+        "rating": {
+          "maximum": 5,
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "required": [
+        "patron_id",
+        "rating",
+        "body"
+      ],
+      "type": "object"
+    },
+    "components_schemas_ReviewPage": {
+      "allOf": [
+        {
+          "$ref": "#/defs/components_schemas_Page"
+        },
+        {
+          "properties": {
+            "data": {
+              "items": {
+                "$ref": "#/defs/components_schemas_Review"
+              },
+              "type": "array"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "type": "object"
+        }
+      ],
+      "unevaluatedProperties": false
+    },
+    "components_schemas_ReviewUpdate": {
+      "additionalProperties": false,
+      "minProperties": 1,
+      "properties": {
+        "body": {
+          "type": "string"
+        },
+        "rating": {
+          "maximum": 5,
+          "minimum": 1,
+          "type": "integer"
+        }
+      },
+      "type": "object"
+    },
+    "components_schemas_Upload": {
+      "additionalProperties": false,
+      "properties": {
+        "byte_count": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "content_type": {
+          "type": "string"
+        },
+        "created_at": {
+          "type": "string"
+        },
+        "filename": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "part_count": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "status": {
+          "enum": [
+            "open",
+            "complete"
+          ],
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "filename",
+        "content_type",
+        "status",
+        "part_count",
+        "byte_count",
+        "created_at"
+      ],
+      "type": "object"
+    },
+    "components_schemas_UploadCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "content_type": {
+          "type": "string"
+        },
+        "filename": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "filename",
+        "content_type"
+      ],
+      "type": "object"
+    },
+    "components_schemas_UploadPart": {
+      "additionalProperties": false,
+      "properties": {
+        "part_number": {
+          "minimum": 1,
+          "type": "integer"
+        },
+        "size": {
+          "minimum": 0,
+          "type": "integer"
+        },
+        "upload_id": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "upload_id",
+        "part_number",
+        "size"
+      ],
+      "type": "object"
+    },
+    "components_schemas_UploadPartCreate": {
+      "additionalProperties": false,
+      "properties": {
+        "data": {
+          "contentEncoding": "base64",
+          "type": "string"
+        }
+      },
+      "required": [
+        "data"
+      ],
+      "type": "object"
+    }
+  },
+  "endpoints": [
+    {
+      "deprecated": false,
+      "id": "GET /admin/audit-events",
+      "method": "GET",
+      "operation_id": "listAuditEvents",
+      "parameters": [
+        {
+          "description": "Opaque id of the last item on the previous page. Omit it to read the first page.",
+          "explode": true,
+          "in": "query",
+          "name": "cursor",
+          "required": false,
+          "schema": {
+            "type": "string"
+          },
+          "style": "form"
+        },
+        {
+          "description": "Maximum number of items to return.",
+          "explode": true,
+          "in": "query",
+          "name": "limit",
+          "required": false,
+          "schema": {
+            "default": 2,
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "style": "form"
+        }
+      ],
+      "path": "/admin/audit-events",
+      "provenance": "/paths/~1admin~1audit-events/get",
+      "responses": {
+        "200": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_AuditPage"
+          }
+        },
+        "400": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "401": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        }
+      },
+      "security": [
+        {
+          "apiKeyAuth": []
+        }
+      ],
+      "summary": "List audit events",
+      "tags": [
+        "admin"
+      ]
+    },
+    {
+      "deprecated": false,
+      "id": "GET /admin/circulation",
+      "method": "GET",
+      "operation_id": "getCirculation",
+      "parameters": [],
+      "path": "/admin/circulation",
+      "provenance": "/paths/~1admin~1circulation/get",
+      "responses": {
+        "200": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Circulation"
+          }
+        },
+        "401": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        }
+      },
+      "security": [
+        {
+          "apiKeyAuth": []
+        }
+      ],
+      "summary": "Read circulation counts",
+      "tags": [
+        "admin"
+      ]
+    },
+    {
+      "deprecated": false,
+      "id": "POST /admin/patrons/{patron_id}/reinstate",
+      "method": "POST",
+      "operation_id": "reinstatePatron",
+      "parameters": [
+        {
+          "explode": false,
+          "in": "path",
+          "name": "patron_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "style": "simple"
+        }
+      ],
+      "path": "/admin/patrons/{patron_id}/reinstate",
+      "provenance": "/paths/~1admin~1patrons~1{patron_id}~1reinstate/post",
+      "responses": {
+        "200": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Patron"
+          }
+        },
+        "401": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "404": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        }
+      },
+      "security": [
+        {
+          "apiKeyAuth": []
+        }
+      ],
+      "summary": "Reinstate a patron",
+      "tags": [
+        "admin"
+      ]
+    },
+    {
+      "deprecated": false,
+      "id": "POST /admin/patrons/{patron_id}/suspend",
+      "method": "POST",
+      "operation_id": "suspendPatron",
+      "parameters": [
+        {
+          "explode": false,
+          "in": "path",
+          "name": "patron_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "style": "simple"
+        }
+      ],
+      "path": "/admin/patrons/{patron_id}/suspend",
+      "provenance": "/paths/~1admin~1patrons~1{patron_id}~1suspend/post",
+      "responses": {
+        "200": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Patron"
+          }
+        },
+        "401": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "404": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        }
+      },
+      "security": [
+        {
+          "apiKeyAuth": []
+        }
+      ],
+      "summary": "Suspend a patron",
+      "tags": [
+        "admin"
+      ]
+    },
+    {
+      "deprecated": false,
+      "id": "GET /books",
+      "method": "GET",
+      "operation_id": "listBooks",
+      "parameters": [
+        {
+          "description": "Opaque id of the last item on the previous page. Omit it to read the first page.",
+          "explode": true,
+          "in": "query",
+          "name": "cursor",
+          "required": false,
+          "schema": {
+            "type": "string"
+          },
+          "style": "form"
+        },
+        {
+          "description": "Maximum number of items to return.",
+          "explode": true,
+          "in": "query",
+          "name": "limit",
+          "required": false,
+          "schema": {
+            "default": 2,
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "style": "form"
+        }
+      ],
+      "path": "/books",
+      "provenance": "/paths/~1books/get",
+      "responses": {
+        "200": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_BookPage"
+          }
+        },
+        "400": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "401": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        }
+      },
+      "security": [
+        {
+          "apiKeyAuth": []
+        }
+      ],
+      "summary": "List books",
+      "tags": [
+        "books"
+      ]
+    },
+    {
+      "deprecated": false,
+      "id": "POST /books",
+      "method": "POST",
+      "operation_id": "createBook",
+      "parameters": [],
+      "path": "/books",
+      "provenance": "/paths/~1books/post",
+      "request_body": {
+        "content_type": "application/json",
+        "required": true,
+        "schema": {
+          "$ref": "#/defs/components_schemas_BookCreate"
+        }
+      },
+      "responses": {
+        "201": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Book"
+          }
+        },
+        "400": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "401": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        }
+      },
+      "security": [
+        {
+          "apiKeyAuth": []
+        }
+      ],
+      "summary": "Create a book",
+      "tags": [
+        "books"
+      ]
+    },
+    {
+      "deprecated": false,
+      "id": "DELETE /books/{book_id}",
+      "method": "DELETE",
+      "operation_id": "deleteBook",
+      "parameters": [
+        {
+          "explode": false,
+          "in": "path",
+          "name": "book_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "style": "simple"
+        }
+      ],
+      "path": "/books/{book_id}",
+      "provenance": "/paths/~1books~1{book_id}/delete",
+      "responses": {
+        "200": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Deletion"
+          }
+        },
+        "400": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "401": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "404": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        }
+      },
+      "security": [
+        {
+          "apiKeyAuth": []
+        }
+      ],
+      "summary": "Delete a book",
+      "tags": [
+        "books"
+      ]
+    },
+    {
+      "deprecated": false,
+      "id": "GET /books/{book_id}",
+      "method": "GET",
+      "operation_id": "getBook",
+      "parameters": [
+        {
+          "explode": false,
+          "in": "path",
+          "name": "book_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "style": "simple"
+        }
+      ],
+      "path": "/books/{book_id}",
+      "provenance": "/paths/~1books~1{book_id}/get",
+      "responses": {
+        "200": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Book"
+          }
+        },
+        "401": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "404": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        }
+      },
+      "security": [
+        {
+          "apiKeyAuth": []
+        }
+      ],
+      "summary": "Read a book",
+      "tags": [
+        "books"
+      ]
+    },
+    {
+      "deprecated": false,
+      "id": "PATCH /books/{book_id}",
+      "method": "PATCH",
+      "operation_id": "updateBook",
+      "parameters": [
+        {
+          "explode": false,
+          "in": "path",
+          "name": "book_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "style": "simple"
+        }
+      ],
+      "path": "/books/{book_id}",
+      "provenance": "/paths/~1books~1{book_id}/patch",
+      "request_body": {
+        "content_type": "application/json",
+        "required": true,
+        "schema": {
+          "$ref": "#/defs/components_schemas_BookUpdate"
+        }
+      },
+      "responses": {
+        "200": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Book"
+          }
+        },
+        "400": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "401": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "404": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        }
+      },
+      "security": [
+        {
+          "apiKeyAuth": []
+        }
+      ],
+      "summary": "Update a book",
+      "tags": [
+        "books"
+      ]
+    },
+    {
+      "deprecated": false,
+      "id": "GET /books/{book_id}/copies",
+      "method": "GET",
+      "operation_id": "listCopies",
+      "parameters": [
+        {
+          "explode": false,
+          "in": "path",
+          "name": "book_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "style": "simple"
+        },
+        {
+          "description": "Opaque id of the last item on the previous page. Omit it to read the first page.",
+          "explode": true,
+          "in": "query",
+          "name": "cursor",
+          "required": false,
+          "schema": {
+            "type": "string"
+          },
+          "style": "form"
+        },
+        {
+          "description": "Maximum number of items to return.",
+          "explode": true,
+          "in": "query",
+          "name": "limit",
+          "required": false,
+          "schema": {
+            "default": 2,
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "style": "form"
+        }
+      ],
+      "path": "/books/{book_id}/copies",
+      "provenance": "/paths/~1books~1{book_id}~1copies/get",
+      "responses": {
+        "200": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_CopyPage"
+          }
+        },
+        "400": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "401": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "404": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        }
+      },
+      "security": [
+        {
+          "apiKeyAuth": []
+        }
+      ],
+      "summary": "List copies of a book",
+      "tags": [
+        "copies"
+      ]
+    },
+    {
+      "deprecated": false,
+      "id": "POST /books/{book_id}/copies",
+      "method": "POST",
+      "operation_id": "createCopy",
+      "parameters": [
+        {
+          "explode": false,
+          "in": "path",
+          "name": "book_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "style": "simple"
+        }
+      ],
+      "path": "/books/{book_id}/copies",
+      "provenance": "/paths/~1books~1{book_id}~1copies/post",
+      "request_body": {
+        "content_type": "application/json",
+        "required": true,
+        "schema": {
+          "$ref": "#/defs/components_schemas_CopyCreate"
+        }
+      },
+      "responses": {
+        "201": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Copy"
+          }
+        },
+        "400": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "401": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "404": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        }
+      },
+      "security": [
+        {
+          "apiKeyAuth": []
+        }
+      ],
+      "summary": "Add a copy of a book",
+      "tags": [
+        "copies"
+      ]
+    },
+    {
+      "deprecated": false,
+      "id": "PUT /books/{book_id}/file",
+      "method": "PUT",
+      "operation_id": "attachBookFile",
+      "parameters": [
+        {
+          "explode": false,
+          "in": "path",
+          "name": "book_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "style": "simple"
+        }
+      ],
+      "path": "/books/{book_id}/file",
+      "provenance": "/paths/~1books~1{book_id}~1file/put",
+      "request_body": {
+        "content_type": "application/json",
+        "required": true,
+        "schema": {
+          "$ref": "#/defs/components_schemas_BookFileAttach"
+        }
+      },
+      "responses": {
+        "200": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_BookFile"
+          }
+        },
+        "400": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "401": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "404": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        }
+      },
+      "security": [
+        {
+          "apiKeyAuth": []
+        }
+      ],
+      "summary": "Attach a completed upload to a book",
+      "tags": [
+        "books"
+      ]
+    },
+    {
+      "deprecated": false,
+      "id": "GET /books/{book_id}/loans",
+      "method": "GET",
+      "operation_id": "listBookLoans",
+      "parameters": [
+        {
+          "explode": false,
+          "in": "path",
+          "name": "book_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "style": "simple"
+        },
+        {
+          "description": "Opaque id of the last item on the previous page. Omit it to read the first page.",
+          "explode": true,
+          "in": "query",
+          "name": "cursor",
+          "required": false,
+          "schema": {
+            "type": "string"
+          },
+          "style": "form"
+        },
+        {
+          "description": "Maximum number of items to return.",
+          "explode": true,
+          "in": "query",
+          "name": "limit",
+          "required": false,
+          "schema": {
+            "default": 2,
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "style": "form"
+        }
+      ],
+      "path": "/books/{book_id}/loans",
+      "provenance": "/paths/~1books~1{book_id}~1loans/get",
+      "responses": {
+        "200": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_LoanPage"
+          }
+        },
+        "400": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "401": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "404": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        }
+      },
+      "security": [
+        {
+          "apiKeyAuth": []
+        }
+      ],
+      "summary": "List loans of a book",
+      "tags": [
+        "loans"
+      ]
+    },
+    {
+      "deprecated": true,
+      "description": "Superseded by getBookStats.",
+      "id": "GET /books/{book_id}/page-count",
+      "method": "GET",
+      "operation_id": "getBookPageCount",
+      "parameters": [
+        {
+          "explode": false,
+          "in": "path",
+          "name": "book_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "style": "simple"
+        }
+      ],
+      "path": "/books/{book_id}/page-count",
+      "provenance": "/paths/~1books~1{book_id}~1page-count/get",
+      "responses": {
+        "200": {
+          "content_type": "application/json",
+          "examples": [
+            {
+              "book_id": "book_001",
+              "page_count": 320
+            }
+          ],
+          "schema": {
+            "$ref": "#/defs/components_schemas_BookPageCount"
+          }
+        },
+        "401": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "404": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        }
+      },
+      "security": [
+        {
+          "apiKeyAuth": []
+        }
+      ],
+      "summary": "Read a book's page count",
+      "tags": [
+        "books"
+      ]
+    },
+    {
+      "deprecated": false,
+      "id": "GET /books/{book_id}/reviews",
+      "method": "GET",
+      "operation_id": "listReviews",
+      "parameters": [
+        {
+          "explode": false,
+          "in": "path",
+          "name": "book_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "style": "simple"
+        },
+        {
+          "description": "Opaque id of the last item on the previous page. Omit it to read the first page.",
+          "explode": true,
+          "in": "query",
+          "name": "cursor",
+          "required": false,
+          "schema": {
+            "type": "string"
+          },
+          "style": "form"
+        },
+        {
+          "description": "Maximum number of items to return.",
+          "explode": true,
+          "in": "query",
+          "name": "limit",
+          "required": false,
+          "schema": {
+            "default": 2,
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "style": "form"
+        }
+      ],
+      "path": "/books/{book_id}/reviews",
+      "provenance": "/paths/~1books~1{book_id}~1reviews/get",
+      "responses": {
+        "200": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_ReviewPage"
+          }
+        },
+        "400": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "401": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "404": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        }
+      },
+      "security": [
+        {
+          "apiKeyAuth": []
+        }
+      ],
+      "summary": "List reviews of a book",
+      "tags": [
+        "reviews"
+      ]
+    },
+    {
+      "deprecated": false,
+      "id": "POST /books/{book_id}/reviews",
+      "method": "POST",
+      "operation_id": "createReview",
+      "parameters": [
+        {
+          "explode": false,
+          "in": "path",
+          "name": "book_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "style": "simple"
+        }
+      ],
+      "path": "/books/{book_id}/reviews",
+      "provenance": "/paths/~1books~1{book_id}~1reviews/post",
+      "request_body": {
+        "content_type": "application/json",
+        "required": true,
+        "schema": {
+          "$ref": "#/defs/components_schemas_ReviewCreate"
+        }
+      },
+      "responses": {
+        "201": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Review"
+          }
+        },
+        "400": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "401": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "404": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        }
+      },
+      "security": [
+        {
+          "apiKeyAuth": []
+        }
+      ],
+      "summary": "Review a book",
+      "tags": [
+        "reviews"
+      ]
+    },
+    {
+      "deprecated": false,
+      "id": "GET /books/{book_id}/stats",
+      "method": "GET",
+      "operation_id": "getBookStats",
+      "parameters": [
+        {
+          "explode": false,
+          "in": "path",
+          "name": "book_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "style": "simple"
+        }
+      ],
+      "path": "/books/{book_id}/stats",
+      "provenance": "/paths/~1books~1{book_id}~1stats/get",
+      "responses": {
+        "200": {
+          "content_type": "application/json",
+          "examples": [
+            {
+              "book_id": "book_001",
+              "page_count": 320,
+              "word_count": 84000
+            }
+          ],
+          "schema": {
+            "$ref": "#/defs/components_schemas_BookStats"
+          }
+        },
+        "401": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "404": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        }
+      },
+      "security": [
+        {
+          "apiKeyAuth": []
+        }
+      ],
+      "summary": "Read book statistics",
+      "tags": [
+        "books"
+      ]
+    },
+    {
+      "deprecated": false,
+      "id": "DELETE /copies/{copy_id}",
+      "method": "DELETE",
+      "operation_id": "deleteCopy",
+      "parameters": [
+        {
+          "explode": false,
+          "in": "path",
+          "name": "copy_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "style": "simple"
+        }
+      ],
+      "path": "/copies/{copy_id}",
+      "provenance": "/paths/~1copies~1{copy_id}/delete",
+      "responses": {
+        "200": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Deletion"
+          }
+        },
+        "400": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "401": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "404": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        }
+      },
+      "security": [
+        {
+          "apiKeyAuth": []
+        }
+      ],
+      "summary": "Delete a copy",
+      "tags": [
+        "copies"
+      ]
+    },
+    {
+      "deprecated": false,
+      "id": "GET /copies/{copy_id}",
+      "method": "GET",
+      "operation_id": "getCopy",
+      "parameters": [
+        {
+          "explode": false,
+          "in": "path",
+          "name": "copy_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "style": "simple"
+        }
+      ],
+      "path": "/copies/{copy_id}",
+      "provenance": "/paths/~1copies~1{copy_id}/get",
+      "responses": {
+        "200": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Copy"
+          }
+        },
+        "401": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "404": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        }
+      },
+      "security": [
+        {
+          "apiKeyAuth": []
+        }
+      ],
+      "summary": "Read a copy",
+      "tags": [
+        "copies"
+      ]
+    },
+    {
+      "deprecated": false,
+      "id": "PATCH /copies/{copy_id}",
+      "method": "PATCH",
+      "operation_id": "updateCopy",
+      "parameters": [
+        {
+          "explode": false,
+          "in": "path",
+          "name": "copy_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "style": "simple"
+        }
+      ],
+      "path": "/copies/{copy_id}",
+      "provenance": "/paths/~1copies~1{copy_id}/patch",
+      "request_body": {
+        "content_type": "application/json",
+        "required": true,
+        "schema": {
+          "$ref": "#/defs/components_schemas_CopyUpdate"
+        }
+      },
+      "responses": {
+        "200": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Copy"
+          }
+        },
+        "400": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "401": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "404": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        }
+      },
+      "security": [
+        {
+          "apiKeyAuth": []
+        }
+      ],
+      "summary": "Update a copy",
+      "tags": [
+        "copies"
+      ]
+    },
+    {
+      "deprecated": false,
+      "id": "DELETE /holds/{hold_id}",
+      "method": "DELETE",
+      "operation_id": "deleteHold",
+      "parameters": [
+        {
+          "explode": false,
+          "in": "path",
+          "name": "hold_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "style": "simple"
+        }
+      ],
+      "path": "/holds/{hold_id}",
+      "provenance": "/paths/~1holds~1{hold_id}/delete",
+      "responses": {
+        "200": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Deletion"
+          }
+        },
+        "401": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "404": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        }
+      },
+      "security": [
+        {
+          "apiKeyAuth": []
+        }
+      ],
+      "summary": "Cancel a hold",
+      "tags": [
+        "holds"
+      ]
+    },
+    {
+      "deprecated": false,
+      "id": "GET /loans",
+      "method": "GET",
+      "operation_id": "listLoans",
+      "parameters": [
+        {
+          "description": "Opaque id of the last item on the previous page. Omit it to read the first page.",
+          "explode": true,
+          "in": "query",
+          "name": "cursor",
+          "required": false,
+          "schema": {
+            "type": "string"
+          },
+          "style": "form"
+        },
+        {
+          "description": "Maximum number of items to return.",
+          "explode": true,
+          "in": "query",
+          "name": "limit",
+          "required": false,
+          "schema": {
+            "default": 2,
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "style": "form"
+        }
+      ],
+      "path": "/loans",
+      "provenance": "/paths/~1loans/get",
+      "responses": {
+        "200": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_LoanPage"
+          }
+        },
+        "400": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "401": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        }
+      },
+      "security": [
+        {
+          "apiKeyAuth": []
+        }
+      ],
+      "summary": "List loans",
+      "tags": [
+        "loans"
+      ]
+    },
+    {
+      "deprecated": false,
+      "id": "POST /loans",
+      "method": "POST",
+      "operation_id": "createLoan",
+      "parameters": [],
+      "path": "/loans",
+      "provenance": "/paths/~1loans/post",
+      "request_body": {
+        "content_type": "application/json",
+        "required": true,
+        "schema": {
+          "$ref": "#/defs/components_schemas_LoanCreate"
+        }
+      },
+      "responses": {
+        "201": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Loan"
+          }
+        },
+        "400": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "401": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "404": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        }
+      },
+      "security": [
+        {
+          "apiKeyAuth": []
+        }
+      ],
+      "summary": "Check out a copy",
+      "tags": [
+        "loans"
+      ]
+    },
+    {
+      "deprecated": false,
+      "id": "GET /loans/{loan_id}",
+      "method": "GET",
+      "operation_id": "getLoan",
+      "parameters": [
+        {
+          "explode": false,
+          "in": "path",
+          "name": "loan_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "style": "simple"
+        }
+      ],
+      "path": "/loans/{loan_id}",
+      "provenance": "/paths/~1loans~1{loan_id}/get",
+      "responses": {
+        "200": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Loan"
+          }
+        },
+        "401": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "404": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        }
+      },
+      "security": [
+        {
+          "apiKeyAuth": []
+        }
+      ],
+      "summary": "Read a loan",
+      "tags": [
+        "loans"
+      ]
+    },
+    {
+      "deprecated": false,
+      "id": "POST /loans/{loan_id}/renew",
+      "method": "POST",
+      "operation_id": "renewLoan",
+      "parameters": [
+        {
+          "explode": false,
+          "in": "path",
+          "name": "loan_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "style": "simple"
+        }
+      ],
+      "path": "/loans/{loan_id}/renew",
+      "provenance": "/paths/~1loans~1{loan_id}~1renew/post",
+      "responses": {
+        "200": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Loan"
+          }
+        },
+        "400": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "401": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "404": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        }
+      },
+      "security": [
+        {
+          "apiKeyAuth": []
+        }
+      ],
+      "summary": "Renew a loan",
+      "tags": [
+        "loans"
+      ]
+    },
+    {
+      "deprecated": false,
+      "id": "POST /loans/{loan_id}/return",
+      "method": "POST",
+      "operation_id": "returnLoan",
+      "parameters": [
+        {
+          "explode": false,
+          "in": "path",
+          "name": "loan_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "style": "simple"
+        }
+      ],
+      "path": "/loans/{loan_id}/return",
+      "provenance": "/paths/~1loans~1{loan_id}~1return/post",
+      "responses": {
+        "200": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Loan"
+          }
+        },
+        "400": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "401": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "404": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        }
+      },
+      "security": [
+        {
+          "apiKeyAuth": []
+        }
+      ],
+      "summary": "Return a loan",
+      "tags": [
+        "loans"
+      ]
+    },
+    {
+      "deprecated": false,
+      "id": "GET /patrons",
+      "method": "GET",
+      "operation_id": "listPatrons",
+      "parameters": [
+        {
+          "description": "Opaque id of the last item on the previous page. Omit it to read the first page.",
+          "explode": true,
+          "in": "query",
+          "name": "cursor",
+          "required": false,
+          "schema": {
+            "type": "string"
+          },
+          "style": "form"
+        },
+        {
+          "description": "Maximum number of items to return.",
+          "explode": true,
+          "in": "query",
+          "name": "limit",
+          "required": false,
+          "schema": {
+            "default": 2,
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "style": "form"
+        }
+      ],
+      "path": "/patrons",
+      "provenance": "/paths/~1patrons/get",
+      "responses": {
+        "200": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_PatronPage"
+          }
+        },
+        "400": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "401": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        }
+      },
+      "security": [
+        {
+          "apiKeyAuth": []
+        }
+      ],
+      "summary": "List patrons",
+      "tags": [
+        "patrons"
+      ]
+    },
+    {
+      "deprecated": false,
+      "id": "POST /patrons",
+      "method": "POST",
+      "operation_id": "createPatron",
+      "parameters": [],
+      "path": "/patrons",
+      "provenance": "/paths/~1patrons/post",
+      "request_body": {
+        "content_type": "application/json",
+        "required": true,
+        "schema": {
+          "$ref": "#/defs/components_schemas_PatronCreate"
+        }
+      },
+      "responses": {
+        "201": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Patron"
+          }
+        },
+        "400": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "401": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        }
+      },
+      "security": [
+        {
+          "apiKeyAuth": []
+        }
+      ],
+      "summary": "Create a patron",
+      "tags": [
+        "patrons"
+      ]
+    },
+    {
+      "deprecated": false,
+      "id": "DELETE /patrons/{patron_id}",
+      "method": "DELETE",
+      "operation_id": "deletePatron",
+      "parameters": [
+        {
+          "explode": false,
+          "in": "path",
+          "name": "patron_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "style": "simple"
+        }
+      ],
+      "path": "/patrons/{patron_id}",
+      "provenance": "/paths/~1patrons~1{patron_id}/delete",
+      "responses": {
+        "200": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Deletion"
+          }
+        },
+        "400": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "401": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "404": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        }
+      },
+      "security": [
+        {
+          "apiKeyAuth": []
+        }
+      ],
+      "summary": "Delete a patron",
+      "tags": [
+        "patrons"
+      ]
+    },
+    {
+      "deprecated": false,
+      "id": "GET /patrons/{patron_id}",
+      "method": "GET",
+      "operation_id": "getPatron",
+      "parameters": [
+        {
+          "explode": false,
+          "in": "path",
+          "name": "patron_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "style": "simple"
+        }
+      ],
+      "path": "/patrons/{patron_id}",
+      "provenance": "/paths/~1patrons~1{patron_id}/get",
+      "responses": {
+        "200": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Patron"
+          }
+        },
+        "401": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "404": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        }
+      },
+      "security": [
+        {
+          "apiKeyAuth": []
+        }
+      ],
+      "summary": "Read a patron",
+      "tags": [
+        "patrons"
+      ]
+    },
+    {
+      "deprecated": false,
+      "id": "PATCH /patrons/{patron_id}",
+      "method": "PATCH",
+      "operation_id": "updatePatron",
+      "parameters": [
+        {
+          "explode": false,
+          "in": "path",
+          "name": "patron_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "style": "simple"
+        }
+      ],
+      "path": "/patrons/{patron_id}",
+      "provenance": "/paths/~1patrons~1{patron_id}/patch",
+      "request_body": {
+        "content_type": "application/json",
+        "required": true,
+        "schema": {
+          "$ref": "#/defs/components_schemas_PatronUpdate"
+        }
+      },
+      "responses": {
+        "200": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Patron"
+          }
+        },
+        "400": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "401": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "404": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        }
+      },
+      "security": [
+        {
+          "apiKeyAuth": []
+        }
+      ],
+      "summary": "Update a patron",
+      "tags": [
+        "patrons"
+      ]
+    },
+    {
+      "deprecated": false,
+      "id": "GET /patrons/{patron_id}/holds",
+      "method": "GET",
+      "operation_id": "listHolds",
+      "parameters": [
+        {
+          "explode": false,
+          "in": "path",
+          "name": "patron_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "style": "simple"
+        },
+        {
+          "description": "Opaque id of the last item on the previous page. Omit it to read the first page.",
+          "explode": true,
+          "in": "query",
+          "name": "cursor",
+          "required": false,
+          "schema": {
+            "type": "string"
+          },
+          "style": "form"
+        },
+        {
+          "description": "Maximum number of items to return.",
+          "explode": true,
+          "in": "query",
+          "name": "limit",
+          "required": false,
+          "schema": {
+            "default": 2,
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "style": "form"
+        }
+      ],
+      "path": "/patrons/{patron_id}/holds",
+      "provenance": "/paths/~1patrons~1{patron_id}~1holds/get",
+      "responses": {
+        "200": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_HoldPage"
+          }
+        },
+        "400": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "401": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "404": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        }
+      },
+      "security": [
+        {
+          "apiKeyAuth": []
+        }
+      ],
+      "summary": "List holds for a patron",
+      "tags": [
+        "holds"
+      ]
+    },
+    {
+      "deprecated": false,
+      "id": "POST /patrons/{patron_id}/holds",
+      "method": "POST",
+      "operation_id": "createHold",
+      "parameters": [
+        {
+          "explode": false,
+          "in": "path",
+          "name": "patron_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "style": "simple"
+        }
+      ],
+      "path": "/patrons/{patron_id}/holds",
+      "provenance": "/paths/~1patrons~1{patron_id}~1holds/post",
+      "request_body": {
+        "content_type": "application/json",
+        "required": true,
+        "schema": {
+          "$ref": "#/defs/components_schemas_HoldCreate"
+        }
+      },
+      "responses": {
+        "201": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Hold"
+          }
+        },
+        "400": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "401": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "404": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        }
+      },
+      "security": [
+        {
+          "apiKeyAuth": []
+        }
+      ],
+      "summary": "Place a hold",
+      "tags": [
+        "holds"
+      ]
+    },
+    {
+      "deprecated": false,
+      "id": "GET /patrons/{patron_id}/loans",
+      "method": "GET",
+      "operation_id": "listPatronLoans",
+      "parameters": [
+        {
+          "explode": false,
+          "in": "path",
+          "name": "patron_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "style": "simple"
+        },
+        {
+          "description": "Opaque id of the last item on the previous page. Omit it to read the first page.",
+          "explode": true,
+          "in": "query",
+          "name": "cursor",
+          "required": false,
+          "schema": {
+            "type": "string"
+          },
+          "style": "form"
+        },
+        {
+          "description": "Maximum number of items to return.",
+          "explode": true,
+          "in": "query",
+          "name": "limit",
+          "required": false,
+          "schema": {
+            "default": 2,
+            "maximum": 100,
+            "minimum": 1,
+            "type": "integer"
+          },
+          "style": "form"
+        }
+      ],
+      "path": "/patrons/{patron_id}/loans",
+      "provenance": "/paths/~1patrons~1{patron_id}~1loans/get",
+      "responses": {
+        "200": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_LoanPage"
+          }
+        },
+        "400": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "401": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "404": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        }
+      },
+      "security": [
+        {
+          "apiKeyAuth": []
+        }
+      ],
+      "summary": "List loans for a patron",
+      "tags": [
+        "loans"
+      ]
+    },
+    {
+      "deprecated": false,
+      "id": "DELETE /reviews/{review_id}",
+      "method": "DELETE",
+      "operation_id": "deleteReview",
+      "parameters": [
+        {
+          "explode": false,
+          "in": "path",
+          "name": "review_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "style": "simple"
+        }
+      ],
+      "path": "/reviews/{review_id}",
+      "provenance": "/paths/~1reviews~1{review_id}/delete",
+      "responses": {
+        "200": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Deletion"
+          }
+        },
+        "401": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "404": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        }
+      },
+      "security": [
+        {
+          "apiKeyAuth": []
+        }
+      ],
+      "summary": "Delete a review",
+      "tags": [
+        "reviews"
+      ]
+    },
+    {
+      "deprecated": false,
+      "id": "GET /reviews/{review_id}",
+      "method": "GET",
+      "operation_id": "getReview",
+      "parameters": [
+        {
+          "explode": false,
+          "in": "path",
+          "name": "review_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "style": "simple"
+        }
+      ],
+      "path": "/reviews/{review_id}",
+      "provenance": "/paths/~1reviews~1{review_id}/get",
+      "responses": {
+        "200": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Review"
+          }
+        },
+        "401": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "404": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        }
+      },
+      "security": [
+        {
+          "apiKeyAuth": []
+        }
+      ],
+      "summary": "Read a review",
+      "tags": [
+        "reviews"
+      ]
+    },
+    {
+      "deprecated": false,
+      "id": "PATCH /reviews/{review_id}",
+      "method": "PATCH",
+      "operation_id": "updateReview",
+      "parameters": [
+        {
+          "explode": false,
+          "in": "path",
+          "name": "review_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "style": "simple"
+        }
+      ],
+      "path": "/reviews/{review_id}",
+      "provenance": "/paths/~1reviews~1{review_id}/patch",
+      "request_body": {
+        "content_type": "application/json",
+        "required": true,
+        "schema": {
+          "$ref": "#/defs/components_schemas_ReviewUpdate"
+        }
+      },
+      "responses": {
+        "200": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Review"
+          }
+        },
+        "400": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "401": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "404": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        }
+      },
+      "security": [
+        {
+          "apiKeyAuth": []
+        }
+      ],
+      "summary": "Update a review",
+      "tags": [
+        "reviews"
+      ]
+    },
+    {
+      "deprecated": false,
+      "id": "POST /uploads",
+      "method": "POST",
+      "operation_id": "createUpload",
+      "parameters": [],
+      "path": "/uploads",
+      "provenance": "/paths/~1uploads/post",
+      "request_body": {
+        "content_type": "application/json",
+        "required": true,
+        "schema": {
+          "$ref": "#/defs/components_schemas_UploadCreate"
+        }
+      },
+      "responses": {
+        "201": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Upload"
+          }
+        },
+        "400": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "401": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        }
+      },
+      "security": [
+        {
+          "apiKeyAuth": []
+        }
+      ],
+      "summary": "Create an upload session",
+      "tags": [
+        "uploads"
+      ]
+    },
+    {
+      "deprecated": false,
+      "id": "POST /uploads/{upload_id}/complete",
+      "method": "POST",
+      "operation_id": "completeUpload",
+      "parameters": [
+        {
+          "explode": false,
+          "in": "path",
+          "name": "upload_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "style": "simple"
+        }
+      ],
+      "path": "/uploads/{upload_id}/complete",
+      "provenance": "/paths/~1uploads~1{upload_id}~1complete/post",
+      "responses": {
+        "200": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Upload"
+          }
+        },
+        "400": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "401": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "404": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        }
+      },
+      "security": [
+        {
+          "apiKeyAuth": []
+        }
+      ],
+      "summary": "Complete an upload session",
+      "tags": [
+        "uploads"
+      ]
+    },
+    {
+      "deprecated": false,
+      "id": "PUT /uploads/{upload_id}/parts/{part_number}",
+      "method": "PUT",
+      "operation_id": "uploadPart",
+      "parameters": [
+        {
+          "explode": false,
+          "in": "path",
+          "name": "upload_id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "style": "simple"
+        },
+        {
+          "explode": false,
+          "in": "path",
+          "name": "part_number",
+          "required": true,
+          "schema": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "style": "simple"
+        }
+      ],
+      "path": "/uploads/{upload_id}/parts/{part_number}",
+      "provenance": "/paths/~1uploads~1{upload_id}~1parts~1{part_number}/put",
+      "request_body": {
+        "content_type": "application/json",
+        "required": true,
+        "schema": {
+          "$ref": "#/defs/components_schemas_UploadPartCreate"
+        }
+      },
+      "responses": {
+        "200": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_UploadPart"
+          }
+        },
+        "400": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "401": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        },
+        "404": {
+          "content_type": "application/json",
+          "schema": {
+            "$ref": "#/defs/components_schemas_Error"
+          }
+        }
+      },
+      "security": [
+        {
+          "apiKeyAuth": []
+        }
+      ],
+      "summary": "Upload one part",
+      "tags": [
+        "uploads"
+      ]
+    }
+  ],
+  "findings": [],
+  "model_version": "endpoint-v1",
+  "security_schemes": {
+    "apiKeyAuth": {
+      "description": "Send the sample key in this header.",
+      "in": "header",
+      "name": "X-API-Key",
+      "type": "apiKey"
+    }
+  },
+  "servers": [
+    {
+      "description": "In-memory reference server",
+      "url": "http://127.0.0.1:8765"
+    }
+  ],
+  "source": {
+    "kind": "openapi",
+    "sha256": "10b6233ec3ce6f2e8b0b0d8248836ce1e78986f3e6fffc5b362f228c12e8f5e2",
+    "uri": "openapi.yaml"
+  },
+  "title": "Shelf",
+  "version": "1.0.0"
+}

@@ -1,0 +1,1162 @@
+{
+  "complete_usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "input_tokens": 100,
+    "output_tokens": 20
+  },
+  "details": {
+    "add_copy": {
+      "excluded": [],
+      "tools": [
+        {
+          "annotations": {
+            "destructiveHint": false,
+            "idempotentHint": false,
+            "openWorldHint": true,
+            "readOnlyHint": false
+          },
+          "depends_on": [],
+          "description": "Add a copy of a book.",
+          "examples": [
+            {
+              "name": "barcode",
+              "value_json": "\"example\""
+            },
+            {
+              "name": "book_id",
+              "value_json": "\"example\""
+            }
+          ],
+          "fixed": [],
+          "inputs": [
+            {
+              "description": "barcode",
+              "endpoint_id": "POST /books/{book_id}/copies",
+              "in": "body",
+              "name": "barcode",
+              "param": "barcode",
+              "required": true
+            },
+            {
+              "description": "book id",
+              "endpoint_id": "POST /books/{book_id}/copies",
+              "in": "path",
+              "name": "book_id",
+              "param": "book_id",
+              "required": true
+            }
+          ],
+          "intent": "Add a copy",
+          "name": "add_copy",
+          "output_fields": [
+            "barcode",
+            "book_id",
+            "created_at",
+            "id",
+            "status"
+          ],
+          "output_from_step": 0,
+          "rationale": "Add Copy is a primary Shelf action.",
+          "steps": [
+            {
+              "binds": [],
+              "endpoint_id": "POST /books/{book_id}/copies"
+            }
+          ],
+          "title": "Add Copy"
+        }
+      ]
+    },
+    "checkout_copy": {
+      "excluded": [],
+      "tools": [
+        {
+          "annotations": {
+            "destructiveHint": false,
+            "idempotentHint": false,
+            "openWorldHint": true,
+            "readOnlyHint": false
+          },
+          "depends_on": [],
+          "description": "Check out a copy.",
+          "examples": [
+            {
+              "name": "copy_id",
+              "value_json": "\"example\""
+            },
+            {
+              "name": "patron_id",
+              "value_json": "\"example\""
+            }
+          ],
+          "fixed": [],
+          "inputs": [
+            {
+              "description": "copy id",
+              "endpoint_id": "POST /loans",
+              "in": "body",
+              "name": "copy_id",
+              "param": "copy_id",
+              "required": true
+            },
+            {
+              "description": "patron id",
+              "endpoint_id": "POST /loans",
+              "in": "body",
+              "name": "patron_id",
+              "param": "patron_id",
+              "required": true
+            }
+          ],
+          "intent": "Check out a copy",
+          "name": "checkout_copy",
+          "output_fields": [
+            "book_id",
+            "copy_id",
+            "created_at",
+            "due_at",
+            "id",
+            "patron_id",
+            "renew_count",
+            "status"
+          ],
+          "output_from_step": 0,
+          "rationale": "Checkout Copy is a primary Shelf action.",
+          "steps": [
+            {
+              "binds": [],
+              "endpoint_id": "POST /loans"
+            }
+          ],
+          "title": "Checkout Copy"
+        }
+      ]
+    },
+    "create_book": {
+      "excluded": [],
+      "tools": [
+        {
+          "annotations": {
+            "destructiveHint": false,
+            "idempotentHint": false,
+            "openWorldHint": true,
+            "readOnlyHint": false
+          },
+          "depends_on": [],
+          "description": "Create a book.",
+          "examples": [
+            {
+              "name": "author",
+              "value_json": "\"example\""
+            },
+            {
+              "name": "title",
+              "value_json": "\"example\""
+            }
+          ],
+          "fixed": [],
+          "inputs": [
+            {
+              "description": "author",
+              "endpoint_id": "POST /books",
+              "in": "body",
+              "name": "author",
+              "param": "author",
+              "required": true
+            },
+            {
+              "description": "title",
+              "endpoint_id": "POST /books",
+              "in": "body",
+              "name": "title",
+              "param": "title",
+              "required": true
+            }
+          ],
+          "intent": "Create a book",
+          "name": "create_book",
+          "output_fields": [
+            "author",
+            "created_at",
+            "file_id",
+            "id",
+            "title"
+          ],
+          "output_from_step": 0,
+          "rationale": "Create Book is a primary Shelf action.",
+          "steps": [
+            {
+              "binds": [],
+              "endpoint_id": "POST /books"
+            }
+          ],
+          "title": "Create Book"
+        }
+      ]
+    },
+    "delete_book": {
+      "excluded": [],
+      "tools": [
+        {
+          "annotations": {
+            "destructiveHint": true,
+            "idempotentHint": true,
+            "openWorldHint": true,
+            "readOnlyHint": false
+          },
+          "depends_on": [],
+          "description": "Delete a book.",
+          "examples": [
+            {
+              "name": "book_id",
+              "value_json": "\"example\""
+            }
+          ],
+          "fixed": [],
+          "inputs": [
+            {
+              "description": "book id",
+              "endpoint_id": "DELETE /books/{book_id}",
+              "in": "path",
+              "name": "book_id",
+              "param": "book_id",
+              "required": true
+            }
+          ],
+          "intent": "Delete a book",
+          "name": "delete_book",
+          "output_fields": [
+            "deleted",
+            "id"
+          ],
+          "output_from_step": 0,
+          "rationale": "Delete Book is a primary Shelf action.",
+          "steps": [
+            {
+              "binds": [],
+              "endpoint_id": "DELETE /books/{book_id}"
+            }
+          ],
+          "title": "Delete Book"
+        }
+      ]
+    },
+    "get_book": {
+      "excluded": [],
+      "tools": [
+        {
+          "annotations": {
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": true,
+            "readOnlyHint": true
+          },
+          "depends_on": [],
+          "description": "Fetch a book and its stats.",
+          "examples": [
+            {
+              "name": "book_id",
+              "value_json": "\"example\""
+            }
+          ],
+          "fixed": [],
+          "inputs": [
+            {
+              "description": "book id",
+              "endpoint_id": "GET /books/{book_id}",
+              "in": "path",
+              "name": "book_id",
+              "param": "book_id",
+              "required": true
+            }
+          ],
+          "intent": "Get a book",
+          "name": "get_book",
+          "output_fields": [
+            "author",
+            "created_at",
+            "file_id",
+            "id",
+            "title"
+          ],
+          "output_from_step": 0,
+          "rationale": "Get Book is a primary Shelf action.",
+          "steps": [
+            {
+              "binds": [],
+              "endpoint_id": "GET /books/{book_id}"
+            },
+            {
+              "binds": [
+                {
+                  "in": "path",
+                  "param": "book_id",
+                  "ref": "$input.book_id"
+                }
+              ],
+              "endpoint_id": "GET /books/{book_id}/stats"
+            }
+          ],
+          "title": "Get Book"
+        }
+      ]
+    },
+    "get_patron": {
+      "excluded": [],
+      "tools": [
+        {
+          "annotations": {
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": true,
+            "readOnlyHint": true
+          },
+          "depends_on": [],
+          "description": "Fetch a patron.",
+          "examples": [
+            {
+              "name": "patron_id",
+              "value_json": "\"example\""
+            }
+          ],
+          "fixed": [],
+          "inputs": [
+            {
+              "description": "patron id",
+              "endpoint_id": "GET /patrons/{patron_id}",
+              "in": "path",
+              "name": "patron_id",
+              "param": "patron_id",
+              "required": true
+            }
+          ],
+          "intent": "Get a patron",
+          "name": "get_patron",
+          "output_fields": [
+            "created_at",
+            "email",
+            "id",
+            "name",
+            "status"
+          ],
+          "output_from_step": 0,
+          "rationale": "Get Patron is a primary Shelf action.",
+          "steps": [
+            {
+              "binds": [],
+              "endpoint_id": "GET /patrons/{patron_id}"
+            }
+          ],
+          "title": "Get Patron"
+        }
+      ]
+    },
+    "list_copies": {
+      "excluded": [],
+      "tools": [
+        {
+          "annotations": {
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": true,
+            "readOnlyHint": true
+          },
+          "depends_on": [],
+          "description": "List copies of a book. Returns the first page.",
+          "examples": [
+            {
+              "name": "book_id",
+              "value_json": "\"example\""
+            }
+          ],
+          "fixed": [
+            {
+              "endpoint_id": "GET /books/{book_id}/copies",
+              "in": "query",
+              "param": "cursor",
+              "reason": "first page",
+              "value_json": "null"
+            },
+            {
+              "endpoint_id": "GET /books/{book_id}/copies",
+              "in": "query",
+              "param": "limit",
+              "reason": "hidden plumbing",
+              "value_json": "2"
+            }
+          ],
+          "inputs": [
+            {
+              "description": "book id",
+              "endpoint_id": "GET /books/{book_id}/copies",
+              "in": "path",
+              "name": "book_id",
+              "param": "book_id",
+              "required": true
+            }
+          ],
+          "intent": "List copies",
+          "name": "list_copies",
+          "output_fields": [
+            "has_more",
+            "next_cursor",
+            "data"
+          ],
+          "output_from_step": 0,
+          "rationale": "List Copies is a primary Shelf action.",
+          "steps": [
+            {
+              "binds": [],
+              "endpoint_id": "GET /books/{book_id}/copies"
+            }
+          ],
+          "title": "List Copies"
+        }
+      ]
+    },
+    "place_hold": {
+      "excluded": [],
+      "tools": [
+        {
+          "annotations": {
+            "destructiveHint": false,
+            "idempotentHint": false,
+            "openWorldHint": true,
+            "readOnlyHint": false
+          },
+          "depends_on": [],
+          "description": "Place a hold on a book.",
+          "examples": [
+            {
+              "name": "book_id",
+              "value_json": "\"example\""
+            },
+            {
+              "name": "patron_id",
+              "value_json": "\"example\""
+            }
+          ],
+          "fixed": [],
+          "inputs": [
+            {
+              "description": "book id",
+              "endpoint_id": "POST /patrons/{patron_id}/holds",
+              "in": "body",
+              "name": "book_id",
+              "param": "book_id",
+              "required": true
+            },
+            {
+              "description": "patron id",
+              "endpoint_id": "POST /patrons/{patron_id}/holds",
+              "in": "path",
+              "name": "patron_id",
+              "param": "patron_id",
+              "required": true
+            }
+          ],
+          "intent": "Place a hold",
+          "name": "place_hold",
+          "output_fields": [
+            "book_id",
+            "created_at",
+            "id",
+            "patron_id"
+          ],
+          "output_from_step": 0,
+          "rationale": "Place Hold is a primary Shelf action.",
+          "steps": [
+            {
+              "binds": [],
+              "endpoint_id": "POST /patrons/{patron_id}/holds"
+            }
+          ],
+          "title": "Place Hold"
+        }
+      ]
+    },
+    "register_patron": {
+      "excluded": [],
+      "tools": [
+        {
+          "annotations": {
+            "destructiveHint": false,
+            "idempotentHint": false,
+            "openWorldHint": true,
+            "readOnlyHint": false
+          },
+          "depends_on": [],
+          "description": "Register a patron.",
+          "examples": [
+            {
+              "name": "email",
+              "value_json": "\"example\""
+            },
+            {
+              "name": "name",
+              "value_json": "\"example\""
+            }
+          ],
+          "fixed": [],
+          "inputs": [
+            {
+              "description": "email",
+              "endpoint_id": "POST /patrons",
+              "in": "body",
+              "name": "email",
+              "param": "email",
+              "required": true
+            },
+            {
+              "description": "name",
+              "endpoint_id": "POST /patrons",
+              "in": "body",
+              "name": "name",
+              "param": "name",
+              "required": true
+            }
+          ],
+          "intent": "Register a patron",
+          "name": "register_patron",
+          "output_fields": [
+            "created_at",
+            "email",
+            "id",
+            "name",
+            "status"
+          ],
+          "output_from_step": 0,
+          "rationale": "Register Patron is a primary Shelf action.",
+          "steps": [
+            {
+              "binds": [],
+              "endpoint_id": "POST /patrons"
+            }
+          ],
+          "title": "Register Patron"
+        }
+      ]
+    },
+    "renew_loan": {
+      "excluded": [],
+      "tools": [
+        {
+          "annotations": {
+            "destructiveHint": false,
+            "idempotentHint": false,
+            "openWorldHint": true,
+            "readOnlyHint": false
+          },
+          "depends_on": [],
+          "description": "Renew a loan.",
+          "examples": [
+            {
+              "name": "loan_id",
+              "value_json": "\"example\""
+            }
+          ],
+          "fixed": [],
+          "inputs": [
+            {
+              "description": "loan id",
+              "endpoint_id": "POST /loans/{loan_id}/renew",
+              "in": "path",
+              "name": "loan_id",
+              "param": "loan_id",
+              "required": true
+            }
+          ],
+          "intent": "Renew a loan",
+          "name": "renew_loan",
+          "output_fields": [
+            "book_id",
+            "copy_id",
+            "created_at",
+            "due_at",
+            "id",
+            "patron_id",
+            "renew_count",
+            "status"
+          ],
+          "output_from_step": 0,
+          "rationale": "Renew Loan is a primary Shelf action.",
+          "steps": [
+            {
+              "binds": [],
+              "endpoint_id": "POST /loans/{loan_id}/renew"
+            }
+          ],
+          "title": "Renew Loan"
+        }
+      ]
+    },
+    "return_loan": {
+      "excluded": [],
+      "tools": [
+        {
+          "annotations": {
+            "destructiveHint": false,
+            "idempotentHint": false,
+            "openWorldHint": true,
+            "readOnlyHint": false
+          },
+          "depends_on": [],
+          "description": "Return a loan.",
+          "examples": [
+            {
+              "name": "loan_id",
+              "value_json": "\"example\""
+            }
+          ],
+          "fixed": [],
+          "inputs": [
+            {
+              "description": "loan id",
+              "endpoint_id": "POST /loans/{loan_id}/return",
+              "in": "path",
+              "name": "loan_id",
+              "param": "loan_id",
+              "required": true
+            }
+          ],
+          "intent": "Return a loan",
+          "name": "return_loan",
+          "output_fields": [
+            "book_id",
+            "copy_id",
+            "created_at",
+            "due_at",
+            "id",
+            "patron_id",
+            "renew_count",
+            "status"
+          ],
+          "output_from_step": 0,
+          "rationale": "Return Loan is a primary Shelf action.",
+          "steps": [
+            {
+              "binds": [],
+              "endpoint_id": "POST /loans/{loan_id}/return"
+            }
+          ],
+          "title": "Return Loan"
+        }
+      ]
+    },
+    "review_book": {
+      "excluded": [],
+      "tools": [
+        {
+          "annotations": {
+            "destructiveHint": false,
+            "idempotentHint": false,
+            "openWorldHint": true,
+            "readOnlyHint": false
+          },
+          "depends_on": [],
+          "description": "Review a book.",
+          "examples": [
+            {
+              "name": "body",
+              "value_json": "\"example\""
+            },
+            {
+              "name": "book_id",
+              "value_json": "\"example\""
+            },
+            {
+              "name": "patron_id",
+              "value_json": "\"example\""
+            },
+            {
+              "name": "rating",
+              "value_json": "1"
+            }
+          ],
+          "fixed": [],
+          "inputs": [
+            {
+              "description": "body",
+              "endpoint_id": "POST /books/{book_id}/reviews",
+              "in": "body",
+              "name": "body",
+              "param": "body",
+              "required": true
+            },
+            {
+              "description": "book id",
+              "endpoint_id": "POST /books/{book_id}/reviews",
+              "in": "path",
+              "name": "book_id",
+              "param": "book_id",
+              "required": true
+            },
+            {
+              "description": "patron id",
+              "endpoint_id": "POST /books/{book_id}/reviews",
+              "in": "body",
+              "name": "patron_id",
+              "param": "patron_id",
+              "required": true
+            },
+            {
+              "description": "rating",
+              "endpoint_id": "POST /books/{book_id}/reviews",
+              "in": "body",
+              "name": "rating",
+              "param": "rating",
+              "required": true
+            }
+          ],
+          "intent": "Review a book",
+          "name": "review_book",
+          "output_fields": [
+            "body",
+            "book_id",
+            "created_at",
+            "id",
+            "patron_id",
+            "rating"
+          ],
+          "output_from_step": 0,
+          "rationale": "Review Book is a primary Shelf action.",
+          "steps": [
+            {
+              "binds": [],
+              "endpoint_id": "POST /books/{book_id}/reviews"
+            }
+          ],
+          "title": "Review Book"
+        }
+      ]
+    },
+    "search_books": {
+      "excluded": [],
+      "tools": [
+        {
+          "annotations": {
+            "destructiveHint": false,
+            "idempotentHint": true,
+            "openWorldHint": true,
+            "readOnlyHint": true
+          },
+          "depends_on": [],
+          "description": "Search the catalog. Returns the first page.",
+          "examples": [],
+          "fixed": [
+            {
+              "endpoint_id": "GET /books",
+              "in": "query",
+              "param": "cursor",
+              "reason": "first page",
+              "value_json": "null"
+            },
+            {
+              "endpoint_id": "GET /books",
+              "in": "query",
+              "param": "limit",
+              "reason": "hidden plumbing",
+              "value_json": "2"
+            }
+          ],
+          "inputs": [],
+          "intent": "Search books",
+          "name": "search_books",
+          "output_fields": [
+            "has_more",
+            "next_cursor",
+            "data"
+          ],
+          "output_from_step": 0,
+          "rationale": "Search Books is a primary Shelf action.",
+          "steps": [
+            {
+              "binds": [],
+              "endpoint_id": "GET /books"
+            }
+          ],
+          "title": "Search Books"
+        }
+      ]
+    },
+    "update_book": {
+      "excluded": [],
+      "tools": [
+        {
+          "annotations": {
+            "destructiveHint": false,
+            "idempotentHint": false,
+            "openWorldHint": true,
+            "readOnlyHint": false
+          },
+          "depends_on": [],
+          "description": "Update a book's title or author.",
+          "examples": [
+            {
+              "name": "book_id",
+              "value_json": "\"example\""
+            },
+            {
+              "name": "title",
+              "value_json": "\"example\""
+            }
+          ],
+          "fixed": [],
+          "inputs": [
+            {
+              "description": "book id",
+              "endpoint_id": "PATCH /books/{book_id}",
+              "in": "path",
+              "name": "book_id",
+              "param": "book_id",
+              "required": true
+            },
+            {
+              "description": "title",
+              "endpoint_id": "PATCH /books/{book_id}",
+              "in": "body",
+              "name": "title",
+              "param": "title",
+              "required": true
+            }
+          ],
+          "intent": "Update a book",
+          "name": "update_book",
+          "output_fields": [
+            "author",
+            "created_at",
+            "file_id",
+            "id",
+            "title"
+          ],
+          "output_from_step": 0,
+          "rationale": "Update Book is a primary Shelf action.",
+          "steps": [
+            {
+              "binds": [],
+              "endpoint_id": "PATCH /books/{book_id}"
+            }
+          ],
+          "title": "Update Book"
+        }
+      ]
+    },
+    "upload_book_file": {
+      "excluded": [],
+      "tools": [
+        {
+          "annotations": {
+            "destructiveHint": false,
+            "idempotentHint": false,
+            "openWorldHint": true,
+            "readOnlyHint": false
+          },
+          "depends_on": [],
+          "description": "Upload a file and attach it to a book.",
+          "examples": [
+            {
+              "name": "book_id",
+              "value_json": "\"example\""
+            },
+            {
+              "name": "content_type",
+              "value_json": "\"example\""
+            },
+            {
+              "name": "data",
+              "value_json": "\"example\""
+            },
+            {
+              "name": "filename",
+              "value_json": "\"example\""
+            }
+          ],
+          "fixed": [
+            {
+              "endpoint_id": "PUT /uploads/{upload_id}/parts/{part_number}",
+              "in": "path",
+              "param": "part_number",
+              "reason": "single part",
+              "value_json": "1"
+            }
+          ],
+          "inputs": [
+            {
+              "description": "book id",
+              "endpoint_id": "PUT /books/{book_id}/file",
+              "in": "path",
+              "name": "book_id",
+              "param": "book_id",
+              "required": true
+            },
+            {
+              "description": "content type",
+              "endpoint_id": "POST /uploads",
+              "in": "body",
+              "name": "content_type",
+              "param": "content_type",
+              "required": true
+            },
+            {
+              "description": "data",
+              "endpoint_id": "PUT /uploads/{upload_id}/parts/{part_number}",
+              "in": "body",
+              "name": "data",
+              "param": "data",
+              "required": true
+            },
+            {
+              "description": "filename",
+              "endpoint_id": "POST /uploads",
+              "in": "body",
+              "name": "filename",
+              "param": "filename",
+              "required": true
+            }
+          ],
+          "intent": "Upload a book file",
+          "name": "upload_book_file",
+          "output_fields": [
+            "book_id",
+            "file_id"
+          ],
+          "output_from_step": 3,
+          "rationale": "Upload Book File is a primary Shelf action.",
+          "steps": [
+            {
+              "binds": [],
+              "endpoint_id": "POST /uploads"
+            },
+            {
+              "binds": [
+                {
+                  "in": "path",
+                  "param": "upload_id",
+                  "ref": "$steps[0].body.id"
+                }
+              ],
+              "endpoint_id": "PUT /uploads/{upload_id}/parts/{part_number}"
+            },
+            {
+              "binds": [
+                {
+                  "in": "path",
+                  "param": "upload_id",
+                  "ref": "$steps[0].body.id"
+                }
+              ],
+              "endpoint_id": "POST /uploads/{upload_id}/complete"
+            },
+            {
+              "binds": [
+                {
+                  "in": "body",
+                  "param": "upload_id",
+                  "ref": "$steps[0].body.id"
+                }
+              ],
+              "endpoint_id": "PUT /books/{book_id}/file"
+            }
+          ],
+          "title": "Upload Book File"
+        }
+      ]
+    }
+  },
+  "plan": {
+    "excluded": [
+      {
+        "endpoint_id": "DELETE /copies/{copy_id}",
+        "note": "Omitted because it does not map to a primary user intent.",
+        "reason": "low-value"
+      },
+      {
+        "endpoint_id": "DELETE /holds/{hold_id}",
+        "note": "Omitted because it does not map to a primary user intent.",
+        "reason": "low-value"
+      },
+      {
+        "endpoint_id": "DELETE /patrons/{patron_id}",
+        "note": "Omitted because it does not map to a primary user intent.",
+        "reason": "low-value"
+      },
+      {
+        "endpoint_id": "DELETE /reviews/{review_id}",
+        "note": "Omitted because it does not map to a primary user intent.",
+        "reason": "low-value"
+      },
+      {
+        "endpoint_id": "GET /books/{book_id}/loans",
+        "note": "Omitted because it does not map to a primary user intent.",
+        "reason": "low-value"
+      },
+      {
+        "endpoint_id": "GET /books/{book_id}/reviews",
+        "note": "Omitted because it does not map to a primary user intent.",
+        "reason": "low-value"
+      },
+      {
+        "endpoint_id": "GET /copies/{copy_id}",
+        "note": "Omitted because it does not map to a primary user intent.",
+        "reason": "low-value"
+      },
+      {
+        "endpoint_id": "GET /loans",
+        "note": "Omitted because it does not map to a primary user intent.",
+        "reason": "low-value"
+      },
+      {
+        "endpoint_id": "GET /loans/{loan_id}",
+        "note": "Omitted because it does not map to a primary user intent.",
+        "reason": "low-value"
+      },
+      {
+        "endpoint_id": "GET /patrons",
+        "note": "Omitted because it does not map to a primary user intent.",
+        "reason": "low-value"
+      },
+      {
+        "endpoint_id": "GET /patrons/{patron_id}/holds",
+        "note": "Omitted because it does not map to a primary user intent.",
+        "reason": "low-value"
+      },
+      {
+        "endpoint_id": "GET /patrons/{patron_id}/loans",
+        "note": "Omitted because it does not map to a primary user intent.",
+        "reason": "low-value"
+      },
+      {
+        "endpoint_id": "GET /reviews/{review_id}",
+        "note": "Omitted because it does not map to a primary user intent.",
+        "reason": "low-value"
+      },
+      {
+        "endpoint_id": "PATCH /copies/{copy_id}",
+        "note": "Omitted because it does not map to a primary user intent.",
+        "reason": "low-value"
+      },
+      {
+        "endpoint_id": "PATCH /patrons/{patron_id}",
+        "note": "Omitted because it does not map to a primary user intent.",
+        "reason": "low-value"
+      },
+      {
+        "endpoint_id": "PATCH /reviews/{review_id}",
+        "note": "Omitted because it does not map to a primary user intent.",
+        "reason": "low-value"
+      }
+    ],
+    "tools": [
+      {
+        "endpoint_ids": [
+          "GET /books"
+        ],
+        "name": "search_books",
+        "rationale": "Search Books is a primary Shelf action."
+      },
+      {
+        "endpoint_ids": [
+          "POST /books"
+        ],
+        "name": "create_book",
+        "rationale": "Create Book is a primary Shelf action."
+      },
+      {
+        "endpoint_ids": [
+          "GET /books/{book_id}",
+          "GET /books/{book_id}/stats"
+        ],
+        "name": "get_book",
+        "rationale": "Get Book is a primary Shelf action."
+      },
+      {
+        "endpoint_ids": [
+          "PATCH /books/{book_id}"
+        ],
+        "name": "update_book",
+        "rationale": "Update Book is a primary Shelf action."
+      },
+      {
+        "endpoint_ids": [
+          "DELETE /books/{book_id}"
+        ],
+        "name": "delete_book",
+        "rationale": "Delete Book is a primary Shelf action."
+      },
+      {
+        "endpoint_ids": [
+          "GET /books/{book_id}/copies"
+        ],
+        "name": "list_copies",
+        "rationale": "List Copies is a primary Shelf action."
+      },
+      {
+        "endpoint_ids": [
+          "POST /books/{book_id}/copies"
+        ],
+        "name": "add_copy",
+        "rationale": "Add Copy is a primary Shelf action."
+      },
+      {
+        "endpoint_ids": [
+          "POST /uploads",
+          "PUT /uploads/{upload_id}/parts/{part_number}",
+          "POST /uploads/{upload_id}/complete",
+          "PUT /books/{book_id}/file"
+        ],
+        "name": "upload_book_file",
+        "rationale": "Upload Book File is a primary Shelf action."
+      },
+      {
+        "endpoint_ids": [
+          "POST /books/{book_id}/reviews"
+        ],
+        "name": "review_book",
+        "rationale": "Review Book is a primary Shelf action."
+      },
+      {
+        "endpoint_ids": [
+          "POST /patrons"
+        ],
+        "name": "register_patron",
+        "rationale": "Register Patron is a primary Shelf action."
+      },
+      {
+        "endpoint_ids": [
+          "GET /patrons/{patron_id}"
+        ],
+        "name": "get_patron",
+        "rationale": "Get Patron is a primary Shelf action."
+      },
+      {
+        "endpoint_ids": [
+          "POST /patrons/{patron_id}/holds"
+        ],
+        "name": "place_hold",
+        "rationale": "Place Hold is a primary Shelf action."
+      },
+      {
+        "endpoint_ids": [
+          "POST /loans"
+        ],
+        "name": "checkout_copy",
+        "rationale": "Checkout Copy is a primary Shelf action."
+      },
+      {
+        "endpoint_ids": [
+          "POST /loans/{loan_id}/return"
+        ],
+        "name": "return_loan",
+        "rationale": "Return Loan is a primary Shelf action."
+      },
+      {
+        "endpoint_ids": [
+          "POST /loans/{loan_id}/renew"
+        ],
+        "name": "renew_loan",
+        "rationale": "Renew Loan is a primary Shelf action."
+      }
+    ]
+  }
+}

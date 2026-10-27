@@ -373,15 +373,30 @@ def test_ingest_command_writes_endpoints(tmp_path: Path) -> None:
 
 
 def test_primary_command_stops_before_curate(
-    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+    tmp_path: Path, capsys: pytest.CaptureFixture[str], monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    monkeypatch.delenv("ANTHROPIC_API_KEY", raising=False)
     spec = tmp_path / "api.yaml"
     spec.write_text(_TINY, encoding="utf-8")
     out = tmp_path / "out"
     code = main([str(spec), "--out", str(out)])
     assert code == ExitCode.USAGE
     assert (out / "endpoints.json").is_file()
-    assert "tools.yaml" in capsys.readouterr().err
+    assert not (out / "tools.yaml").exists()
+    assert "ANTHROPIC_API_KEY" in capsys.readouterr().err
+
+
+def test_primary_command_heuristic_stops_before_emit(
+    tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    spec = tmp_path / "api.yaml"
+    spec.write_text(_TINY, encoding="utf-8")
+    out = tmp_path / "out"
+    code = main([str(spec), "--out", str(out), "--curation", "heuristic"])
+    assert code == ExitCode.USAGE
+    assert (out / "endpoints.json").is_file()
+    assert (out / "tools.yaml").is_file()
+    assert "generated" in capsys.readouterr().err
 
 
 def test_largest_spec_is_fast() -> None:
