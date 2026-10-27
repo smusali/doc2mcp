@@ -17,6 +17,8 @@ Report vulnerabilities privately through [GitHub security advisories](https://gi
 
 doc2mcp fetches documentation the operator did not write and passes that text to a model. A hostile page can attempt prompt injection.
 
+Curation sends summaries, descriptions, tags, and examples to the model inside `<<<UNTRUSTED DOC>>>` markers and tells the model that text is data. Admin, internal, deprecated, webhook-management, and bulk-destructive operations are removed in code after the model responds. A description that asks to publish those operations does not put them in `tools.yaml`. Unsupported authentication is excluded the same way.
+
 The tool then generates code, and that code is executed. It also runs a generated test suite. Verification can call live APIs with real credentials.
 
 ## Guarantees

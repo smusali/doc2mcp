@@ -6,7 +6,7 @@ import sys
 from dataclasses import dataclass
 from enum import IntEnum
 from pathlib import Path
-from typing import Annotated, Protocol, TypedDict, runtime_checkable
+from typing import Annotated, Literal, Protocol, TypedDict, runtime_checkable
 
 import typer
 
@@ -17,9 +17,31 @@ _DESCRIPTION = (
     "then verify every generated tool against the real API."
 )
 _STAGES = frozenset({"ingest", "curate", "emit", "verify"})
-_VALUE_FLAGS = frozenset({"--out", "--allow-ref-host"})
-_BOOL_FLAGS = frozenset({"--json", "--quiet", "--verbose", "--offline"})
-_EQUALS_FLAGS = ("--out=", "--allow-ref-host=")
+_VALUE_FLAGS = frozenset(
+    {
+        "--out",
+        "--allow-ref-host",
+        "--model",
+        "--budget-tokens",
+        "--budget-usd",
+        "--curation",
+        "--max-tools",
+        "--namespace",
+        "--include-tag",
+    }
+)
+_BOOL_FLAGS = frozenset({"--json", "--quiet", "--verbose", "--offline", "--dry-run", "--recurate"})
+_EQUALS_FLAGS = (
+    "--out=",
+    "--allow-ref-host=",
+    "--model=",
+    "--budget-tokens=",
+    "--budget-usd=",
+    "--curation=",
+    "--max-tools=",
+    "--namespace=",
+    "--include-tag=",
+)
 _ENDPOINTS = "endpoints.json"
 _TOOLS = "tools.yaml"
 _GENERATED = "generated"
@@ -61,6 +83,15 @@ class RunOptions:
     verbose: bool
     offline: bool
     allow_ref_hosts: tuple[str, ...]
+    model: str
+    budget_tokens: int
+    budget_usd: float
+    curation: str
+    max_tools: int
+    namespace: str
+    include_tags: tuple[str, ...]
+    dry_run: bool
+    recurate: bool
 
 
 @runtime_checkable
@@ -138,6 +169,42 @@ def _root(
         list[str] | None,
         typer.Option("--allow-ref-host", help="Host allowed for remote reference fetches."),
     ] = None,
+    model: Annotated[
+        str,
+        typer.Option("--model", help="Claude model used for agent curation."),
+    ] = "claude-opus-5-5",
+    budget_tokens: Annotated[
+        int,
+        typer.Option("--budget-tokens", help="Maximum tokens for agent curation."),
+    ] = 200_000,
+    budget_usd: Annotated[
+        float,
+        typer.Option("--budget-usd", help="Maximum estimated USD for agent curation."),
+    ] = 5,
+    curation: Annotated[
+        str,
+        typer.Option("--curation", help="Curation mode: agent, heuristic, or manual."),
+    ] = "agent",
+    max_tools: Annotated[
+        int,
+        typer.Option("--max-tools", help="Tool-count target. Exceeding it requires a rationale."),
+    ] = 20,
+    namespace: Annotated[
+        str,
+        typer.Option("--namespace", help="Prefix added to each tool name."),
+    ] = "",
+    include_tag: Annotated[
+        list[str] | None,
+        typer.Option("--include-tag", help="Tag or category to keep instead of excluding."),
+    ] = None,
+    dry_run: Annotated[
+        bool,
+        typer.Option("--dry-run", help="Print a token and cost estimate without a paid call."),
+    ] = False,
+    recurate: Annotated[
+        bool,
+        typer.Option("--recurate", help="Curate again even when the input hash matches."),
+    ] = False,
     _version: Annotated[
         bool,
         typer.Option(
@@ -158,6 +225,15 @@ def _root(
         verbose=verbose,
         offline=offline,
         allow_ref_hosts=tuple(allow_ref_host or ()),
+        model=model,
+        budget_tokens=budget_tokens,
+        budget_usd=budget_usd,
+        curation=curation,
+        max_tools=max_tools,
+        namespace=namespace,
+        include_tags=tuple(include_tag or ()),
+        dry_run=dry_run,
+        recurate=recurate,
     )
     if ctx.invoked_subcommand is None:
         raise UsageError("missing spec")
@@ -170,8 +246,10 @@ def _run(
 ) -> None:
     options = _options(ctx)
     _ingest(spec, options)
-    _require_file(options.out / _ENDPOINTS)
-    _unwritten(options.out / _TOOLS)
+    _curate(options)
+    if options.dry_run:
+        return
+    _unwritten(options.out / _GENERATED)
 
 
 @app.command(help="Read an OpenAPI file path or URL and write endpoints.json.")
@@ -184,9 +262,7 @@ def ingest(
 
 @app.command(help="Read endpoints.json and write tools.yaml.")
 def curate(ctx: typer.Context) -> None:
-    options = _options(ctx)
-    _require_file(options.out / _ENDPOINTS)
-    _unwritten(options.out / _TOOLS)
+    _curate(_options(ctx))
 
 
 @app.command(help="Read tools.yaml and endpoints.json and write generated/.")
@@ -251,6 +327,46 @@ def _ingest(spec: str, options: RunOptions) -> None:
         allow_ref_hosts=options.allow_ref_hosts,
     )
     write_endpoints(loaded, options.out)
+
+
+def _curate(options: RunOptions) -> None:
+    from doc2mcp.curate.agent import CurationOptions, CurationUpstream, CurationUsage, curate
+
+    mode = _curation_mode(options.curation)
+    try:
+        result = curate(
+            options.out,
+            CurationOptions(
+                model=options.model,
+                mode=mode,
+                max_tools=options.max_tools,
+                namespace=options.namespace,
+                include_tags=options.include_tags,
+                budget_tokens=options.budget_tokens,
+                budget_usd=options.budget_usd,
+                dry_run=options.dry_run,
+                recurate=options.recurate,
+                offline=options.offline,
+            ),
+        )
+    except CurationUsage as exc:
+        raise UsageError(exc.message) from exc
+    except CurationUpstream as exc:
+        raise UpstreamError(exc.message) from exc
+    if result.report:
+        sys.stdout.write(result.report)
+    for warning in result.warnings:
+        sys.stderr.write(f"{warning}\n")
+
+
+def _curation_mode(value: str) -> Literal["agent", "heuristic", "manual"]:
+    if value == "agent":
+        return "agent"
+    if value == "heuristic":
+        return "heuristic"
+    if value == "manual":
+        return "manual"
+    raise UsageError("curation mode is not supported")
 
 
 def _require_file(path: Path) -> None:

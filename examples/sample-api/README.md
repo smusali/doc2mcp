@@ -50,6 +50,14 @@ examples/sample-api/
   README.md
   openapi.yaml
   server.py
+  endpoints.json
+  tools.yaml
 ```
 
-Later stages write `endpoints.json`, `tools.yaml`, `generated/`, `tests/`, and `report/` next to these files.
+`endpoints.json` is the ingest of `openapi.yaml`. `tools.yaml` is a replayed curation with at most 15 tools and a reason for every other operation. Reuse it without a model call:
+
+```text
+doc2mcp curate --out examples/sample-api --offline
+```
+
+A later refresh with a key is `doc2mcp curate --recurate --out examples/sample-api`. Emit and verify still write `generated/`, `tests/`, and `report/` next to these files.

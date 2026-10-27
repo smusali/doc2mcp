@@ -39,6 +39,15 @@ Flags may appear before or after the command.
 | `--verbose` | Log debug messages. |
 | `--offline` | Read local files only. A URL, or a `$ref` that needs the network, is a usage error. |
 | `--allow-ref-host HOST` | Allow a remote `$ref` from `HOST`. Repeat the flag for more than one host. |
+| `--model ID` | Claude model for agent curation. Defaults to `claude-opus-5-5`. |
+| `--budget-tokens N` | Token budget for agent curation. Defaults to 200000. |
+| `--budget-usd N` | Estimated USD budget for agent curation. Defaults to 5. |
+| `--curation MODE` | `agent`, `heuristic`, or `manual`. Defaults to `agent`. |
+| `--max-tools N` | Tool-count target. Defaults to 20. Exceeding it requires a rationale. |
+| `--namespace NAME` | Prefix added to each tool name. |
+| `--include-tag TAG` | Keep a tag or a category (`admin`, `internal`, `deprecated`, `webhook-management`, `destructive-bulk`). Repeat the flag to include more than one. |
+| `--dry-run` | Print a token and cost estimate and do not write `tools.yaml`. |
+| `--recurate` | Curate again even when the input hash matches. |
 
 `--quiet` and `--verbose` together is a usage error.
 
@@ -61,5 +70,9 @@ Remote `$ref`s are followed only for the input URL's host, plus each `--allow-re
 | 4 | Ingest, network, model API, or upstream API failure |
 
 A missing input is exit 2, and the message names that path. `--offline` refusing a URL or a network `$ref` is also exit 2.
+
+`doc2mcp curate` reads `endpoints.json` and writes `tools.yaml`. Agent mode needs `ANTHROPIC_API_KEY`. A missing key is exit 2 with `missing ANTHROPIC_API_KEY`, before a client is created. `--dry-run` counts tokens and prints the estimate on stdout, then exits 0 without writing `tools.yaml`. `--offline --dry-run` exits 2 with `cannot estimate tokens offline`. `--offline` without a matching `tools.yaml` exits 2 unless `--curation heuristic` is set. `--curation manual` loads `tools.yaml`, applies `overrides.yaml`, and exits 2 without rewriting the file when that manifest is missing or invalid. A model or network failure during curation is exit 4.
+
+The primary command ingests, curates, then stops at emit until `generated/` can be written. `--dry-run` on that command returns after the estimate and does not try to emit.
 
 Exit 4 includes an HTML page, a remote `$ref` whose host is not allowed, a response over 25 MiB, and a YAML document that is too large. Exit 0 is reserved for a run that verified every generated tool. `doc2mcp ingest` exits 0 after it writes `endpoints.json`.

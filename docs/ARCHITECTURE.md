@@ -17,6 +17,8 @@ Ingest writes `endpoints.json` as version `endpoint-v1`. Later stages read that 
 
 `endpoint-v1` changes only by adding fields. A change that is not additive is published as `endpoint-v2`. `docs/schemas/endpoint-v1.json` is generated from the models, and the test suite fails when the two drift.
 
+Curate writes `tools.yaml` as version `manifest-v1`. The model chooses names, groupings, and field paths. doc2mcp copies every JSON Schema from `endpoints.json`, checks the manifest, and drops a tool that is still invalid after one correction. `docs/schemas/manifest-v1.json` is generated from the models the same way. The pre-override manifest is cached at `.doc2mcp/base-tools.yaml`. A later run with the same input hash reuses that cache and applies `overrides.yaml` again. Emit still treats `tools.yaml` as an input and does not write it.
+
 The artifact is deterministic. Endpoints are ordered by path and method, object keys are sorted, and the file is UTF-8 with LF line endings. For a local spec, `source.uri` is the file name without its directory, and `source.sha256` is the digest of the raw input bytes. Copying the spec to another directory does not change the artifact when the file name stays the same.
 
 `.doc2mcp/` is the local cache. It is not a stage artifact, and it is gitignored. Stage artifacts are whatever `--out` points at.
