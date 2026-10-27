@@ -48,6 +48,7 @@ Flags may appear before or after the command.
 | `--include-tag TAG` | Keep a tag or a category (`admin`, `internal`, `deprecated`, `webhook-management`, `destructive-bulk`). Repeat the flag to include more than one. |
 | `--dry-run` | Print a token and cost estimate and do not write `tools.yaml`. |
 | `--recurate` | Curate again even when the input hash matches. |
+| `--force` | Overwrite generated files that were edited after the last emit. |
 
 `--quiet` and `--verbose` together is a usage error.
 
@@ -73,6 +74,6 @@ A missing input is exit 2, and the message names that path. `--offline` refusing
 
 `doc2mcp curate` reads `endpoints.json` and writes `tools.yaml`. Agent mode needs `ANTHROPIC_API_KEY`. A missing key is exit 2 with `missing ANTHROPIC_API_KEY`, before a client is created. `--dry-run` counts tokens and prints the estimate on stdout, then exits 0 without writing `tools.yaml`. `--offline --dry-run` exits 2 with `cannot estimate tokens offline`. `--offline` without a matching `tools.yaml` exits 2 unless `--curation heuristic` is set. `--curation manual` loads `tools.yaml`, applies `overrides.yaml`, and exits 2 without rewriting the file when that manifest is missing or invalid. A model or network failure during curation is exit 4.
 
-The primary command ingests, curates, then stops at emit until `generated/` can be written. `--dry-run` on that command returns after the estimate and does not try to emit.
+`doc2mcp emit` reads `tools.yaml` and `endpoints.json` and writes `generated/`. A file under `generated/` that was edited after the last emit is exit 2. The message lists that path and says to change `tools.yaml` or `overrides.yaml`, or to pass `--force`. `--force` overwrites the edited files. The primary command ingests, curates, emits, then stops at verify until `report/` can be written. `--dry-run` on that command returns after the estimate and does not emit.
 
 Exit 4 includes an HTML page, a remote `$ref` whose host is not allowed, a response over 25 MiB, and a YAML document that is too large. Exit 0 is reserved for a run that verified every generated tool. `doc2mcp ingest` exits 0 after it writes `endpoints.json`.

@@ -30,7 +30,9 @@ _VALUE_FLAGS = frozenset(
         "--include-tag",
     }
 )
-_BOOL_FLAGS = frozenset({"--json", "--quiet", "--verbose", "--offline", "--dry-run", "--recurate"})
+_BOOL_FLAGS = frozenset(
+    {"--json", "--quiet", "--verbose", "--offline", "--dry-run", "--recurate", "--force"}
+)
 _EQUALS_FLAGS = (
     "--out=",
     "--allow-ref-host=",
@@ -92,6 +94,7 @@ class RunOptions:
     include_tags: tuple[str, ...]
     dry_run: bool
     recurate: bool
+    force: bool
 
 
 @runtime_checkable
@@ -205,6 +208,10 @@ def _root(
         bool,
         typer.Option("--recurate", help="Curate again even when the input hash matches."),
     ] = False,
+    force: Annotated[
+        bool,
+        typer.Option("--force", help="Overwrite generated files that were edited."),
+    ] = False,
     _version: Annotated[
         bool,
         typer.Option(
@@ -234,6 +241,7 @@ def _root(
         include_tags=tuple(include_tag or ()),
         dry_run=dry_run,
         recurate=recurate,
+        force=force,
     )
     if ctx.invoked_subcommand is None:
         raise UsageError("missing spec")
@@ -249,7 +257,8 @@ def _run(
     _curate(options)
     if options.dry_run:
         return
-    _unwritten(options.out / _GENERATED)
+    _emit(options)
+    _unwritten(options.out / _REPORT)
 
 
 @app.command(help="Read an OpenAPI file path or URL and write endpoints.json.")
@@ -270,7 +279,7 @@ def emit(ctx: typer.Context) -> None:
     options = _options(ctx)
     _require_file(options.out / _TOOLS)
     _require_file(options.out / _ENDPOINTS)
-    _unwritten(options.out / _GENERATED)
+    _emit(options)
 
 
 @app.command(help="Read generated/ and tests/ and write report/.")
@@ -377,6 +386,15 @@ def _require_file(path: Path) -> None:
 def _require_dir(path: Path) -> None:
     if not path.is_dir():
         raise UsageError(f"not found: {path}")
+
+
+def _emit(options: RunOptions) -> None:
+    from doc2mcp.emit import EmitError, emit
+
+    try:
+        emit(options.out, force=options.force)
+    except EmitError as exc:
+        raise UsageError(exc.message) from exc
 
 
 def _unwritten(path: Path) -> None:

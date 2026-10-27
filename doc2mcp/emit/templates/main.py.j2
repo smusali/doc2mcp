@@ -1,0 +1,99 @@
+{% include "header.py.j2" %}
+from __future__ import annotations
+
+import logging
+import sys
+
+from {{ module }}.client import startup_error
+from {{ module }}.server import mcp
+
+_QUIET_LOGGERS = ("httpx", "httpx2", "httpcore", "httpcore2")
+_PROGRAM = {{ program_literal }}
+
+
+def main() -> None:
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(levelname)s %(name)s: %(message)s",
+        stream=sys.stderr,
+    )
+    for name in _QUIET_LOGGERS:
+        logging.getLogger(name).setLevel(logging.WARNING)
+    transport, host, port = _parse(sys.argv[1:])
+    problem = startup_error()
+    if problem is not None:
+        sys.stderr.write(f"{problem}\n")
+        raise SystemExit(2)
+    if transport == "http":
+        mcp.run(transport="streamable-http", host=host, port=port)
+        return
+    mcp.run(transport="stdio")
+
+
+def _parse(argv: list[str]) -> tuple[str, str, int]:
+    transport = "stdio"
+    host = "127.0.0.1"
+    port = 8000
+    index = 0
+    while index < len(argv):
+        token = argv[index]
+        if token in {"-h", "--help"}:
+            _help()
+            raise SystemExit(0)
+        if token == "--transport":
+            transport = _value(argv, index)
+            index += 2
+            continue
+        if token.startswith("--transport="):
+            transport = token.split("=", 1)[1]
+            index += 1
+            continue
+        if token == "--host":
+            host = _value(argv, index)
+            index += 2
+            continue
+        if token.startswith("--host="):
+            host = token.split("=", 1)[1]
+            index += 1
+            continue
+        if token == "--port":
+            port = _port(_value(argv, index))
+            index += 2
+            continue
+        if token.startswith("--port="):
+            port = _port(token.split("=", 1)[1])
+            index += 1
+            continue
+        sys.stderr.write(f"unknown argument {token}\n")
+        raise SystemExit(2)
+    if transport not in {"stdio", "http"}:
+        sys.stderr.write("transport must be stdio or http\n")
+        raise SystemExit(2)
+    return transport, host, port
+
+
+def _value(argv: list[str], index: int) -> str:
+    if index + 1 >= len(argv):
+        sys.stderr.write(f"missing value for {argv[index]}\n")
+        raise SystemExit(2)
+    return argv[index + 1]
+
+
+def _port(text: str) -> int:
+    try:
+        value = int(text)
+    except ValueError:
+        sys.stderr.write("port must be an integer\n")
+        raise SystemExit(2) from None
+    if value < 0 or value > 65535:
+        sys.stderr.write("port is out of range\n")
+        raise SystemExit(2)
+    return value
+
+
+def _help() -> None:
+    sys.stdout.write(f"usage: {_PROGRAM} [--transport stdio|http] [--host HOST] [--port PORT]\n")
+
+
+if __name__ == "__main__":
+    main()

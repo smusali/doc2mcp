@@ -386,7 +386,7 @@ def test_primary_command_stops_before_curate(
     assert "ANTHROPIC_API_KEY" in capsys.readouterr().err
 
 
-def test_primary_command_heuristic_stops_before_emit(
+def test_primary_command_heuristic_stops_at_verify(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
     spec = tmp_path / "api.yaml"
@@ -396,7 +396,8 @@ def test_primary_command_heuristic_stops_before_emit(
     assert code == ExitCode.USAGE
     assert (out / "endpoints.json").is_file()
     assert (out / "tools.yaml").is_file()
-    assert "generated" in capsys.readouterr().err
+    assert (out / "generated").is_dir()
+    assert "report" in capsys.readouterr().err
 
 
 def test_largest_spec_is_fast() -> None:

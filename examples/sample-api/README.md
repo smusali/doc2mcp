@@ -52,6 +52,7 @@ examples/sample-api/
   server.py
   endpoints.json
   tools.yaml
+  generated/
 ```
 
 `endpoints.json` is the ingest of `openapi.yaml`. `tools.yaml` is a replayed curation with at most 15 tools and a reason for every other operation. Reuse it without a model call:
