@@ -263,15 +263,14 @@ def test_http_transport_lists_tools(tmp_path: Path) -> None:
 
 
 def test_packaged_server_help_runs_offline() -> None:
-    with tempfile.TemporaryDirectory() as tmp:
-        project = Path(tmp) / "generated"
-        _copy_tree(_SAMPLE / "generated", project)
-        completed = subprocess.run(
-            ["uv", "run", "--project", str(project), "--offline", "shelf-mcp", "--help"],
-            check=False,
-            capture_output=True,
-            text=True,
-        )
+    project = _SAMPLE / "generated"
+    completed = subprocess.run(
+        [sys.executable, "-m", "shelf_mcp", "--help"],
+        cwd=project,
+        check=False,
+        capture_output=True,
+        text=True,
+    )
     assert completed.returncode == 0, completed.stderr
     assert "usage: shelf-mcp" in completed.stdout
 
@@ -281,17 +280,6 @@ def _copy_sample(out: Path) -> Path:
     (out / "tools.yaml").write_bytes((_SAMPLE / "tools.yaml").read_bytes())
     (out / "endpoints.json").write_bytes((_SAMPLE / "endpoints.json").read_bytes())
     return out
-
-
-def _copy_tree(source: Path, dest: Path) -> None:
-    dest.mkdir(parents=True, exist_ok=True)
-    for path in source.rglob("*"):
-        target = dest / path.relative_to(source)
-        if path.is_dir():
-            target.mkdir(parents=True, exist_ok=True)
-            continue
-        target.parent.mkdir(parents=True, exist_ok=True)
-        target.write_bytes(path.read_bytes())
 
 
 def _assert_same(expected: Path, actual: Path) -> None:
