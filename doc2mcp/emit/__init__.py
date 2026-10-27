@@ -16,12 +16,20 @@ _LEDGER = ".doc2mcp-files.json"
 _GENERATED = "generated"
 
 
-def emit(out: Path, *, force: bool = False) -> None:
+def emit(
+    out: Path,
+    *,
+    force: bool = False,
+    skip_tools: frozenset[str] | None = None,
+    description_prefixes: dict[str, str] | None = None,
+) -> None:
     """Write the generated MCP server for a curated manifest.
 
     Args:
         out: Directory that contains tools.yaml and endpoints.json.
         force: Overwrite generated files that were edited after the last emit.
+        skip_tools: Tool names to leave out of the server.
+        description_prefixes: Text prepended to those tools' descriptions.
 
     Returns:
         None. The server is written under ``out / "generated"``.
@@ -34,12 +42,32 @@ def emit(out: Path, *, force: bool = False) -> None:
         raise EmitError(f"not found: {endpoints_path}")
     tools_bytes = _read(tools_path)
     endpoints_bytes = _read(endpoints_path)
+    manifest = _load_manifest(tools_bytes)
+    selected = _select_tools(manifest, skip_tools or frozenset(), description_prefixes or {})
     rendered = render_files(
         _load_spec(endpoints_bytes),
-        _load_manifest(tools_bytes),
+        manifest if selected is None else selected,
         tools_sha256=hashlib.sha256(tools_bytes).hexdigest(),
     )
     _write_tree(out / _GENERATED, rendered.files, rendered.header, force=force)
+
+
+def _select_tools(
+    manifest: Manifest,
+    skip_tools: frozenset[str],
+    description_prefixes: dict[str, str],
+) -> Manifest | None:
+    if not skip_tools and not description_prefixes:
+        return None
+    tools = []
+    for tool in manifest.tools:
+        if tool.name in skip_tools:
+            continue
+        prefix = description_prefixes.get(tool.name, "")
+        if prefix:
+            tool = tool.model_copy(update={"description": f"{prefix}{tool.description}"})
+        tools.append(tool)
+    return manifest.model_copy(update={"tools": tools})
 
 
 def _read(path: Path) -> bytes:

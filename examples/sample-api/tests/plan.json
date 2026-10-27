@@ -1,0 +1,3928 @@
+{
+  "allowlist": [
+    "127.0.0.1"
+  ],
+  "base_url_env": "SHELF_BASE_URL",
+  "bindings": [],
+  "calls": [
+    {
+      "arguments": {
+        "book_id": "book_001"
+      },
+      "hang": false,
+      "id": "get_book:required",
+      "kind": "required",
+      "negative": false,
+      "nullable": [
+        "file_id"
+      ],
+      "output_step": 0,
+      "required": [
+        "author",
+        "created_at",
+        "file_id",
+        "id",
+        "title"
+      ],
+      "steps": [
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Book": {
+                "additionalProperties": false,
+                "properties": {
+                  "author": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "file_id": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "title",
+                  "author",
+                  "created_at",
+                  "file_id"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_Book"
+          },
+          "success_status": 200,
+          "synthetic_body": {
+            "author": "",
+            "created_at": "",
+            "file_id": null,
+            "id": "",
+            "title": ""
+          },
+          "synthetic_status": 200
+        },
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_BookStats": {
+                "additionalProperties": false,
+                "properties": {
+                  "book_id": {
+                    "type": "string"
+                  },
+                  "page_count": {
+                    "description": "Number of pages.",
+                    "examples": [
+                      320
+                    ],
+                    "type": "integer"
+                  },
+                  "word_count": {
+                    "description": "Number of words.",
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "book_id",
+                  "page_count",
+                  "word_count"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_BookStats"
+          },
+          "success_status": 200,
+          "synthetic_body": {
+            "book_id": "book_001",
+            "page_count": 320,
+            "word_count": 84000
+          },
+          "synthetic_status": 200
+        }
+      ],
+      "tool": "get_book"
+    },
+    {
+      "arguments": {
+        "book_id": "book_001"
+      },
+      "hang": false,
+      "id": "get_book:all",
+      "kind": "all",
+      "negative": false,
+      "nullable": [
+        "file_id"
+      ],
+      "output_step": 0,
+      "required": [
+        "author",
+        "created_at",
+        "file_id",
+        "id",
+        "title"
+      ],
+      "steps": [
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Book": {
+                "additionalProperties": false,
+                "properties": {
+                  "author": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "file_id": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "title",
+                  "author",
+                  "created_at",
+                  "file_id"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_Book"
+          },
+          "success_status": 200,
+          "synthetic_body": {
+            "author": "",
+            "created_at": "",
+            "file_id": null,
+            "id": "",
+            "title": ""
+          },
+          "synthetic_status": 200
+        },
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_BookStats": {
+                "additionalProperties": false,
+                "properties": {
+                  "book_id": {
+                    "type": "string"
+                  },
+                  "page_count": {
+                    "description": "Number of pages.",
+                    "examples": [
+                      320
+                    ],
+                    "type": "integer"
+                  },
+                  "word_count": {
+                    "description": "Number of words.",
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "book_id",
+                  "page_count",
+                  "word_count"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_BookStats"
+          },
+          "success_status": 200,
+          "synthetic_body": {
+            "book_id": "book_001",
+            "page_count": 320,
+            "word_count": 84000
+          },
+          "synthetic_status": 200
+        }
+      ],
+      "tool": "get_book"
+    },
+    {
+      "arguments": {},
+      "hang": false,
+      "id": "get_book:negative",
+      "kind": "negative",
+      "negative": true,
+      "nullable": [
+        "file_id"
+      ],
+      "output_step": 0,
+      "required": [
+        "author",
+        "created_at",
+        "file_id",
+        "id",
+        "title"
+      ],
+      "steps": [
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Book": {
+                "additionalProperties": false,
+                "properties": {
+                  "author": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "file_id": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "title",
+                  "author",
+                  "created_at",
+                  "file_id"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_Book"
+          },
+          "success_status": 200,
+          "synthetic_body": {
+            "author": "",
+            "created_at": "",
+            "file_id": null,
+            "id": "",
+            "title": ""
+          },
+          "synthetic_status": 200
+        },
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_BookStats": {
+                "additionalProperties": false,
+                "properties": {
+                  "book_id": {
+                    "type": "string"
+                  },
+                  "page_count": {
+                    "description": "Number of pages.",
+                    "examples": [
+                      320
+                    ],
+                    "type": "integer"
+                  },
+                  "word_count": {
+                    "description": "Number of words.",
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "book_id",
+                  "page_count",
+                  "word_count"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_BookStats"
+          },
+          "success_status": 200,
+          "synthetic_body": {
+            "book_id": "book_001",
+            "page_count": 320,
+            "word_count": 84000
+          },
+          "synthetic_status": 200
+        }
+      ],
+      "tool": "get_book"
+    },
+    {
+      "arguments": {
+        "patron_id": "patron_001"
+      },
+      "hang": false,
+      "id": "get_patron:required",
+      "kind": "required",
+      "negative": false,
+      "nullable": [],
+      "output_step": 0,
+      "required": [
+        "created_at",
+        "email",
+        "id",
+        "name",
+        "status"
+      ],
+      "steps": [
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Patron": {
+                "additionalProperties": false,
+                "properties": {
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "enum": [
+                      "active",
+                      "suspended"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "name",
+                  "email",
+                  "status",
+                  "created_at"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_Patron"
+          },
+          "success_status": 200,
+          "synthetic_body": {
+            "created_at": "",
+            "email": "",
+            "id": "",
+            "name": "",
+            "status": "active"
+          },
+          "synthetic_status": 200
+        }
+      ],
+      "tool": "get_patron"
+    },
+    {
+      "arguments": {
+        "patron_id": "patron_001"
+      },
+      "hang": false,
+      "id": "get_patron:all",
+      "kind": "all",
+      "negative": false,
+      "nullable": [],
+      "output_step": 0,
+      "required": [
+        "created_at",
+        "email",
+        "id",
+        "name",
+        "status"
+      ],
+      "steps": [
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Patron": {
+                "additionalProperties": false,
+                "properties": {
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "enum": [
+                      "active",
+                      "suspended"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "name",
+                  "email",
+                  "status",
+                  "created_at"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_Patron"
+          },
+          "success_status": 200,
+          "synthetic_body": {
+            "created_at": "",
+            "email": "",
+            "id": "",
+            "name": "",
+            "status": "active"
+          },
+          "synthetic_status": 200
+        }
+      ],
+      "tool": "get_patron"
+    },
+    {
+      "arguments": {},
+      "hang": false,
+      "id": "get_patron:negative",
+      "kind": "negative",
+      "negative": true,
+      "nullable": [],
+      "output_step": 0,
+      "required": [
+        "created_at",
+        "email",
+        "id",
+        "name",
+        "status"
+      ],
+      "steps": [
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Patron": {
+                "additionalProperties": false,
+                "properties": {
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "enum": [
+                      "active",
+                      "suspended"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "name",
+                  "email",
+                  "status",
+                  "created_at"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_Patron"
+          },
+          "success_status": 200,
+          "synthetic_body": {
+            "created_at": "",
+            "email": "",
+            "id": "",
+            "name": "",
+            "status": "active"
+          },
+          "synthetic_status": 200
+        }
+      ],
+      "tool": "get_patron"
+    },
+    {
+      "arguments": {
+        "book_id": "book_001"
+      },
+      "hang": false,
+      "id": "list_copies:required",
+      "kind": "required",
+      "negative": false,
+      "nullable": [
+        "next_cursor"
+      ],
+      "output_step": 0,
+      "required": [
+        "has_more",
+        "next_cursor",
+        "data"
+      ],
+      "steps": [
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Copy": {
+                "additionalProperties": false,
+                "properties": {
+                  "barcode": {
+                    "type": "string"
+                  },
+                  "book_id": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "enum": [
+                      "available",
+                      "on_loan"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "book_id",
+                  "barcode",
+                  "status",
+                  "created_at"
+                ],
+                "type": "object"
+              },
+              "components_schemas_CopyPage": {
+                "allOf": [
+                  {
+                    "$ref": "#/$defs/components_schemas_Page"
+                  },
+                  {
+                    "properties": {
+                      "data": {
+                        "items": {
+                          "$ref": "#/$defs/components_schemas_Copy"
+                        },
+                        "type": "array"
+                      }
+                    },
+                    "required": [
+                      "data"
+                    ],
+                    "type": "object"
+                  }
+                ],
+                "unevaluatedProperties": false
+              },
+              "components_schemas_Page": {
+                "properties": {
+                  "has_more": {
+                    "type": "boolean"
+                  },
+                  "next_cursor": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "required": [
+                  "has_more",
+                  "next_cursor"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_CopyPage"
+          },
+          "success_status": 200,
+          "synthetic_body": {
+            "data": [],
+            "has_more": false,
+            "next_cursor": null
+          },
+          "synthetic_status": 200
+        }
+      ],
+      "tool": "list_copies"
+    },
+    {
+      "arguments": {
+        "book_id": "book_001"
+      },
+      "hang": false,
+      "id": "list_copies:all",
+      "kind": "all",
+      "negative": false,
+      "nullable": [
+        "next_cursor"
+      ],
+      "output_step": 0,
+      "required": [
+        "has_more",
+        "next_cursor",
+        "data"
+      ],
+      "steps": [
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Copy": {
+                "additionalProperties": false,
+                "properties": {
+                  "barcode": {
+                    "type": "string"
+                  },
+                  "book_id": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "enum": [
+                      "available",
+                      "on_loan"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "book_id",
+                  "barcode",
+                  "status",
+                  "created_at"
+                ],
+                "type": "object"
+              },
+              "components_schemas_CopyPage": {
+                "allOf": [
+                  {
+                    "$ref": "#/$defs/components_schemas_Page"
+                  },
+                  {
+                    "properties": {
+                      "data": {
+                        "items": {
+                          "$ref": "#/$defs/components_schemas_Copy"
+                        },
+                        "type": "array"
+                      }
+                    },
+                    "required": [
+                      "data"
+                    ],
+                    "type": "object"
+                  }
+                ],
+                "unevaluatedProperties": false
+              },
+              "components_schemas_Page": {
+                "properties": {
+                  "has_more": {
+                    "type": "boolean"
+                  },
+                  "next_cursor": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "required": [
+                  "has_more",
+                  "next_cursor"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_CopyPage"
+          },
+          "success_status": 200,
+          "synthetic_body": {
+            "data": [],
+            "has_more": false,
+            "next_cursor": null
+          },
+          "synthetic_status": 200
+        }
+      ],
+      "tool": "list_copies"
+    },
+    {
+      "arguments": {},
+      "hang": false,
+      "id": "list_copies:negative",
+      "kind": "negative",
+      "negative": true,
+      "nullable": [
+        "next_cursor"
+      ],
+      "output_step": 0,
+      "required": [
+        "has_more",
+        "next_cursor",
+        "data"
+      ],
+      "steps": [
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Copy": {
+                "additionalProperties": false,
+                "properties": {
+                  "barcode": {
+                    "type": "string"
+                  },
+                  "book_id": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "enum": [
+                      "available",
+                      "on_loan"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "book_id",
+                  "barcode",
+                  "status",
+                  "created_at"
+                ],
+                "type": "object"
+              },
+              "components_schemas_CopyPage": {
+                "allOf": [
+                  {
+                    "$ref": "#/$defs/components_schemas_Page"
+                  },
+                  {
+                    "properties": {
+                      "data": {
+                        "items": {
+                          "$ref": "#/$defs/components_schemas_Copy"
+                        },
+                        "type": "array"
+                      }
+                    },
+                    "required": [
+                      "data"
+                    ],
+                    "type": "object"
+                  }
+                ],
+                "unevaluatedProperties": false
+              },
+              "components_schemas_Page": {
+                "properties": {
+                  "has_more": {
+                    "type": "boolean"
+                  },
+                  "next_cursor": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "required": [
+                  "has_more",
+                  "next_cursor"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_CopyPage"
+          },
+          "success_status": 200,
+          "synthetic_body": {
+            "data": [],
+            "has_more": false,
+            "next_cursor": null
+          },
+          "synthetic_status": 200
+        }
+      ],
+      "tool": "list_copies"
+    },
+    {
+      "arguments": {},
+      "hang": false,
+      "id": "search_books:required",
+      "kind": "required",
+      "negative": false,
+      "nullable": [
+        "next_cursor"
+      ],
+      "output_step": 0,
+      "required": [
+        "has_more",
+        "next_cursor",
+        "data"
+      ],
+      "steps": [
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Book": {
+                "additionalProperties": false,
+                "properties": {
+                  "author": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "file_id": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "title",
+                  "author",
+                  "created_at",
+                  "file_id"
+                ],
+                "type": "object"
+              },
+              "components_schemas_BookPage": {
+                "allOf": [
+                  {
+                    "$ref": "#/$defs/components_schemas_Page"
+                  },
+                  {
+                    "properties": {
+                      "data": {
+                        "items": {
+                          "$ref": "#/$defs/components_schemas_Book"
+                        },
+                        "type": "array"
+                      }
+                    },
+                    "required": [
+                      "data"
+                    ],
+                    "type": "object"
+                  }
+                ],
+                "unevaluatedProperties": false
+              },
+              "components_schemas_Page": {
+                "properties": {
+                  "has_more": {
+                    "type": "boolean"
+                  },
+                  "next_cursor": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "required": [
+                  "has_more",
+                  "next_cursor"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_BookPage"
+          },
+          "success_status": 200,
+          "synthetic_body": {
+            "data": [],
+            "has_more": false,
+            "next_cursor": null
+          },
+          "synthetic_status": 200
+        }
+      ],
+      "tool": "search_books"
+    },
+    {
+      "arguments": {},
+      "hang": false,
+      "id": "search_books:all",
+      "kind": "all",
+      "negative": false,
+      "nullable": [
+        "next_cursor"
+      ],
+      "output_step": 0,
+      "required": [
+        "has_more",
+        "next_cursor",
+        "data"
+      ],
+      "steps": [
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Book": {
+                "additionalProperties": false,
+                "properties": {
+                  "author": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "file_id": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "title",
+                  "author",
+                  "created_at",
+                  "file_id"
+                ],
+                "type": "object"
+              },
+              "components_schemas_BookPage": {
+                "allOf": [
+                  {
+                    "$ref": "#/$defs/components_schemas_Page"
+                  },
+                  {
+                    "properties": {
+                      "data": {
+                        "items": {
+                          "$ref": "#/$defs/components_schemas_Book"
+                        },
+                        "type": "array"
+                      }
+                    },
+                    "required": [
+                      "data"
+                    ],
+                    "type": "object"
+                  }
+                ],
+                "unevaluatedProperties": false
+              },
+              "components_schemas_Page": {
+                "properties": {
+                  "has_more": {
+                    "type": "boolean"
+                  },
+                  "next_cursor": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                },
+                "required": [
+                  "has_more",
+                  "next_cursor"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_BookPage"
+          },
+          "success_status": 200,
+          "synthetic_body": {
+            "data": [],
+            "has_more": false,
+            "next_cursor": null
+          },
+          "synthetic_status": 200
+        }
+      ],
+      "tool": "search_books"
+    },
+    {
+      "arguments": {
+        "barcode": "C-004",
+        "book_id": "book_001"
+      },
+      "hang": false,
+      "id": "add_copy:required",
+      "kind": "required",
+      "negative": false,
+      "nullable": [],
+      "output_step": 0,
+      "required": [
+        "barcode",
+        "book_id",
+        "created_at",
+        "id",
+        "status"
+      ],
+      "steps": [
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Copy": {
+                "additionalProperties": false,
+                "properties": {
+                  "barcode": {
+                    "type": "string"
+                  },
+                  "book_id": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "enum": [
+                      "available",
+                      "on_loan"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "book_id",
+                  "barcode",
+                  "status",
+                  "created_at"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_Copy"
+          },
+          "success_status": 201,
+          "synthetic_body": {
+            "barcode": "",
+            "book_id": "",
+            "created_at": "",
+            "id": "",
+            "status": "on_loan"
+          },
+          "synthetic_status": 201
+        }
+      ],
+      "tool": "add_copy"
+    },
+    {
+      "arguments": {
+        "barcode": "C-004",
+        "book_id": "book_001"
+      },
+      "hang": false,
+      "id": "add_copy:all",
+      "kind": "all",
+      "negative": false,
+      "nullable": [],
+      "output_step": 0,
+      "required": [
+        "barcode",
+        "book_id",
+        "created_at",
+        "id",
+        "status"
+      ],
+      "steps": [
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Copy": {
+                "additionalProperties": false,
+                "properties": {
+                  "barcode": {
+                    "type": "string"
+                  },
+                  "book_id": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "enum": [
+                      "available",
+                      "on_loan"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "book_id",
+                  "barcode",
+                  "status",
+                  "created_at"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_Copy"
+          },
+          "success_status": 201,
+          "synthetic_body": {
+            "barcode": "",
+            "book_id": "",
+            "created_at": "",
+            "id": "",
+            "status": "on_loan"
+          },
+          "synthetic_status": 201
+        }
+      ],
+      "tool": "add_copy"
+    },
+    {
+      "arguments": {
+        "book_id": "book_001"
+      },
+      "hang": false,
+      "id": "add_copy:negative",
+      "kind": "negative",
+      "negative": true,
+      "nullable": [],
+      "output_step": 0,
+      "required": [
+        "barcode",
+        "book_id",
+        "created_at",
+        "id",
+        "status"
+      ],
+      "steps": [
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Copy": {
+                "additionalProperties": false,
+                "properties": {
+                  "barcode": {
+                    "type": "string"
+                  },
+                  "book_id": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "enum": [
+                      "available",
+                      "on_loan"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "book_id",
+                  "barcode",
+                  "status",
+                  "created_at"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_Copy"
+          },
+          "success_status": 201,
+          "synthetic_body": {
+            "barcode": "",
+            "book_id": "",
+            "created_at": "",
+            "id": "",
+            "status": "on_loan"
+          },
+          "synthetic_status": 201
+        }
+      ],
+      "tool": "add_copy"
+    },
+    {
+      "arguments": {
+        "copy_id": "copy_002",
+        "patron_id": "patron_001"
+      },
+      "hang": false,
+      "id": "checkout_copy:required",
+      "kind": "required",
+      "negative": false,
+      "nullable": [],
+      "output_step": 0,
+      "required": [
+        "book_id",
+        "copy_id",
+        "created_at",
+        "due_at",
+        "id",
+        "patron_id",
+        "renew_count",
+        "status"
+      ],
+      "steps": [
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Loan": {
+                "additionalProperties": false,
+                "properties": {
+                  "book_id": {
+                    "type": "string"
+                  },
+                  "copy_id": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "due_at": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "patron_id": {
+                    "type": "string"
+                  },
+                  "renew_count": {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "status": {
+                    "enum": [
+                      "active",
+                      "returned"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "copy_id",
+                  "book_id",
+                  "patron_id",
+                  "status",
+                  "due_at",
+                  "renew_count",
+                  "created_at"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_Loan"
+          },
+          "success_status": 201,
+          "synthetic_body": {
+            "book_id": "",
+            "copy_id": "",
+            "created_at": "",
+            "due_at": "",
+            "id": "",
+            "patron_id": "",
+            "renew_count": 0,
+            "status": "active"
+          },
+          "synthetic_status": 201
+        }
+      ],
+      "tool": "checkout_copy"
+    },
+    {
+      "arguments": {
+        "copy_id": "copy_002",
+        "patron_id": "patron_001"
+      },
+      "hang": false,
+      "id": "checkout_copy:all",
+      "kind": "all",
+      "negative": false,
+      "nullable": [],
+      "output_step": 0,
+      "required": [
+        "book_id",
+        "copy_id",
+        "created_at",
+        "due_at",
+        "id",
+        "patron_id",
+        "renew_count",
+        "status"
+      ],
+      "steps": [
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Loan": {
+                "additionalProperties": false,
+                "properties": {
+                  "book_id": {
+                    "type": "string"
+                  },
+                  "copy_id": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "due_at": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "patron_id": {
+                    "type": "string"
+                  },
+                  "renew_count": {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "status": {
+                    "enum": [
+                      "active",
+                      "returned"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "copy_id",
+                  "book_id",
+                  "patron_id",
+                  "status",
+                  "due_at",
+                  "renew_count",
+                  "created_at"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_Loan"
+          },
+          "success_status": 201,
+          "synthetic_body": {
+            "book_id": "",
+            "copy_id": "",
+            "created_at": "",
+            "due_at": "",
+            "id": "",
+            "patron_id": "",
+            "renew_count": 0,
+            "status": "active"
+          },
+          "synthetic_status": 201
+        }
+      ],
+      "tool": "checkout_copy"
+    },
+    {
+      "arguments": {
+        "patron_id": "patron_001"
+      },
+      "hang": false,
+      "id": "checkout_copy:negative",
+      "kind": "negative",
+      "negative": true,
+      "nullable": [],
+      "output_step": 0,
+      "required": [
+        "book_id",
+        "copy_id",
+        "created_at",
+        "due_at",
+        "id",
+        "patron_id",
+        "renew_count",
+        "status"
+      ],
+      "steps": [
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Loan": {
+                "additionalProperties": false,
+                "properties": {
+                  "book_id": {
+                    "type": "string"
+                  },
+                  "copy_id": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "due_at": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "patron_id": {
+                    "type": "string"
+                  },
+                  "renew_count": {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "status": {
+                    "enum": [
+                      "active",
+                      "returned"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "copy_id",
+                  "book_id",
+                  "patron_id",
+                  "status",
+                  "due_at",
+                  "renew_count",
+                  "created_at"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_Loan"
+          },
+          "success_status": 201,
+          "synthetic_body": {
+            "book_id": "",
+            "copy_id": "",
+            "created_at": "",
+            "due_at": "",
+            "id": "",
+            "patron_id": "",
+            "renew_count": 0,
+            "status": "active"
+          },
+          "synthetic_status": 201
+        }
+      ],
+      "tool": "checkout_copy"
+    },
+    {
+      "arguments": {
+        "author": "Ned Brooks",
+        "title": "West Index"
+      },
+      "hang": false,
+      "id": "create_book:required",
+      "kind": "required",
+      "negative": false,
+      "nullable": [
+        "file_id"
+      ],
+      "output_step": 0,
+      "required": [
+        "author",
+        "created_at",
+        "file_id",
+        "id",
+        "title"
+      ],
+      "steps": [
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Book": {
+                "additionalProperties": false,
+                "properties": {
+                  "author": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "file_id": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "title",
+                  "author",
+                  "created_at",
+                  "file_id"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_Book"
+          },
+          "success_status": 201,
+          "synthetic_body": {
+            "author": "",
+            "created_at": "",
+            "file_id": null,
+            "id": "",
+            "title": ""
+          },
+          "synthetic_status": 201
+        }
+      ],
+      "tool": "create_book"
+    },
+    {
+      "arguments": {
+        "author": "Ned Brooks",
+        "title": "West Index"
+      },
+      "hang": false,
+      "id": "create_book:all",
+      "kind": "all",
+      "negative": false,
+      "nullable": [
+        "file_id"
+      ],
+      "output_step": 0,
+      "required": [
+        "author",
+        "created_at",
+        "file_id",
+        "id",
+        "title"
+      ],
+      "steps": [
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Book": {
+                "additionalProperties": false,
+                "properties": {
+                  "author": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "file_id": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "title",
+                  "author",
+                  "created_at",
+                  "file_id"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_Book"
+          },
+          "success_status": 201,
+          "synthetic_body": {
+            "author": "",
+            "created_at": "",
+            "file_id": null,
+            "id": "",
+            "title": ""
+          },
+          "synthetic_status": 201
+        }
+      ],
+      "tool": "create_book"
+    },
+    {
+      "arguments": {
+        "title": "West Index"
+      },
+      "hang": false,
+      "id": "create_book:negative",
+      "kind": "negative",
+      "negative": true,
+      "nullable": [
+        "file_id"
+      ],
+      "output_step": 0,
+      "required": [
+        "author",
+        "created_at",
+        "file_id",
+        "id",
+        "title"
+      ],
+      "steps": [
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Book": {
+                "additionalProperties": false,
+                "properties": {
+                  "author": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "file_id": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "title",
+                  "author",
+                  "created_at",
+                  "file_id"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_Book"
+          },
+          "success_status": 201,
+          "synthetic_body": {
+            "author": "",
+            "created_at": "",
+            "file_id": null,
+            "id": "",
+            "title": ""
+          },
+          "synthetic_status": 201
+        }
+      ],
+      "tool": "create_book"
+    },
+    {
+      "arguments": {
+        "book_id": "book_002",
+        "patron_id": "patron_001"
+      },
+      "hang": false,
+      "id": "place_hold:required",
+      "kind": "required",
+      "negative": false,
+      "nullable": [],
+      "output_step": 0,
+      "required": [
+        "book_id",
+        "created_at",
+        "id",
+        "patron_id"
+      ],
+      "steps": [
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Hold": {
+                "additionalProperties": false,
+                "properties": {
+                  "book_id": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "patron_id": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "book_id",
+                  "patron_id",
+                  "created_at"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_Hold"
+          },
+          "success_status": 201,
+          "synthetic_body": {
+            "book_id": "",
+            "created_at": "",
+            "id": "",
+            "patron_id": ""
+          },
+          "synthetic_status": 201
+        }
+      ],
+      "tool": "place_hold"
+    },
+    {
+      "arguments": {
+        "book_id": "book_002",
+        "patron_id": "patron_001"
+      },
+      "hang": false,
+      "id": "place_hold:all",
+      "kind": "all",
+      "negative": false,
+      "nullable": [],
+      "output_step": 0,
+      "required": [
+        "book_id",
+        "created_at",
+        "id",
+        "patron_id"
+      ],
+      "steps": [
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Hold": {
+                "additionalProperties": false,
+                "properties": {
+                  "book_id": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "patron_id": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "book_id",
+                  "patron_id",
+                  "created_at"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_Hold"
+          },
+          "success_status": 201,
+          "synthetic_body": {
+            "book_id": "",
+            "created_at": "",
+            "id": "",
+            "patron_id": ""
+          },
+          "synthetic_status": 201
+        }
+      ],
+      "tool": "place_hold"
+    },
+    {
+      "arguments": {
+        "patron_id": "patron_001"
+      },
+      "hang": false,
+      "id": "place_hold:negative",
+      "kind": "negative",
+      "negative": true,
+      "nullable": [],
+      "output_step": 0,
+      "required": [
+        "book_id",
+        "created_at",
+        "id",
+        "patron_id"
+      ],
+      "steps": [
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Hold": {
+                "additionalProperties": false,
+                "properties": {
+                  "book_id": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "patron_id": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "book_id",
+                  "patron_id",
+                  "created_at"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_Hold"
+          },
+          "success_status": 201,
+          "synthetic_body": {
+            "book_id": "",
+            "created_at": "",
+            "id": "",
+            "patron_id": ""
+          },
+          "synthetic_status": 201
+        }
+      ],
+      "tool": "place_hold"
+    },
+    {
+      "arguments": {
+        "email": "jules@example.test",
+        "name": "Jules Hart"
+      },
+      "hang": false,
+      "id": "register_patron:required",
+      "kind": "required",
+      "negative": false,
+      "nullable": [],
+      "output_step": 0,
+      "required": [
+        "created_at",
+        "email",
+        "id",
+        "name",
+        "status"
+      ],
+      "steps": [
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Patron": {
+                "additionalProperties": false,
+                "properties": {
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "enum": [
+                      "active",
+                      "suspended"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "name",
+                  "email",
+                  "status",
+                  "created_at"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_Patron"
+          },
+          "success_status": 201,
+          "synthetic_body": {
+            "created_at": "",
+            "email": "",
+            "id": "",
+            "name": "",
+            "status": "active"
+          },
+          "synthetic_status": 201
+        }
+      ],
+      "tool": "register_patron"
+    },
+    {
+      "arguments": {
+        "email": "jules@example.test",
+        "name": "Jules Hart"
+      },
+      "hang": false,
+      "id": "register_patron:all",
+      "kind": "all",
+      "negative": false,
+      "nullable": [],
+      "output_step": 0,
+      "required": [
+        "created_at",
+        "email",
+        "id",
+        "name",
+        "status"
+      ],
+      "steps": [
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Patron": {
+                "additionalProperties": false,
+                "properties": {
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "enum": [
+                      "active",
+                      "suspended"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "name",
+                  "email",
+                  "status",
+                  "created_at"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_Patron"
+          },
+          "success_status": 201,
+          "synthetic_body": {
+            "created_at": "",
+            "email": "",
+            "id": "",
+            "name": "",
+            "status": "active"
+          },
+          "synthetic_status": 201
+        }
+      ],
+      "tool": "register_patron"
+    },
+    {
+      "arguments": {
+        "name": "Jules Hart"
+      },
+      "hang": false,
+      "id": "register_patron:negative",
+      "kind": "negative",
+      "negative": true,
+      "nullable": [],
+      "output_step": 0,
+      "required": [
+        "created_at",
+        "email",
+        "id",
+        "name",
+        "status"
+      ],
+      "steps": [
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Patron": {
+                "additionalProperties": false,
+                "properties": {
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "enum": [
+                      "active",
+                      "suspended"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "name",
+                  "email",
+                  "status",
+                  "created_at"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_Patron"
+          },
+          "success_status": 201,
+          "synthetic_body": {
+            "created_at": "",
+            "email": "",
+            "id": "",
+            "name": "",
+            "status": "active"
+          },
+          "synthetic_status": 201
+        }
+      ],
+      "tool": "register_patron"
+    },
+    {
+      "arguments": {
+        "loan_id": "loan_001"
+      },
+      "hang": false,
+      "id": "renew_loan:required",
+      "kind": "required",
+      "negative": false,
+      "nullable": [],
+      "output_step": 0,
+      "required": [
+        "book_id",
+        "copy_id",
+        "created_at",
+        "due_at",
+        "id",
+        "patron_id",
+        "renew_count",
+        "status"
+      ],
+      "steps": [
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Loan": {
+                "additionalProperties": false,
+                "properties": {
+                  "book_id": {
+                    "type": "string"
+                  },
+                  "copy_id": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "due_at": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "patron_id": {
+                    "type": "string"
+                  },
+                  "renew_count": {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "status": {
+                    "enum": [
+                      "active",
+                      "returned"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "copy_id",
+                  "book_id",
+                  "patron_id",
+                  "status",
+                  "due_at",
+                  "renew_count",
+                  "created_at"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_Loan"
+          },
+          "success_status": 200,
+          "synthetic_body": {
+            "book_id": "",
+            "copy_id": "",
+            "created_at": "",
+            "due_at": "",
+            "id": "",
+            "patron_id": "",
+            "renew_count": 0,
+            "status": "active"
+          },
+          "synthetic_status": 200
+        }
+      ],
+      "tool": "renew_loan"
+    },
+    {
+      "arguments": {
+        "loan_id": "loan_001"
+      },
+      "hang": false,
+      "id": "renew_loan:all",
+      "kind": "all",
+      "negative": false,
+      "nullable": [],
+      "output_step": 0,
+      "required": [
+        "book_id",
+        "copy_id",
+        "created_at",
+        "due_at",
+        "id",
+        "patron_id",
+        "renew_count",
+        "status"
+      ],
+      "steps": [
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Loan": {
+                "additionalProperties": false,
+                "properties": {
+                  "book_id": {
+                    "type": "string"
+                  },
+                  "copy_id": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "due_at": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "patron_id": {
+                    "type": "string"
+                  },
+                  "renew_count": {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "status": {
+                    "enum": [
+                      "active",
+                      "returned"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "copy_id",
+                  "book_id",
+                  "patron_id",
+                  "status",
+                  "due_at",
+                  "renew_count",
+                  "created_at"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_Loan"
+          },
+          "success_status": 200,
+          "synthetic_body": {
+            "book_id": "",
+            "copy_id": "",
+            "created_at": "",
+            "due_at": "",
+            "id": "",
+            "patron_id": "",
+            "renew_count": 0,
+            "status": "active"
+          },
+          "synthetic_status": 200
+        }
+      ],
+      "tool": "renew_loan"
+    },
+    {
+      "arguments": {},
+      "hang": false,
+      "id": "renew_loan:negative",
+      "kind": "negative",
+      "negative": true,
+      "nullable": [],
+      "output_step": 0,
+      "required": [
+        "book_id",
+        "copy_id",
+        "created_at",
+        "due_at",
+        "id",
+        "patron_id",
+        "renew_count",
+        "status"
+      ],
+      "steps": [
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Loan": {
+                "additionalProperties": false,
+                "properties": {
+                  "book_id": {
+                    "type": "string"
+                  },
+                  "copy_id": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "due_at": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "patron_id": {
+                    "type": "string"
+                  },
+                  "renew_count": {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "status": {
+                    "enum": [
+                      "active",
+                      "returned"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "copy_id",
+                  "book_id",
+                  "patron_id",
+                  "status",
+                  "due_at",
+                  "renew_count",
+                  "created_at"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_Loan"
+          },
+          "success_status": 200,
+          "synthetic_body": {
+            "book_id": "",
+            "copy_id": "",
+            "created_at": "",
+            "due_at": "",
+            "id": "",
+            "patron_id": "",
+            "renew_count": 0,
+            "status": "active"
+          },
+          "synthetic_status": 200
+        }
+      ],
+      "tool": "renew_loan"
+    },
+    {
+      "arguments": {
+        "loan_id": "loan_001"
+      },
+      "hang": false,
+      "id": "return_loan:required",
+      "kind": "required",
+      "negative": false,
+      "nullable": [],
+      "output_step": 0,
+      "required": [
+        "book_id",
+        "copy_id",
+        "created_at",
+        "due_at",
+        "id",
+        "patron_id",
+        "renew_count",
+        "status"
+      ],
+      "steps": [
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Loan": {
+                "additionalProperties": false,
+                "properties": {
+                  "book_id": {
+                    "type": "string"
+                  },
+                  "copy_id": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "due_at": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "patron_id": {
+                    "type": "string"
+                  },
+                  "renew_count": {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "status": {
+                    "enum": [
+                      "active",
+                      "returned"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "copy_id",
+                  "book_id",
+                  "patron_id",
+                  "status",
+                  "due_at",
+                  "renew_count",
+                  "created_at"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_Loan"
+          },
+          "success_status": 200,
+          "synthetic_body": {
+            "book_id": "",
+            "copy_id": "",
+            "created_at": "",
+            "due_at": "",
+            "id": "",
+            "patron_id": "",
+            "renew_count": 0,
+            "status": "active"
+          },
+          "synthetic_status": 200
+        }
+      ],
+      "tool": "return_loan"
+    },
+    {
+      "arguments": {
+        "loan_id": "loan_001"
+      },
+      "hang": false,
+      "id": "return_loan:all",
+      "kind": "all",
+      "negative": false,
+      "nullable": [],
+      "output_step": 0,
+      "required": [
+        "book_id",
+        "copy_id",
+        "created_at",
+        "due_at",
+        "id",
+        "patron_id",
+        "renew_count",
+        "status"
+      ],
+      "steps": [
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Loan": {
+                "additionalProperties": false,
+                "properties": {
+                  "book_id": {
+                    "type": "string"
+                  },
+                  "copy_id": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "due_at": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "patron_id": {
+                    "type": "string"
+                  },
+                  "renew_count": {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "status": {
+                    "enum": [
+                      "active",
+                      "returned"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "copy_id",
+                  "book_id",
+                  "patron_id",
+                  "status",
+                  "due_at",
+                  "renew_count",
+                  "created_at"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_Loan"
+          },
+          "success_status": 200,
+          "synthetic_body": {
+            "book_id": "",
+            "copy_id": "",
+            "created_at": "",
+            "due_at": "",
+            "id": "",
+            "patron_id": "",
+            "renew_count": 0,
+            "status": "active"
+          },
+          "synthetic_status": 200
+        }
+      ],
+      "tool": "return_loan"
+    },
+    {
+      "arguments": {},
+      "hang": false,
+      "id": "return_loan:negative",
+      "kind": "negative",
+      "negative": true,
+      "nullable": [],
+      "output_step": 0,
+      "required": [
+        "book_id",
+        "copy_id",
+        "created_at",
+        "due_at",
+        "id",
+        "patron_id",
+        "renew_count",
+        "status"
+      ],
+      "steps": [
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Loan": {
+                "additionalProperties": false,
+                "properties": {
+                  "book_id": {
+                    "type": "string"
+                  },
+                  "copy_id": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "due_at": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "patron_id": {
+                    "type": "string"
+                  },
+                  "renew_count": {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "status": {
+                    "enum": [
+                      "active",
+                      "returned"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "copy_id",
+                  "book_id",
+                  "patron_id",
+                  "status",
+                  "due_at",
+                  "renew_count",
+                  "created_at"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_Loan"
+          },
+          "success_status": 200,
+          "synthetic_body": {
+            "book_id": "",
+            "copy_id": "",
+            "created_at": "",
+            "due_at": "",
+            "id": "",
+            "patron_id": "",
+            "renew_count": 0,
+            "status": "active"
+          },
+          "synthetic_status": 200
+        }
+      ],
+      "tool": "return_loan"
+    },
+    {
+      "arguments": {
+        "body": "Worth a second read.",
+        "book_id": "book_001",
+        "patron_id": "patron_001",
+        "rating": 4
+      },
+      "hang": false,
+      "id": "review_book:required",
+      "kind": "required",
+      "negative": false,
+      "nullable": [],
+      "output_step": 0,
+      "required": [
+        "body",
+        "book_id",
+        "created_at",
+        "id",
+        "patron_id",
+        "rating"
+      ],
+      "steps": [
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Review": {
+                "additionalProperties": false,
+                "properties": {
+                  "body": {
+                    "type": "string"
+                  },
+                  "book_id": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "patron_id": {
+                    "type": "string"
+                  },
+                  "rating": {
+                    "maximum": 5,
+                    "minimum": 1,
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "id",
+                  "book_id",
+                  "patron_id",
+                  "rating",
+                  "body",
+                  "created_at"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_Review"
+          },
+          "success_status": 201,
+          "synthetic_body": {
+            "body": "",
+            "book_id": "",
+            "created_at": "",
+            "id": "",
+            "patron_id": "",
+            "rating": 1
+          },
+          "synthetic_status": 201
+        }
+      ],
+      "tool": "review_book"
+    },
+    {
+      "arguments": {
+        "body": "Worth a second read.",
+        "book_id": "book_001",
+        "patron_id": "patron_001",
+        "rating": 4
+      },
+      "hang": false,
+      "id": "review_book:all",
+      "kind": "all",
+      "negative": false,
+      "nullable": [],
+      "output_step": 0,
+      "required": [
+        "body",
+        "book_id",
+        "created_at",
+        "id",
+        "patron_id",
+        "rating"
+      ],
+      "steps": [
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Review": {
+                "additionalProperties": false,
+                "properties": {
+                  "body": {
+                    "type": "string"
+                  },
+                  "book_id": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "patron_id": {
+                    "type": "string"
+                  },
+                  "rating": {
+                    "maximum": 5,
+                    "minimum": 1,
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "id",
+                  "book_id",
+                  "patron_id",
+                  "rating",
+                  "body",
+                  "created_at"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_Review"
+          },
+          "success_status": 201,
+          "synthetic_body": {
+            "body": "",
+            "book_id": "",
+            "created_at": "",
+            "id": "",
+            "patron_id": "",
+            "rating": 1
+          },
+          "synthetic_status": 201
+        }
+      ],
+      "tool": "review_book"
+    },
+    {
+      "arguments": {
+        "book_id": "book_001",
+        "patron_id": "patron_001",
+        "rating": 4
+      },
+      "hang": false,
+      "id": "review_book:negative",
+      "kind": "negative",
+      "negative": true,
+      "nullable": [],
+      "output_step": 0,
+      "required": [
+        "body",
+        "book_id",
+        "created_at",
+        "id",
+        "patron_id",
+        "rating"
+      ],
+      "steps": [
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Review": {
+                "additionalProperties": false,
+                "properties": {
+                  "body": {
+                    "type": "string"
+                  },
+                  "book_id": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "patron_id": {
+                    "type": "string"
+                  },
+                  "rating": {
+                    "maximum": 5,
+                    "minimum": 1,
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "id",
+                  "book_id",
+                  "patron_id",
+                  "rating",
+                  "body",
+                  "created_at"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_Review"
+          },
+          "success_status": 201,
+          "synthetic_body": {
+            "body": "",
+            "book_id": "",
+            "created_at": "",
+            "id": "",
+            "patron_id": "",
+            "rating": 1
+          },
+          "synthetic_status": 201
+        }
+      ],
+      "tool": "review_book"
+    },
+    {
+      "arguments": {
+        "book_id": "book_001",
+        "title": "North Wind Revised"
+      },
+      "hang": false,
+      "id": "update_book:required",
+      "kind": "required",
+      "negative": false,
+      "nullable": [
+        "file_id"
+      ],
+      "output_step": 0,
+      "required": [
+        "author",
+        "created_at",
+        "file_id",
+        "id",
+        "title"
+      ],
+      "steps": [
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Book": {
+                "additionalProperties": false,
+                "properties": {
+                  "author": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "file_id": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "title",
+                  "author",
+                  "created_at",
+                  "file_id"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_Book"
+          },
+          "success_status": 200,
+          "synthetic_body": {
+            "author": "",
+            "created_at": "",
+            "file_id": null,
+            "id": "",
+            "title": ""
+          },
+          "synthetic_status": 200
+        }
+      ],
+      "tool": "update_book"
+    },
+    {
+      "arguments": {
+        "book_id": "book_001",
+        "title": "North Wind Revised"
+      },
+      "hang": false,
+      "id": "update_book:all",
+      "kind": "all",
+      "negative": false,
+      "nullable": [
+        "file_id"
+      ],
+      "output_step": 0,
+      "required": [
+        "author",
+        "created_at",
+        "file_id",
+        "id",
+        "title"
+      ],
+      "steps": [
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Book": {
+                "additionalProperties": false,
+                "properties": {
+                  "author": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "file_id": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "title",
+                  "author",
+                  "created_at",
+                  "file_id"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_Book"
+          },
+          "success_status": 200,
+          "synthetic_body": {
+            "author": "",
+            "created_at": "",
+            "file_id": null,
+            "id": "",
+            "title": ""
+          },
+          "synthetic_status": 200
+        }
+      ],
+      "tool": "update_book"
+    },
+    {
+      "arguments": {
+        "title": "North Wind Revised"
+      },
+      "hang": false,
+      "id": "update_book:negative",
+      "kind": "negative",
+      "negative": true,
+      "nullable": [
+        "file_id"
+      ],
+      "output_step": 0,
+      "required": [
+        "author",
+        "created_at",
+        "file_id",
+        "id",
+        "title"
+      ],
+      "steps": [
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Book": {
+                "additionalProperties": false,
+                "properties": {
+                  "author": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "file_id": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "title",
+                  "author",
+                  "created_at",
+                  "file_id"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_Book"
+          },
+          "success_status": 200,
+          "synthetic_body": {
+            "author": "",
+            "created_at": "",
+            "file_id": null,
+            "id": "",
+            "title": ""
+          },
+          "synthetic_status": 200
+        }
+      ],
+      "tool": "update_book"
+    },
+    {
+      "arguments": {
+        "book_id": "book_001",
+        "content_type": "text/plain",
+        "data": "aGVsbG8=",
+        "filename": "notes.txt"
+      },
+      "hang": false,
+      "id": "upload_book_file:required",
+      "kind": "required",
+      "negative": false,
+      "nullable": [],
+      "output_step": 3,
+      "required": [
+        "book_id",
+        "file_id"
+      ],
+      "steps": [
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Upload": {
+                "additionalProperties": false,
+                "properties": {
+                  "byte_count": {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "content_type": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "filename": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "part_count": {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "status": {
+                    "enum": [
+                      "open",
+                      "complete"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "filename",
+                  "content_type",
+                  "status",
+                  "part_count",
+                  "byte_count",
+                  "created_at"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_Upload"
+          },
+          "success_status": 201,
+          "synthetic_body": {
+            "byte_count": 0,
+            "content_type": "",
+            "created_at": "",
+            "filename": "",
+            "id": "",
+            "part_count": 0,
+            "status": "open"
+          },
+          "synthetic_status": 201
+        },
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_UploadPart": {
+                "additionalProperties": false,
+                "properties": {
+                  "part_number": {
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "size": {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "upload_id": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "upload_id",
+                  "part_number",
+                  "size"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_UploadPart"
+          },
+          "success_status": 200,
+          "synthetic_body": {
+            "part_number": 1,
+            "size": 0,
+            "upload_id": ""
+          },
+          "synthetic_status": 200
+        },
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Upload": {
+                "additionalProperties": false,
+                "properties": {
+                  "byte_count": {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "content_type": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "filename": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "part_count": {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "status": {
+                    "enum": [
+                      "open",
+                      "complete"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "filename",
+                  "content_type",
+                  "status",
+                  "part_count",
+                  "byte_count",
+                  "created_at"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_Upload"
+          },
+          "success_status": 200,
+          "synthetic_body": {
+            "byte_count": 0,
+            "content_type": "",
+            "created_at": "",
+            "filename": "",
+            "id": "",
+            "part_count": 0,
+            "status": "open"
+          },
+          "synthetic_status": 200
+        },
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_BookFile": {
+                "additionalProperties": false,
+                "properties": {
+                  "book_id": {
+                    "type": "string"
+                  },
+                  "file_id": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "book_id",
+                  "file_id"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_BookFile"
+          },
+          "success_status": 200,
+          "synthetic_body": {
+            "book_id": "",
+            "file_id": ""
+          },
+          "synthetic_status": 200
+        }
+      ],
+      "tool": "upload_book_file"
+    },
+    {
+      "arguments": {
+        "book_id": "book_001",
+        "content_type": "text/plain",
+        "data": "aGVsbG8=",
+        "filename": "notes.txt"
+      },
+      "hang": false,
+      "id": "upload_book_file:all",
+      "kind": "all",
+      "negative": false,
+      "nullable": [],
+      "output_step": 3,
+      "required": [
+        "book_id",
+        "file_id"
+      ],
+      "steps": [
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Upload": {
+                "additionalProperties": false,
+                "properties": {
+                  "byte_count": {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "content_type": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "filename": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "part_count": {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "status": {
+                    "enum": [
+                      "open",
+                      "complete"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "filename",
+                  "content_type",
+                  "status",
+                  "part_count",
+                  "byte_count",
+                  "created_at"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_Upload"
+          },
+          "success_status": 201,
+          "synthetic_body": {
+            "byte_count": 0,
+            "content_type": "",
+            "created_at": "",
+            "filename": "",
+            "id": "",
+            "part_count": 0,
+            "status": "open"
+          },
+          "synthetic_status": 201
+        },
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_UploadPart": {
+                "additionalProperties": false,
+                "properties": {
+                  "part_number": {
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "size": {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "upload_id": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "upload_id",
+                  "part_number",
+                  "size"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_UploadPart"
+          },
+          "success_status": 200,
+          "synthetic_body": {
+            "part_number": 1,
+            "size": 0,
+            "upload_id": ""
+          },
+          "synthetic_status": 200
+        },
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Upload": {
+                "additionalProperties": false,
+                "properties": {
+                  "byte_count": {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "content_type": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "filename": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "part_count": {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "status": {
+                    "enum": [
+                      "open",
+                      "complete"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "filename",
+                  "content_type",
+                  "status",
+                  "part_count",
+                  "byte_count",
+                  "created_at"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_Upload"
+          },
+          "success_status": 200,
+          "synthetic_body": {
+            "byte_count": 0,
+            "content_type": "",
+            "created_at": "",
+            "filename": "",
+            "id": "",
+            "part_count": 0,
+            "status": "open"
+          },
+          "synthetic_status": 200
+        },
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_BookFile": {
+                "additionalProperties": false,
+                "properties": {
+                  "book_id": {
+                    "type": "string"
+                  },
+                  "file_id": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "book_id",
+                  "file_id"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_BookFile"
+          },
+          "success_status": 200,
+          "synthetic_body": {
+            "book_id": "",
+            "file_id": ""
+          },
+          "synthetic_status": 200
+        }
+      ],
+      "tool": "upload_book_file"
+    },
+    {
+      "arguments": {
+        "content_type": "text/plain",
+        "data": "aGVsbG8=",
+        "filename": "notes.txt"
+      },
+      "hang": false,
+      "id": "upload_book_file:negative",
+      "kind": "negative",
+      "negative": true,
+      "nullable": [],
+      "output_step": 3,
+      "required": [
+        "book_id",
+        "file_id"
+      ],
+      "steps": [
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Upload": {
+                "additionalProperties": false,
+                "properties": {
+                  "byte_count": {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "content_type": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "filename": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "part_count": {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "status": {
+                    "enum": [
+                      "open",
+                      "complete"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "filename",
+                  "content_type",
+                  "status",
+                  "part_count",
+                  "byte_count",
+                  "created_at"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_Upload"
+          },
+          "success_status": 201,
+          "synthetic_body": {
+            "byte_count": 0,
+            "content_type": "",
+            "created_at": "",
+            "filename": "",
+            "id": "",
+            "part_count": 0,
+            "status": "open"
+          },
+          "synthetic_status": 201
+        },
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_UploadPart": {
+                "additionalProperties": false,
+                "properties": {
+                  "part_number": {
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "size": {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "upload_id": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "upload_id",
+                  "part_number",
+                  "size"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_UploadPart"
+          },
+          "success_status": 200,
+          "synthetic_body": {
+            "part_number": 1,
+            "size": 0,
+            "upload_id": ""
+          },
+          "synthetic_status": 200
+        },
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Upload": {
+                "additionalProperties": false,
+                "properties": {
+                  "byte_count": {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "content_type": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "filename": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "part_count": {
+                    "minimum": 0,
+                    "type": "integer"
+                  },
+                  "status": {
+                    "enum": [
+                      "open",
+                      "complete"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "filename",
+                  "content_type",
+                  "status",
+                  "part_count",
+                  "byte_count",
+                  "created_at"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_Upload"
+          },
+          "success_status": 200,
+          "synthetic_body": {
+            "byte_count": 0,
+            "content_type": "",
+            "created_at": "",
+            "filename": "",
+            "id": "",
+            "part_count": 0,
+            "status": "open"
+          },
+          "synthetic_status": 200
+        },
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_BookFile": {
+                "additionalProperties": false,
+                "properties": {
+                  "book_id": {
+                    "type": "string"
+                  },
+                  "file_id": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "book_id",
+                  "file_id"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_BookFile"
+          },
+          "success_status": 200,
+          "synthetic_body": {
+            "book_id": "",
+            "file_id": ""
+          },
+          "synthetic_status": 200
+        }
+      ],
+      "tool": "upload_book_file"
+    },
+    {
+      "arguments": {
+        "book_id": "book_004"
+      },
+      "hang": false,
+      "id": "delete_book:required",
+      "kind": "required",
+      "negative": false,
+      "nullable": [],
+      "output_step": 0,
+      "required": [
+        "deleted",
+        "id"
+      ],
+      "steps": [
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Deletion": {
+                "additionalProperties": false,
+                "properties": {
+                  "deleted": {
+                    "const": true,
+                    "type": "boolean"
+                  },
+                  "id": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "deleted"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_Deletion"
+          },
+          "success_status": 200,
+          "synthetic_body": {
+            "deleted": true,
+            "id": ""
+          },
+          "synthetic_status": 200
+        }
+      ],
+      "tool": "delete_book"
+    },
+    {
+      "arguments": {
+        "book_id": "book_004"
+      },
+      "hang": false,
+      "id": "delete_book:all",
+      "kind": "all",
+      "negative": false,
+      "nullable": [],
+      "output_step": 0,
+      "required": [
+        "deleted",
+        "id"
+      ],
+      "steps": [
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Deletion": {
+                "additionalProperties": false,
+                "properties": {
+                  "deleted": {
+                    "const": true,
+                    "type": "boolean"
+                  },
+                  "id": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "deleted"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_Deletion"
+          },
+          "success_status": 200,
+          "synthetic_body": {
+            "deleted": true,
+            "id": ""
+          },
+          "synthetic_status": 200
+        }
+      ],
+      "tool": "delete_book"
+    },
+    {
+      "arguments": {},
+      "hang": false,
+      "id": "delete_book:negative",
+      "kind": "negative",
+      "negative": true,
+      "nullable": [],
+      "output_step": 0,
+      "required": [
+        "deleted",
+        "id"
+      ],
+      "steps": [
+        {
+          "hang": false,
+          "response_schema": {
+            "$defs": {
+              "components_schemas_Deletion": {
+                "additionalProperties": false,
+                "properties": {
+                  "deleted": {
+                    "const": true,
+                    "type": "boolean"
+                  },
+                  "id": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "deleted"
+                ],
+                "type": "object"
+              }
+            },
+            "$ref": "#/$defs/components_schemas_Deletion"
+          },
+          "success_status": 200,
+          "synthetic_body": {
+            "deleted": true,
+            "id": ""
+          },
+          "synthetic_status": 200
+        }
+      ],
+      "tool": "delete_book"
+    }
+  ],
+  "generated": "generated",
+  "module": "shelf_mcp",
+  "secret_envs": [
+    "SHELF_API_KEY"
+  ],
+  "timeout_env": "SHELF_TIMEOUT",
+  "timeout_seconds": 10,
+  "upstream": "fixture",
+  "upstream_url": ""
+}

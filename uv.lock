@@ -356,6 +356,8 @@ source = { editable = "." }
 dependencies = [
     { name = "anthropic" },
     { name = "httpx2" },
+    { name = "hypothesis" },
+    { name = "hypothesis-jsonschema" },
     { name = "jinja2" },
     { name = "jsonschema" },
     { name = "jsonschema-rs" },
@@ -387,7 +389,9 @@ requires-dist = [
     { name = "anthropic", specifier = ">=2.2.0,<3" },
     { name = "build", marker = "extra == 'dev'", specifier = ">=1.6.1,<2" },
     { name = "httpx2", specifier = ">=2.16.0,<3" },
+    { name = "hypothesis", specifier = ">=6.170.8,<7" },
     { name = "hypothesis", marker = "extra == 'dev'", specifier = ">=6.170.8,<7" },
+    { name = "hypothesis-jsonschema", specifier = ">=0.23.1,<1" },
     { name = "jinja2", specifier = ">=3.1.6,<4" },
     { name = "jsonschema", specifier = ">=4.26.0,<5" },
     { name = "jsonschema-rs", specifier = ">=0.60,<1" },
@@ -566,6 +570,19 @@ wheels = [
     { url = "https://files.pythonhosted.org/packages/f0/3e/4fafe1a50b0df2d032b6142e13366a7d37ed0cab5d6af749c430fb538f0a/hypothesis-6.170.12-pp312-pypy312_pp73-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:18ea9df1deec60fad073305438f050365a2ab8f5c7a577b5c8f96e5aaec620ad", size = 1122799, upload-time = "2026-10-26T17:11:19.011Z" },
     { url = "https://files.pythonhosted.org/packages/2f/24/b9b30baa2b6c3703162f8a5f49235d74df568ed941680edde70332e4fe42/hypothesis-6.170.12-pp312-pypy312_pp73-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:99efd12654a380a6d683b962f481969d08beb55bd2426424cd5178d3f9f12b23", size = 1167006, upload-time = "2026-10-26T17:11:29.968Z" },
     { url = "https://files.pythonhosted.org/packages/ce/13/dcfda3cbfcbd0501aefe0ee6e46591671a19df3ba18d65fdfd4229c5e3b6/hypothesis-6.170.12-pp312-pypy312_pp73-win_amd64.whl", hash = "sha256:8259bf11eed5379c8bc69c7fd998baa0e122350ab3e5b3432d5ef2e22e11d8e3", size = 692109, upload-time = "2026-10-26T17:11:32.645Z" },
+]
+
+[[package]]
+name = "hypothesis-jsonschema"
+version = "0.23.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "hypothesis" },
+    { name = "jsonschema" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/b9/26/9b380c6b31e2d493c7148668bde3cdbbcaaf2b6cdd0bd2ca09405bed8e63/hypothesis_jsonschema-0.23.2.tar.gz", hash = "sha256:43a5f21c67f7cdccd6e3e0d1300cb5261bede6c046e3eff8a73c094b4afdf761", size = 43983, upload-time = "2026-10-27T20:08:58.707Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/d8/8f/5e7d1a9d99eccebcb67a6e1f83faaf921f23bc1c474af7e0ac33f2f47739/hypothesis_jsonschema-0.23.2-py3-none-any.whl", hash = "sha256:7f591c2534830919342474c4adebb03c19879cdad9a7cb44d4c9d9da45dcdae3", size = 29558, upload-time = "2026-10-27T20:08:57.504Z" },
 ]
 
 [[package]]

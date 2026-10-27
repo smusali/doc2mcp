@@ -1,0 +1,230 @@
+{
+  "allowlist": [
+    "127.0.0.1"
+  ],
+  "curation_mode": "agent",
+  "doc2mcp": "0.1.0",
+  "evidence": "fixtures",
+  "excluded": [
+    "get_book"
+  ],
+  "failures": [
+    {
+      "actual": "string",
+      "arguments": {
+        "book_id": "book_001"
+      },
+      "assertion": "schema",
+      "body": "{\"book_id\": \"book_001\", \"page_count\": \"320\", \"word_count\": 84000}",
+      "call": "get_book:required",
+      "expected": "integer",
+      "field": "page_count",
+      "tool": "get_book",
+      "upstream_status": 200
+    },
+    {
+      "actual": "string",
+      "arguments": {
+        "book_id": "book_001"
+      },
+      "assertion": "schema",
+      "body": "{\"book_id\": \"book_001\", \"page_count\": \"320\", \"word_count\": 84000}",
+      "call": "get_book:all",
+      "expected": "integer",
+      "field": "page_count",
+      "tool": "get_book",
+      "upstream_status": 200
+    }
+  ],
+  "findings": [],
+  "manifest_sha256": "a2d48b93c0802583fea849310d3a4543bf3e96b682fce70a7512fccac9703874",
+  "model": "claude-opus-5-5",
+  "report_version": "report-v1",
+  "source_sha256": "10b6233ec3ce6f2e8b0b0d8248836ce1e78986f3e6fffc5b362f228c12e8f5e2",
+  "source_uri": "openapi.yaml",
+  "summary": {
+    "gaps": 1,
+    "generated": 15,
+    "skipped": 0,
+    "synthesized": 0,
+    "verified": 14
+  },
+  "tools": [
+    {
+      "calls": 3,
+      "endpoints": [
+        "GET /books/{book_id}",
+        "GET /books/{book_id}/stats"
+      ],
+      "evidence": "fixtures",
+      "failed": "schema",
+      "reason": "page_count: expected integer, got string",
+      "status": "known gap",
+      "tool": "get_book"
+    },
+    {
+      "calls": 3,
+      "endpoints": [
+        "GET /patrons/{patron_id}"
+      ],
+      "evidence": "fixtures",
+      "failed": "",
+      "reason": "",
+      "status": "verified",
+      "tool": "get_patron"
+    },
+    {
+      "calls": 3,
+      "endpoints": [
+        "GET /books/{book_id}/copies"
+      ],
+      "evidence": "fixtures",
+      "failed": "",
+      "reason": "",
+      "status": "verified",
+      "tool": "list_copies"
+    },
+    {
+      "calls": 2,
+      "endpoints": [
+        "GET /books"
+      ],
+      "evidence": "fixtures",
+      "failed": "",
+      "reason": "",
+      "status": "verified",
+      "tool": "search_books"
+    },
+    {
+      "calls": 3,
+      "endpoints": [
+        "POST /books/{book_id}/copies"
+      ],
+      "evidence": "fixtures",
+      "failed": "",
+      "reason": "",
+      "status": "verified",
+      "tool": "add_copy"
+    },
+    {
+      "calls": 3,
+      "endpoints": [
+        "POST /loans"
+      ],
+      "evidence": "fixtures",
+      "failed": "",
+      "reason": "",
+      "status": "verified",
+      "tool": "checkout_copy"
+    },
+    {
+      "calls": 3,
+      "endpoints": [
+        "POST /books"
+      ],
+      "evidence": "fixtures",
+      "failed": "",
+      "reason": "",
+      "status": "verified",
+      "tool": "create_book"
+    },
+    {
+      "calls": 3,
+      "endpoints": [
+        "POST /patrons/{patron_id}/holds"
+      ],
+      "evidence": "fixtures",
+      "failed": "",
+      "reason": "",
+      "status": "verified",
+      "tool": "place_hold"
+    },
+    {
+      "calls": 3,
+      "endpoints": [
+        "POST /patrons"
+      ],
+      "evidence": "fixtures",
+      "failed": "",
+      "reason": "",
+      "status": "verified",
+      "tool": "register_patron"
+    },
+    {
+      "calls": 3,
+      "endpoints": [
+        "POST /loans/{loan_id}/renew"
+      ],
+      "evidence": "fixtures",
+      "failed": "",
+      "reason": "",
+      "status": "verified",
+      "tool": "renew_loan"
+    },
+    {
+      "calls": 3,
+      "endpoints": [
+        "POST /loans/{loan_id}/return"
+      ],
+      "evidence": "fixtures",
+      "failed": "",
+      "reason": "",
+      "status": "verified",
+      "tool": "return_loan"
+    },
+    {
+      "calls": 3,
+      "endpoints": [
+        "POST /books/{book_id}/reviews"
+      ],
+      "evidence": "fixtures",
+      "failed": "",
+      "reason": "",
+      "status": "verified",
+      "tool": "review_book"
+    },
+    {
+      "calls": 3,
+      "endpoints": [
+        "PATCH /books/{book_id}"
+      ],
+      "evidence": "fixtures",
+      "failed": "",
+      "reason": "",
+      "status": "verified",
+      "tool": "update_book"
+    },
+    {
+      "calls": 3,
+      "endpoints": [
+        "POST /uploads",
+        "PUT /uploads/{upload_id}/parts/{part_number}",
+        "POST /uploads/{upload_id}/complete",
+        "PUT /books/{book_id}/file"
+      ],
+      "evidence": "fixtures",
+      "failed": "",
+      "reason": "",
+      "status": "verified",
+      "tool": "upload_book_file"
+    },
+    {
+      "calls": 3,
+      "endpoints": [
+        "DELETE /books/{book_id}"
+      ],
+      "evidence": "fixtures",
+      "failed": "",
+      "reason": "",
+      "status": "verified",
+      "tool": "delete_book"
+    }
+  ],
+  "usage": {
+    "cache_read_input_tokens": 0,
+    "cache_write_input_tokens": 0,
+    "estimated_usd": 0.0128,
+    "input_tokens": 1600,
+    "output_tokens": 320
+  }
+}

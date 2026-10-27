@@ -1,0 +1,44 @@
+{
+  "exchanges": [
+    {
+      "body": {
+        "copy_id": "copy_002",
+        "patron_id": "patron_001"
+      },
+      "method": "POST",
+      "path": "/loans",
+      "query": {},
+      "response": {
+        "book_id": "book_001",
+        "copy_id": "copy_002",
+        "created_at": "2024-01-15T00:00:00Z",
+        "due_at": "2024-02-15T00:00:00Z",
+        "id": "loan_002",
+        "patron_id": "patron_001",
+        "renew_count": 0,
+        "status": "active"
+      },
+      "status": 201
+    },
+    {
+      "body": {
+        "copy_id": "copy_002",
+        "patron_id": "patron_001"
+      },
+      "method": "POST",
+      "path": "/loans",
+      "query": {},
+      "response": {
+        "book_id": "book_001",
+        "copy_id": "copy_002",
+        "created_at": "2024-01-15T00:00:00Z",
+        "due_at": "2024-02-15T00:00:00Z",
+        "id": "loan_002",
+        "patron_id": "patron_001",
+        "renew_count": 0,
+        "status": "active"
+      },
+      "status": 201
+    }
+  ]
+}

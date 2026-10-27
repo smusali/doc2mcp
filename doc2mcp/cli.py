@@ -6,21 +6,25 @@ import sys
 from dataclasses import dataclass
 from enum import IntEnum
 from pathlib import Path
-from typing import Annotated, Literal, Protocol, TypedDict, runtime_checkable
+from typing import TYPE_CHECKING, Annotated, Literal, Protocol, TypedDict, runtime_checkable
 
 import typer
 
 from doc2mcp import __version__
 
+if TYPE_CHECKING:
+    from doc2mcp.verify import VerifyOptions
+
 _DESCRIPTION = (
     "Turn API docs into a working MCP server, "
     "then verify every generated tool against the real API."
 )
-_STAGES = frozenset({"ingest", "curate", "emit", "verify"})
+_STAGES = frozenset({"ingest", "curate", "emit", "verify", "record"})
 _VALUE_FLAGS = frozenset(
     {
         "--out",
         "--allow-ref-host",
+        "--allow-host",
         "--model",
         "--budget-tokens",
         "--budget-usd",
@@ -28,14 +32,30 @@ _VALUE_FLAGS = frozenset(
         "--max-tools",
         "--namespace",
         "--include-tag",
+        "--on-failure",
+        "--sandbox",
     }
 )
 _BOOL_FLAGS = frozenset(
-    {"--json", "--quiet", "--verbose", "--offline", "--dry-run", "--recurate", "--force"}
+    {
+        "--json",
+        "--quiet",
+        "--verbose",
+        "--offline",
+        "--dry-run",
+        "--recurate",
+        "--force",
+        "--deterministic",
+        "--live",
+        "--allow-writes",
+        "--isolate",
+        "--html",
+    }
 )
 _EQUALS_FLAGS = (
     "--out=",
     "--allow-ref-host=",
+    "--allow-host=",
     "--model=",
     "--budget-tokens=",
     "--budget-usd=",
@@ -43,12 +63,12 @@ _EQUALS_FLAGS = (
     "--max-tools=",
     "--namespace=",
     "--include-tag=",
+    "--on-failure=",
+    "--sandbox=",
 )
 _ENDPOINTS = "endpoints.json"
 _TOOLS = "tools.yaml"
 _GENERATED = "generated"
-_TESTS = "tests"
-_REPORT = "report"
 
 
 class ExitCode(IntEnum):
@@ -69,6 +89,13 @@ class UpstreamError(Exception):
     def __init__(self, message: str) -> None:
         super().__init__(message)
         self.message = message
+
+
+class GapError(Exception):
+    def __init__(self, message: str, *, printed: bool) -> None:
+        super().__init__(message)
+        self.message = message
+        self.printed = printed
 
 
 class ErrorReport(TypedDict):
@@ -95,6 +122,14 @@ class RunOptions:
     dry_run: bool
     recurate: bool
     force: bool
+    allow_hosts: tuple[str, ...]
+    on_failure: str
+    sandbox: str
+    deterministic: bool
+    live: bool
+    allow_writes: bool
+    isolate: bool
+    html: bool
 
 
 @runtime_checkable
@@ -125,6 +160,10 @@ def main(argv: list[str] | None = None) -> int:
     except UpstreamError as exc:
         _emit_error(exc.message, ExitCode.UPSTREAM, as_json=_json_requested(args))
         return ExitCode.UPSTREAM
+    except GapError as exc:
+        if not exc.printed or _json_requested(args):
+            _emit_error(exc.message, ExitCode.GAP, as_json=_json_requested(args))
+        return ExitCode.GAP
     except typer.TyperException as exc:
         return _parser_exit(exc)
     except Exception as exc:
@@ -212,6 +251,44 @@ def _root(
         bool,
         typer.Option("--force", help="Overwrite generated files that were edited."),
     ] = False,
+    allow_host: Annotated[
+        list[str] | None,
+        typer.Option("--allow-host", help="Host the verification proxy may dial."),
+    ] = None,
+    on_failure: Annotated[
+        str,
+        typer.Option(
+            "--on-failure", help="exclude drops a failed tool. keep warns in its description."
+        ),
+    ] = "exclude",
+    sandbox: Annotated[
+        str,
+        typer.Option(
+            "--sandbox", help="Sandbox base URL for record, or for verify instead of fixtures."
+        ),
+    ] = "",
+    deterministic: Annotated[
+        bool,
+        typer.Option("--deterministic", help="Omit timestamps and durations from the report."),
+    ] = False,
+    live: Annotated[
+        bool,
+        typer.Option("--live", help="Call the spec server instead of fixtures."),
+    ] = False,
+    allow_writes: Annotated[
+        bool,
+        typer.Option(
+            "--allow-writes", help="Call destructive and non-idempotent tools during --live."
+        ),
+    ] = False,
+    isolate: Annotated[
+        bool,
+        typer.Option("--isolate", help="Run verification in a Linux network namespace."),
+    ] = False,
+    html: Annotated[
+        bool,
+        typer.Option("--html", help="Also write report/verification.html."),
+    ] = False,
     _version: Annotated[
         bool,
         typer.Option(
@@ -224,6 +301,10 @@ def _root(
 ) -> None:
     if quiet and verbose:
         raise UsageError("use only one of --quiet and --verbose")
+    if live and sandbox:
+        raise UsageError("use only one of --live and --sandbox")
+    if on_failure not in {"exclude", "keep"}:
+        raise UsageError("on-failure must be exclude or keep")
     _configure_logging(quiet=quiet, verbose=verbose)
     ctx.obj = RunOptions(
         out=Path(".") if out is None else out,
@@ -242,6 +323,14 @@ def _root(
         dry_run=dry_run,
         recurate=recurate,
         force=force,
+        allow_hosts=tuple(allow_host or ()),
+        on_failure=on_failure,
+        sandbox=sandbox,
+        deterministic=deterministic,
+        live=live,
+        allow_writes=allow_writes,
+        isolate=isolate,
+        html=html,
     )
     if ctx.invoked_subcommand is None:
         raise UsageError("missing spec")
@@ -258,7 +347,7 @@ def _run(
     if options.dry_run:
         return
     _emit(options)
-    _unwritten(options.out / _REPORT)
+    _verify(options)
 
 
 @app.command(help="Read an OpenAPI file path or URL and write endpoints.json.")
@@ -282,12 +371,18 @@ def emit(ctx: typer.Context) -> None:
     _emit(options)
 
 
-@app.command(help="Read generated/ and tests/ and write report/.")
+@app.command(help="Call every generated tool and write report/.")
 def verify(ctx: typer.Context) -> None:
     options = _options(ctx)
     _require_dir(options.out / _GENERATED)
-    _require_dir(options.out / _TESTS)
-    _unwritten(options.out / _REPORT)
+    _require_file(options.out / _ENDPOINTS)
+    _require_file(options.out / _TOOLS)
+    _verify(options)
+
+
+@app.command(help="Record cassettes against a sandbox URL.")
+def record(ctx: typer.Context) -> None:
+    _record(_options(ctx))
 
 
 def _normalize_argv(argv: list[str]) -> list[str]:
@@ -397,8 +492,49 @@ def _emit(options: RunOptions) -> None:
         raise UsageError(exc.message) from exc
 
 
-def _unwritten(path: Path) -> None:
-    raise UsageError(f"cannot write {path}")
+def _verify(options: RunOptions) -> None:
+    from doc2mcp.verify import VerifyUpstream, VerifyUsage, verify
+
+    try:
+        outcome = verify(options.out, _verify_options(options))
+    except VerifyUsage as exc:
+        raise UsageError(exc.message) from exc
+    except VerifyUpstream as exc:
+        raise UpstreamError(exc.message) from exc
+    if outcome.gaps:
+        raise GapError(outcome.summary, printed=not options.as_json)
+
+
+def _record(options: RunOptions) -> None:
+    from doc2mcp.verify import VerifyUpstream, VerifyUsage
+    from doc2mcp.verify import record as record_cassettes
+
+    if not options.sandbox:
+        raise UsageError("record needs --sandbox")
+    try:
+        record_cassettes(options.out, _verify_options(options))
+    except VerifyUsage as exc:
+        raise UsageError(exc.message) from exc
+    except VerifyUpstream as exc:
+        raise UpstreamError(exc.message) from exc
+
+
+def _verify_options(options: RunOptions) -> VerifyOptions:
+    from doc2mcp.verify import VerifyOptions as Options
+
+    return Options(
+        offline=options.offline,
+        live=options.live,
+        sandbox=options.sandbox,
+        allow_hosts=options.allow_hosts,
+        allow_writes=options.allow_writes,
+        on_failure=options.on_failure,
+        deterministic=options.deterministic,
+        html=options.html,
+        quiet=options.quiet,
+        as_json=options.as_json,
+        isolate=options.isolate,
+    )
 
 
 def _configure_logging(*, quiet: bool, verbose: bool) -> None:

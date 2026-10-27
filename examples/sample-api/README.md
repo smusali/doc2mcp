@@ -33,13 +33,25 @@ The process binds to `127.0.0.1:8765`. That host and port match the server URL i
 
 ## Record cassettes
 
-Start the server, then record against it:
-
 ```text
 doc2mcp record --sandbox http://127.0.0.1:8765
 ```
 
-Use the same port the server was given. A fresh process returns byte-identical bodies, so a re-record does not churn.
+Use the port the server was given. Set `SHELF_API_KEY` to the sample key before recording. The key is a request header, and cassettes do not store headers.
+
+That command uses one server process for the whole plan. The committed cassettes were recorded with a new process for each call, so each call sees the seed data. A second checkout of `copy_002` in the same process fails because the copy is already on loan. `delete_book` uses `book_004`, created with one `POST /books` in that same process before the delete. Reads against a fresh process return the same bytes.
+
+## Verification
+
+From the repository root:
+
+```text
+doc2mcp examples/sample-api/openapi.yaml --offline --deterministic --out examples/sample-api
+```
+
+That command exits 3. Fourteen tools verify from the committed cassettes. `get_book` is the known gap: `GET /books/{book_id}/stats` returns `page_count` as a string, and the spec says integer. The failure names `page_count`. `tools.yaml` still lists `get_book`. The default `--on-failure exclude` rewrites `generated/` without that tool.
+
+`pytest examples/sample-api/tests` fails on that same gap. The report is the record of it.
 
 ## Directory
 
@@ -53,6 +65,8 @@ examples/sample-api/
   endpoints.json
   tools.yaml
   generated/
+  tests/
+  report/
 ```
 
 `endpoints.json` is the ingest of `openapi.yaml`. `tools.yaml` is a replayed curation with at most 15 tools and a reason for every other operation. Reuse it without a model call:

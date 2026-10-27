@@ -1,0 +1,38 @@
+{
+  "exchanges": [
+    {
+      "body": {
+        "author": "Ned Brooks",
+        "title": "West Index"
+      },
+      "method": "POST",
+      "path": "/books",
+      "query": {},
+      "response": {
+        "author": "Ned Brooks",
+        "created_at": "2024-01-15T00:00:00Z",
+        "file_id": null,
+        "id": "book_004",
+        "title": "West Index"
+      },
+      "status": 201
+    },
+    {
+      "body": {
+        "author": "Ned Brooks",
+        "title": "West Index"
+      },
+      "method": "POST",
+      "path": "/books",
+      "query": {},
+      "response": {
+        "author": "Ned Brooks",
+        "created_at": "2024-01-15T00:00:00Z",
+        "file_id": null,
+        "id": "book_004",
+        "title": "West Index"
+      },
+      "status": 201
+    }
+  ]
+}

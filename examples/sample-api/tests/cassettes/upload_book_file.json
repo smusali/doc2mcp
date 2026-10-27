@@ -1,0 +1,128 @@
+{
+  "exchanges": [
+    {
+      "body": {
+        "content_type": "text/plain",
+        "filename": "notes.txt"
+      },
+      "method": "POST",
+      "path": "/uploads",
+      "query": {},
+      "response": {
+        "byte_count": 0,
+        "content_type": "text/plain",
+        "created_at": "2024-01-15T00:00:00Z",
+        "filename": "notes.txt",
+        "id": "upload_001",
+        "part_count": 0,
+        "status": "open"
+      },
+      "status": 201
+    },
+    {
+      "body": {
+        "data": "aGVsbG8="
+      },
+      "method": "PUT",
+      "path": "/uploads/upload_001/parts/1",
+      "query": {},
+      "response": {
+        "part_number": 1,
+        "size": 5,
+        "upload_id": "upload_001"
+      },
+      "status": 200
+    },
+    {
+      "body": null,
+      "method": "POST",
+      "path": "/uploads/upload_001/complete",
+      "query": {},
+      "response": {
+        "byte_count": 5,
+        "content_type": "text/plain",
+        "created_at": "2024-01-15T00:00:00Z",
+        "filename": "notes.txt",
+        "id": "upload_001",
+        "part_count": 1,
+        "status": "complete"
+      },
+      "status": 200
+    },
+    {
+      "body": {
+        "upload_id": "upload_001"
+      },
+      "method": "PUT",
+      "path": "/books/book_001/file",
+      "query": {},
+      "response": {
+        "book_id": "book_001",
+        "file_id": "upload_001"
+      },
+      "status": 200
+    },
+    {
+      "body": {
+        "content_type": "text/plain",
+        "filename": "notes.txt"
+      },
+      "method": "POST",
+      "path": "/uploads",
+      "query": {},
+      "response": {
+        "byte_count": 0,
+        "content_type": "text/plain",
+        "created_at": "2024-01-15T00:00:00Z",
+        "filename": "notes.txt",
+        "id": "upload_001",
+        "part_count": 0,
+        "status": "open"
+      },
+      "status": 201
+    },
+    {
+      "body": {
+        "data": "aGVsbG8="
+      },
+      "method": "PUT",
+      "path": "/uploads/upload_001/parts/1",
+      "query": {},
+      "response": {
+        "part_number": 1,
+        "size": 5,
+        "upload_id": "upload_001"
+      },
+      "status": 200
+    },
+    {
+      "body": null,
+      "method": "POST",
+      "path": "/uploads/upload_001/complete",
+      "query": {},
+      "response": {
+        "byte_count": 5,
+        "content_type": "text/plain",
+        "created_at": "2024-01-15T00:00:00Z",
+        "filename": "notes.txt",
+        "id": "upload_001",
+        "part_count": 1,
+        "status": "complete"
+      },
+      "status": 200
+    },
+    {
+      "body": {
+        "upload_id": "upload_001"
+      },
+      "method": "PUT",
+      "path": "/books/book_001/file",
+      "query": {},
+      "response": {
+        "book_id": "book_001",
+        "file_id": "upload_001"
+      },
+      "status": 200
+    }
+  ]
+}

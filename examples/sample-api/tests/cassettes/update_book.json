@@ -1,0 +1,36 @@
+{
+  "exchanges": [
+    {
+      "body": {
+        "title": "North Wind Revised"
+      },
+      "method": "PATCH",
+      "path": "/books/book_001",
+      "query": {},
+      "response": {
+        "author": "Ada North",
+        "created_at": "2024-01-15T00:00:00Z",
+        "file_id": null,
+        "id": "book_001",
+        "title": "North Wind Revised"
+      },
+      "status": 200
+    },
+    {
+      "body": {
+        "title": "North Wind Revised"
+      },
+      "method": "PATCH",
+      "path": "/books/book_001",
+      "query": {},
+      "response": {
+        "author": "Ada North",
+        "created_at": "2024-01-15T00:00:00Z",
+        "file_id": null,
+        "id": "book_001",
+        "title": "North Wind Revised"
+      },
+      "status": 200
+    }
+  ]
+}

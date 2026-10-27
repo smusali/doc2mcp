@@ -386,6 +386,7 @@ def test_primary_command_stops_before_curate(
     assert "ANTHROPIC_API_KEY" in capsys.readouterr().err
 
 
+@pytest.mark.enable_socket
 def test_primary_command_heuristic_stops_at_verify(
     tmp_path: Path, capsys: pytest.CaptureFixture[str]
 ) -> None:
@@ -393,11 +394,12 @@ def test_primary_command_heuristic_stops_at_verify(
     spec.write_text(_TINY, encoding="utf-8")
     out = tmp_path / "out"
     code = main([str(spec), "--out", str(out), "--curation", "heuristic"])
-    assert code == ExitCode.USAGE
+    assert code == ExitCode.VERIFIED
     assert (out / "endpoints.json").is_file()
     assert (out / "tools.yaml").is_file()
     assert (out / "generated").is_dir()
-    assert "report" in capsys.readouterr().err
+    assert (out / "report" / "verification.md").is_file()
+    assert "cannot write" not in capsys.readouterr().err
 
 
 def test_largest_spec_is_fast() -> None:
