@@ -869,7 +869,8 @@ def _string_example(schema: JsonObject) -> str:
 def _write_suite(out: Path, plan: JsonObject) -> None:
     tests = out / "tests"
     (tests / "cassettes").mkdir(parents=True, exist_ok=True)
-    (tests / "suite.py").write_bytes(_SUITE.read_bytes())
+    source = _SUITE.read_text(encoding="utf-8")
+    (tests / "suite.py").write_text(source, encoding="utf-8", newline="\n")
     _write_json(tests / "plan.json", plan)
     (tests / "conftest.py").write_text(_CONFTEST, encoding="utf-8", newline="\n")
     (tests / "test_tools.py").write_text(_PYTEST, encoding="utf-8", newline="\n")
