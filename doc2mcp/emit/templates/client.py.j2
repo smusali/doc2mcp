@@ -1,0 +1,305 @@
+{% include "header.py.j2" %}
+from __future__ import annotations
+
+import json
+import logging
+import os
+import re
+from collections.abc import Mapping
+from typing import TypeAlias
+from urllib.parse import quote
+
+import httpx2
+from mcp.server.mcpserver.exceptions import ToolError
+
+JsonValue: TypeAlias = bool | int | float | str | list["JsonValue"] | dict[str, "JsonValue"] | None
+_PATH = re.compile(r"\{([^{}]+)\}")
+_MESSAGE_KEYS = ("error", "message", "detail", "error_description", "title")
+_ERROR_LIMIT = 200
+_DEFAULT_BASE_URL = {{ default_base_url }}
+_BASE_URL_ENV = {{ base_url_env }}
+_TIMEOUT_ENV = {{ timeout_env }}
+{% if has_api_key %}
+_API_KEY_ENV = {{ api_key_env }}
+{% endif %}
+{% if has_bearer %}
+_TOKEN_ENV = {{ token_env }}
+{% endif %}
+logger = logging.getLogger(__name__)
+
+
+def startup_error() -> str | None:
+    try:
+        _base_url()
+        _timeout()
+    except ToolError as exc:
+        return str(exc)
+    return None
+
+
+class ApiClient:
+    async def request(
+        self,
+        method: str,
+        path: str,
+        *,
+        path_params: Mapping[str, object] | None = None,
+        query: Mapping[str, object] | None = None,
+        headers: Mapping[str, object] | None = None,
+        cookies: Mapping[str, object] | None = None,
+        body: object | None = None,
+        auth: tuple[tuple[str, str, str], ...] = (),
+    ) -> JsonValue:
+        logger.info("%s %s", method, path)
+        url = _base_url() + _fill_path(path, path_params or {})
+        parsed = httpx2.URL(url)
+        _check_host(parsed)
+        request_headers = _strings(headers)
+        request_query = _strings(query)
+        request_cookies = _strings(cookies)
+        _apply_auth(auth, request_headers, request_query, request_cookies)
+        async with httpx2.AsyncClient(timeout=_timeout(), follow_redirects=False) as http:
+            response = await http.request(
+                method,
+                url,
+                params=request_query or None,
+                headers=request_headers or None,
+                cookies=request_cookies or None,
+                json=_body(body),
+            )
+        if response.status_code < 200 or response.status_code >= 300:
+            raise ToolError(_error_message(response.status_code, response.content))
+        if not response.content:
+            return {}
+        return _decode(response.content, response.status_code)
+{% if has_pick %}
+
+    def pick(self, payload: JsonValue, *keys: str) -> JsonValue:
+        current = payload
+        for key in keys:
+            if not isinstance(current, dict) or key not in current:
+                raise ToolError(f"response is missing {key}")
+            current = current[key]
+        return current
+{% endif %}
+
+
+def _base_url() -> str:
+    raw = os.environ.get(_BASE_URL_ENV, _DEFAULT_BASE_URL).strip()
+    if not raw:
+        raise ToolError(f"{_BASE_URL_ENV} is empty")
+    return raw.rstrip("/")
+
+
+def _timeout() -> float:
+    raw = os.environ.get(_TIMEOUT_ENV)
+    if raw is None or raw.strip() == "":
+        return 30.0
+    try:
+        value = float(raw)
+    except ValueError as exc:
+        raise ToolError(f"{_TIMEOUT_ENV} must be a number") from exc
+    if value <= 0:
+        raise ToolError(f"{_TIMEOUT_ENV} must be a positive number")
+    return value
+
+
+def _fill_path(path: str, params: Mapping[str, object]) -> str:
+    def replace(match: re.Match[str]) -> str:
+        name = match.group(1)
+        if name not in params or params[name] is None:
+            raise ToolError(f"missing path parameter {name}")
+        return _segment(params[name])
+
+    filled = _PATH.sub(replace, path)
+    if not filled.startswith("/"):
+        return "/" + filled
+    return filled
+
+
+def _segment(value: object) -> str:
+    if isinstance(value, bool):
+        text = "true" if value else "false"
+    elif isinstance(value, str):
+        text = value
+    elif isinstance(value, int):
+        text = str(value)
+    elif isinstance(value, float):
+        text = repr(value)
+    else:
+        raise ToolError("path parameter must be a scalar")
+    return quote(text, safe="")
+
+
+def _strings(values: Mapping[str, object] | None) -> dict[str, str]:
+    if values is None:
+        return {}
+    result: dict[str, str] = {}
+    for key, value in values.items():
+        if value is None:
+            continue
+        result[key] = _plain(value)
+    return result
+
+
+def _plain(value: object) -> str:
+    if isinstance(value, bool):
+        return "true" if value else "false"
+    if isinstance(value, str):
+        return value
+    if isinstance(value, int):
+        return str(value)
+    if isinstance(value, float):
+        return repr(value)
+    raise ToolError("parameter must be a scalar")
+
+
+def _body(value: object | None) -> object | None:
+    if not isinstance(value, dict):
+        return value
+    cleaned: dict[str, object] = {}
+    for key, item in value.items():
+        if isinstance(key, str) and item is not None:
+            cleaned[key] = item
+    if not cleaned:
+        return None
+    return cleaned
+
+
+def _apply_auth(
+    auth: tuple[tuple[str, str, str], ...],
+    headers: dict[str, str],
+    query: dict[str, str],
+    cookies: dict[str, str],
+) -> None:
+{% if has_api_key and has_bearer %}
+    for kind, place, name in auth:
+        if kind == "api_key":
+            secret = _secret(_API_KEY_ENV)
+            if place == "header":
+                headers[name] = secret
+            elif place == "query":
+                query[name] = secret
+            elif place == "cookie":
+                cookies[name] = secret
+            else:
+                raise ToolError("unsupported authentication")
+            continue
+        if kind == "bearer":
+            headers["Authorization"] = f"Bearer {_secret(_TOKEN_ENV)}"
+            continue
+        raise ToolError("unsupported authentication")
+{% elif has_api_key %}
+    for kind, place, name in auth:
+        if kind == "api_key":
+            secret = _secret(_API_KEY_ENV)
+            if place == "header":
+                headers[name] = secret
+            elif place == "query":
+                query[name] = secret
+            elif place == "cookie":
+                cookies[name] = secret
+            else:
+                raise ToolError("unsupported authentication")
+            continue
+        raise ToolError("unsupported authentication")
+{% elif has_bearer %}
+    for kind, _place, _name in auth:
+        if kind == "bearer":
+            headers["Authorization"] = f"Bearer {_secret(_TOKEN_ENV)}"
+            continue
+        raise ToolError("unsupported authentication")
+{% else %}
+    if auth:
+        raise ToolError("unsupported authentication")
+{% endif %}
+
+
+def _secret(name: str) -> str:
+    value = os.environ.get(name)
+    if value is None or value == "":
+        raise ToolError(f"missing {name}")
+    return value
+
+
+def _check_host(url: httpx2.URL) -> None:
+    raw = os.environ.get("DOC2MCP_ALLOWED_HOSTS")
+    if raw is None:
+        return
+    allowed = {item.strip().lower() for item in raw.split(",") if item.strip()}
+    host = (url.host or "").lower()
+    if host not in allowed:
+        raise ToolError(f"host {host} is not allowed")
+
+
+def _error_message(status: int, body: bytes) -> str:
+    text = body.decode("utf-8", errors="replace").strip()
+    message = ""
+    if text:
+        try:
+            parsed: object = json.loads(text)
+        except json.JSONDecodeError:
+            message = text
+        else:
+            message = _message_from(parsed)
+    message = _redact(message)
+    if len(message) > _ERROR_LIMIT:
+        message = message[:_ERROR_LIMIT]
+    if message:
+        return f"HTTP {status}: {message}"
+    return f"HTTP {status}"
+
+
+def _message_from(value: object) -> str:
+    if isinstance(value, dict):
+        for key in _MESSAGE_KEYS:
+            item = value.get(key)
+            if isinstance(item, str) and item.strip():
+                return item.strip()
+        return ""
+    if isinstance(value, str):
+        return value.strip()
+    return ""
+
+
+def _redact(text: str) -> str:
+    redacted = text
+    for name in {{ secret_envs }}:
+        secret = os.environ.get(name)
+        if not secret:
+            continue
+        redacted = redacted.replace(secret, "***")
+        redacted = redacted.replace(quote(secret, safe=""), "***")
+    return redacted
+
+
+def _decode(body: bytes, status: int) -> JsonValue:
+    try:
+        parsed: object = json.loads(body)
+    except json.JSONDecodeError as exc:
+        raise ToolError(f"HTTP {status}: response is not JSON") from exc
+    try:
+        return _json_value(parsed)
+    except ToolError as exc:
+        raise ToolError(f"HTTP {status}: response is not JSON") from exc
+
+
+def _json_value(value: object) -> JsonValue:
+    if value is None or isinstance(value, str):
+        return value
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, int):
+        return value
+    if isinstance(value, float):
+        return value
+    if isinstance(value, list):
+        return [_json_value(item) for item in value]
+    if isinstance(value, dict):
+        result: dict[str, JsonValue] = {}
+        for key, item in value.items():
+            if not isinstance(key, str):
+                raise ToolError("response is not JSON")
+            result[key] = _json_value(item)
+        return result
+    raise ToolError("response is not JSON")

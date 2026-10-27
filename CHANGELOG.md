@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Emit writes a Python MCP server under `generated/` from `tools.yaml` and `endpoints.json`, with a hand-edit guard and `--force`.
 - Curation writes `tools.yaml` (`manifest-v1`) from `endpoints.json`, with an agent, a heuristic fallback, human overrides, and a budget.
 - Sample Shelf library API and in-memory reference server under `examples/sample-api`.
 - OpenAPI 3.0, 3.1, 3.2, and Swagger 2.0 ingest that writes a deterministic `endpoints.json` in the `endpoint-v1` model.

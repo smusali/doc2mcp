@@ -1,0 +1,50 @@
+<!--
+{{ line1 }}
+{{ line2 }}
+-->
+
+# {{ title }} MCP server
+
+Generated server for the {{ title }} API.
+
+## Run
+
+Stdio is the default. Claude Code, Claude Desktop, and IDE clients launch it that way.
+
+```text
+uvx --from ./generated {{ program }}
+```
+
+Streamable HTTP listens on 127.0.0.1 port 8000. Put a proxy in front of it if another host should reach it.
+
+```text
+{{ program }} --transport http
+```
+
+`--host` and `--port` change the HTTP bind address. Stdio ignores them.
+
+## Environment
+
+{% for row in env_rows %}
+- `{{ row.name }}`: {{ row.purpose }}
+{% endfor %}
+
+Credentials are read from the environment only. They are not written into this package.
+
+## Tools
+
+{% for tool in tools %}
+- `{{ tool.name }}` ({{ tool.title }}): {{ tool.description }}
+{% endfor %}
+
+## Claude Code
+
+```text
+claude mcp add {{ program }} -- uvx --from ./generated {{ program }}
+```
+
+## Claude Desktop
+
+```json
+{{ claude_desktop }}
+```
