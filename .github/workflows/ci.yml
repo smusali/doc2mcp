@@ -33,6 +33,23 @@ jobs:
       - name: Install
         run: uv sync --frozen --extra dev
 
+      - name: Install bubblewrap
+        if: runner.os == 'Linux'
+        run: |
+          if ! command -v bwrap >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y bubblewrap
+          fi
+
+      - name: Cassettes stay scrubbed
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -R -E -n -e 'shelf-sample-key' -e 'Authorization' examples/sample-api/tests/cassettes; then
+            echo "cassette contains a credential"
+            exit 1
+          fi
+
       - name: Lint
         run: uv run ruff check .
 
@@ -86,10 +103,11 @@ jobs:
       - name: Install
         run: uv sync --frozen --extra dev
 
-      - name: Compare exit code and report
+      - name: Compare the sample tree
         shell: bash
         run: |
           set -euo pipefail
+          cp -a examples/sample-api "$RUNNER_TEMP/out"
           set +e
           uv run doc2mcp examples/sample-api/openapi.yaml --offline --deterministic --out "$RUNNER_TEMP/out"
           code=$?
@@ -98,9 +116,7 @@ jobs:
             echo "expected exit 3, got $code"
             exit 1
           fi
-          diff -u \
-            examples/sample-api/expected/report/verification.json \
-            "$RUNNER_TEMP/out/report/verification.json"
+          diff -r --exclude=.doc2mcp examples/sample-api "$RUNNER_TEMP/out"
 
   determinism:
     name: determinism
@@ -126,6 +142,8 @@ jobs:
           set -euo pipefail
           run_once() {
             dest="$1"
+            rm -rf "$dest"
+            cp -a examples/sample-api "$dest"
             set +e
             uv run doc2mcp examples/sample-api/openapi.yaml --offline --deterministic --out "$dest"
             code=$?
@@ -137,4 +155,4 @@ jobs:
           }
           run_once "$RUNNER_TEMP/one"
           run_once "$RUNNER_TEMP/two"
-          diff -r "$RUNNER_TEMP/one" "$RUNNER_TEMP/two"
+          diff -r --exclude=.doc2mcp "$RUNNER_TEMP/one" "$RUNNER_TEMP/two"

@@ -21,6 +21,7 @@ from doc2mcp.curate.agent import (
 from doc2mcp.curate.manifest import (
     DetailDecision,
     PlanDecision,
+    dump_manifest,
     endpoint_index_document,
     load_manifest,
     name_error,
@@ -698,7 +699,9 @@ def test_sample_replay_matches_the_committed_manifest(tmp_path: Path) -> None:
 
     (tmp_path / "endpoints.json").write_bytes((_SAMPLE / "endpoints.json").read_bytes())
     result = curate(tmp_path, CurationOptions(), client=Replay())
-    assert (tmp_path / "tools.yaml").read_bytes() == (_SAMPLE / "tools.yaml").read_bytes()
+    replay = (tmp_path / "tools.yaml").read_text(encoding="utf-8")
+    committed = (_SAMPLE / "tools.yaml").read_text(encoding="utf-8")
+    assert _without_example_args(replay) == _without_example_args(committed)
     assert result.manifest is not None
     assert len(result.manifest.tools) <= 15
     spec = ApiSpec.model_validate_json((_SAMPLE / "endpoints.json").read_text(encoding="utf-8"))
@@ -716,6 +719,15 @@ def test_sample_replay_matches_the_committed_manifest(tmp_path: Path) -> None:
     upload = next(tool for tool in result.manifest.tools if tool.name == "upload_book_file")
     assert len(upload.steps) == 4
     assert any(item.param == "part_number" and item.value == 1 for item in upload.fixed)
+
+
+def _without_example_args(text: str) -> str:
+    manifest = load_manifest(text)
+    tools = [
+        tool.model_copy(update={"verify": tool.verify.model_copy(update={"example_args": {}})})
+        for tool in manifest.tools
+    ]
+    return dump_manifest(manifest.model_copy(update={"tools": tools}))
 
 
 def test_request_prefix_has_no_sampling_parameters() -> None:

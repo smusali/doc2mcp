@@ -1,0 +1,42 @@
+{
+  "exchanges": [
+    {
+      "body": {
+        "body": "Worth a second read.",
+        "patron_id": "patron_001",
+        "rating": 4
+      },
+      "method": "POST",
+      "path": "/books/book_001/reviews",
+      "query": {},
+      "response": {
+        "body": "Worth a second read.",
+        "book_id": "book_001",
+        "created_at": "2024-01-15T00:00:00Z",
+        "id": "review_002",
+        "patron_id": "patron_001",
+        "rating": 4
+      },
+      "status": 201
+    },
+    {
+      "body": {
+        "body": "Worth a second read.",
+        "patron_id": "patron_001",
+        "rating": 4
+      },
+      "method": "POST",
+      "path": "/books/book_001/reviews",
+      "query": {},
+      "response": {
+        "body": "Worth a second read.",
+        "book_id": "book_001",
+        "created_at": "2024-01-15T00:00:00Z",
+        "id": "review_002",
+        "patron_id": "patron_001",
+        "rating": 4
+      },
+      "status": 201
+    }
+  ]
+}

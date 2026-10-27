@@ -46,13 +46,15 @@ _KEY = "SENTINEL/key+9f3a"
 _TOKEN = "SENTINEL-token-9f3a"
 
 
-def test_sample_emit_matches_committed_tree(tmp_path: Path) -> None:
-    out = _copy_sample(tmp_path)
-    emit(out)
-    _assert_same(_SAMPLE / "generated", out / "generated")
-    emit(out)
-    _assert_same(_SAMPLE / "generated", out / "generated")
-    for path in (out / "generated").rglob("*"):
+def test_sample_emit_is_idempotent(tmp_path: Path) -> None:
+    first = _copy_sample(tmp_path / "one")
+    second = _copy_sample(tmp_path / "two")
+    emit(first)
+    emit(second)
+    _assert_same(first / "generated", second / "generated")
+    emit(first)
+    _assert_same(first / "generated", second / "generated")
+    for path in (first / "generated").rglob("*"):
         if path.is_file():
             assert b"\r" not in path.read_bytes()
 
@@ -134,10 +136,20 @@ def test_hand_edit_guard(tmp_path: Path) -> None:
 
 
 @pytest.mark.enable_socket
-def test_stdio_lists_and_calls_search_books() -> None:
+def test_stdio_lists_and_calls_search_books(tmp_path: Path) -> None:
     app, key = _sample_app()
+    full = _copy_sample(tmp_path)
+    emit(full)
     with _serve(app) as base:
-        listed, result, err = asyncio.run(
+        listed, _full_result, _full_err = asyncio.run(
+            _stdio_round_trip(
+                full / "generated",
+                "shelf_mcp",
+                {"SHELF_API_KEY": key, "SHELF_BASE_URL": base},
+                "search_books",
+            )
+        )
+        _committed, result, err = asyncio.run(
             _stdio_round_trip(
                 _SAMPLE / "generated",
                 "shelf_mcp",

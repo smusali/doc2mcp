@@ -1,0 +1,26 @@
+{
+  "exchanges": [
+    {
+      "body": null,
+      "method": "DELETE",
+      "path": "/books/book_004",
+      "query": {},
+      "response": {
+        "deleted": true,
+        "id": "book_004"
+      },
+      "status": 200
+    },
+    {
+      "body": null,
+      "method": "DELETE",
+      "path": "/books/book_004",
+      "query": {},
+      "response": {
+        "deleted": true,
+        "id": "book_004"
+      },
+      "status": 200
+    }
+  ]
+}

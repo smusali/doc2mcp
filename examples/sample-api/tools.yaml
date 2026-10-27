@@ -69,8 +69,8 @@ tools:
       - status
   verify:
     example_args:
-      barcode: example
-      book_id: example
+      barcode: C-004
+      book_id: book_001
     depends_on: []
   rationale: Add Copy is a primary Shelf action.
 - name: checkout_copy
@@ -151,8 +151,8 @@ tools:
       - status
   verify:
     example_args:
-      copy_id: example
-      patron_id: example
+      copy_id: copy_002
+      patron_id: patron_001
     depends_on: []
   rationale: Checkout Copy is a primary Shelf action.
 - name: create_book
@@ -219,8 +219,8 @@ tools:
       - title
   verify:
     example_args:
-      author: example
-      title: example
+      author: Ned Brooks
+      title: West Index
     depends_on: []
   rationale: Create Book is a primary Shelf action.
 - name: delete_book
@@ -265,7 +265,7 @@ tools:
       - id
   verify:
     example_args:
-      book_id: example
+      book_id: book_004
     depends_on: []
   rationale: Delete Book is a primary Shelf action.
 - name: get_book
@@ -328,7 +328,7 @@ tools:
       - title
   verify:
     example_args:
-      book_id: example
+      book_id: book_001
     depends_on: []
   rationale: Get Book is a primary Shelf action.
 - name: get_patron
@@ -387,7 +387,7 @@ tools:
       - status
   verify:
     example_args:
-      patron_id: example
+      patron_id: patron_001
     depends_on: []
   rationale: Get Patron is a primary Shelf action.
 - name: list_copies
@@ -473,7 +473,7 @@ tools:
           type: object
   verify:
     example_args:
-      book_id: example
+      book_id: book_001
     depends_on: []
   rationale: List Copies is a primary Shelf action.
 - name: place_hold
@@ -534,8 +534,8 @@ tools:
       - patron_id
   verify:
     example_args:
-      book_id: example
-      patron_id: example
+      book_id: book_002
+      patron_id: patron_001
     depends_on: []
   rationale: Place Hold is a primary Shelf action.
 - name: register_patron
@@ -603,8 +603,8 @@ tools:
       - status
   verify:
     example_args:
-      email: example
-      name: example
+      email: jules@example.test
+      name: Jules Hart
     depends_on: []
   rationale: Register Patron is a primary Shelf action.
 - name: renew_loan
@@ -676,7 +676,7 @@ tools:
       - status
   verify:
     example_args:
-      loan_id: example
+      loan_id: loan_001
     depends_on: []
   rationale: Renew Loan is a primary Shelf action.
 - name: return_loan
@@ -748,7 +748,7 @@ tools:
       - status
   verify:
     example_args:
-      loan_id: example
+      loan_id: loan_001
     depends_on: []
   rationale: Return Loan is a primary Shelf action.
 - name: review_book
@@ -839,10 +839,10 @@ tools:
       - rating
   verify:
     example_args:
-      body: example
-      book_id: example
-      patron_id: example
-      rating: 1
+      body: Worth a second read.
+      book_id: book_001
+      patron_id: patron_001
+      rating: 4
     depends_on: []
   rationale: Review Book is a primary Shelf action.
 - name: search_books
@@ -984,8 +984,8 @@ tools:
       - title
   verify:
     example_args:
-      book_id: example
-      title: example
+      book_id: book_001
+      title: North Wind Revised
     depends_on: []
   rationale: Update Book is a primary Shelf action.
 - name: upload_book_file
@@ -1077,10 +1077,10 @@ tools:
       - file_id
   verify:
     example_args:
-      book_id: example
-      content_type: example
-      data: example
-      filename: example
+      book_id: book_001
+      content_type: text/plain
+      data: aGVsbG8=
+      filename: notes.txt
     depends_on: []
   rationale: Upload Book File is a primary Shelf action.
 excluded:

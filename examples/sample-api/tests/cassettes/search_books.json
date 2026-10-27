@@ -1,0 +1,62 @@
+{
+  "exchanges": [
+    {
+      "body": null,
+      "method": "GET",
+      "path": "/books",
+      "query": {
+        "limit": "2"
+      },
+      "response": {
+        "data": [
+          {
+            "author": "Ada North",
+            "created_at": "2024-01-15T00:00:00Z",
+            "file_id": null,
+            "id": "book_001",
+            "title": "North Wind"
+          },
+          {
+            "author": "Lin Park",
+            "created_at": "2024-01-15T00:00:00Z",
+            "file_id": null,
+            "id": "book_002",
+            "title": "South Dock"
+          }
+        ],
+        "has_more": true,
+        "next_cursor": "book_002"
+      },
+      "status": 200
+    },
+    {
+      "body": null,
+      "method": "GET",
+      "path": "/books",
+      "query": {
+        "limit": "2"
+      },
+      "response": {
+        "data": [
+          {
+            "author": "Ada North",
+            "created_at": "2024-01-15T00:00:00Z",
+            "file_id": null,
+            "id": "book_001",
+            "title": "North Wind"
+          },
+          {
+            "author": "Lin Park",
+            "created_at": "2024-01-15T00:00:00Z",
+            "file_id": null,
+            "id": "book_002",
+            "title": "South Dock"
+          }
+        ],
+        "has_more": true,
+        "next_cursor": "book_002"
+      },
+      "status": 200
+    }
+  ]
+}

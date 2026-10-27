@@ -19,7 +19,7 @@ def test_version(capsys: pytest.CaptureFixture[str]) -> None:
 def test_help_lists_stages(capsys: pytest.CaptureFixture[str]) -> None:
     assert main(["--help"]) == ExitCode.VERIFIED
     output = _ANSI.sub("", capsys.readouterr().out)
-    for name in ("ingest", "curate", "emit", "verify"):
+    for name in ("ingest", "curate", "emit", "verify", "record"):
         assert name in output
     assert "OpenAPI file path or URL" in output
     assert "docs URL" not in output

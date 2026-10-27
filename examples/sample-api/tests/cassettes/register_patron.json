@@ -1,0 +1,38 @@
+{
+  "exchanges": [
+    {
+      "body": {
+        "email": "jules@example.test",
+        "name": "Jules Hart"
+      },
+      "method": "POST",
+      "path": "/patrons",
+      "query": {},
+      "response": {
+        "created_at": "2024-01-15T00:00:00Z",
+        "email": "jules@example.test",
+        "id": "patron_003",
+        "name": "Jules Hart",
+        "status": "active"
+      },
+      "status": 201
+    },
+    {
+      "body": {
+        "email": "jules@example.test",
+        "name": "Jules Hart"
+      },
+      "method": "POST",
+      "path": "/patrons",
+      "query": {},
+      "response": {
+        "created_at": "2024-01-15T00:00:00Z",
+        "email": "jules@example.test",
+        "id": "patron_003",
+        "name": "Jules Hart",
+        "status": "active"
+      },
+      "status": 201
+    }
+  ]
+}

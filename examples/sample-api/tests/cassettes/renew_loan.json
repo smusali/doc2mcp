@@ -1,0 +1,38 @@
+{
+  "exchanges": [
+    {
+      "body": null,
+      "method": "POST",
+      "path": "/loans/loan_001/renew",
+      "query": {},
+      "response": {
+        "book_id": "book_001",
+        "copy_id": "copy_001",
+        "created_at": "2024-01-15T00:00:00Z",
+        "due_at": "2024-03-15T00:00:00Z",
+        "id": "loan_001",
+        "patron_id": "patron_001",
+        "renew_count": 1,
+        "status": "active"
+      },
+      "status": 200
+    },
+    {
+      "body": null,
+      "method": "POST",
+      "path": "/loans/loan_001/renew",
+      "query": {},
+      "response": {
+        "book_id": "book_001",
+        "copy_id": "copy_001",
+        "created_at": "2024-01-15T00:00:00Z",
+        "due_at": "2024-03-15T00:00:00Z",
+        "id": "loan_001",
+        "patron_id": "patron_001",
+        "renew_count": 1,
+        "status": "active"
+      },
+      "status": 200
+    }
+  ]
+}

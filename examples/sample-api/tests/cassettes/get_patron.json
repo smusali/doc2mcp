@@ -1,0 +1,32 @@
+{
+  "exchanges": [
+    {
+      "body": null,
+      "method": "GET",
+      "path": "/patrons/patron_001",
+      "query": {},
+      "response": {
+        "created_at": "2024-01-15T00:00:00Z",
+        "email": "riley@example.test",
+        "id": "patron_001",
+        "name": "Riley Chen",
+        "status": "active"
+      },
+      "status": 200
+    },
+    {
+      "body": null,
+      "method": "GET",
+      "path": "/patrons/patron_001",
+      "query": {},
+      "response": {
+        "created_at": "2024-01-15T00:00:00Z",
+        "email": "riley@example.test",
+        "id": "patron_001",
+        "name": "Riley Chen",
+        "status": "active"
+      },
+      "status": 200
+    }
+  ]
+}

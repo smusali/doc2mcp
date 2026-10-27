@@ -9,7 +9,7 @@ doc2mcp runs four stages. Each stage reads the previous stage's artifact from di
 | ingest | OpenAPI file or URL | `endpoints.json` |
 | curate | `endpoints.json` | `tools.yaml` |
 | emit | `tools.yaml` and `endpoints.json` | `generated/` |
-| verify | `generated/` and `tests/` | `report/` |
+| verify | `generated/`, `tools.yaml`, `endpoints.json`, and `tests/cassettes/` when present | `tests/` and `report/` |
 
 `ingest` is the only stage that reads an external spec. The other inputs are artifacts under `--out`. The primary command `doc2mcp SPEC` runs the stages in that order.
 
@@ -30,5 +30,9 @@ Templates live in `doc2mcp/emit/templates`, ship inside the installed package, a
 Schema models are emitted in this repository. `datamodel-code-generator` was not used: its output changes with the formatter, the Python version, and class order, its defaults pull in Black and isort, and an untyped schema becomes `Any`. Curation already projects each tool schema onto a small JSON Schema subset, and the emitter turns that subset into pydantic models. A schema outside the subset fails emit and names the tool.
 
 Python and TOML files start with two comments. The first names the doc2mcp version, the spec file, and the full sha256 of the spec and of `tools.yaml`. The second says not to edit the file. Each Python comment ends with a length noqa so the full hash can stay on one line. `README.md` puts the same two sentences in an HTML comment. The ledger stores them in a `header` field.
+
+Verify reads `endpoints.json`, `tools.yaml`, and `generated/`. It emits the full server again so a previous exclusion does not hide a tool, calls every tool over stdio, then applies `--on-failure`. The runner is `doc2mcp/suite.py`. Verify copies that file to `<out>/tests/suite.py` and loads the copy, so the command and pytest execute the same file. `doc2mcp record` uses the same runner against a sandbox URL and writes `tests/cassettes/`. It is not a step of the primary command.
+
+The report is version `report-v1`. `docs/schemas/report-v1.json` is generated from the model, and the test suite fails when the two drift. `report/verification.json` is sorted JSON, UTF-8, with LF line endings. `--deterministic` omits `started_at` and durations. See `docs/VERIFICATION.md` for calls, cassettes, the allowlist, and exit 3.
 
 The package requires Python 3.11 through 3.15.
