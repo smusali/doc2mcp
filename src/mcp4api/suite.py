@@ -10,7 +10,8 @@ import sys
 import tempfile
 import threading
 import time
-from collections.abc import Mapping, Sequence
+from collections.abc import Iterator, Mapping, Sequence
+from contextlib import contextmanager
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import TextIO, TypeAlias, TypedDict
@@ -393,9 +394,21 @@ def _run(
     produced: dict[str, list[JsonValue]] = {}
     happy_seen: dict[str, int] = {}
     calls: list[JsonObject] = []
-    with tempfile.TemporaryFile(mode="w+", encoding="utf-8") as errlog:
+    with _stderr_log() as errlog:
         asyncio.run(_session(plan, env, fixture, proxy, produced, happy_seen, calls, errlog))
     return _pack({"calls": calls})
+
+
+@contextmanager
+def _stderr_log() -> Iterator[TextIO]:
+    descriptor, name = tempfile.mkstemp(prefix="mcp4api-")
+    os.close(descriptor)
+    path = Path(name)
+    try:
+        with path.open("w+", encoding="utf-8") as handle:
+            yield handle
+    finally:
+        path.unlink(missing_ok=True)
 
 
 async def _session(

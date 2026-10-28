@@ -33,6 +33,7 @@ from mcp4api.emit import emit
 from mcp4api.errors import ExitCode, UsageError
 from mcp4api.ingest import ingest
 from mcp4api.model import JsonObject, dump_endpoints
+from mcp4api.suite import _stderr_log
 from starlette.applications import Starlette
 from starlette.requests import Request
 from starlette.responses import JSONResponse, Response
@@ -475,7 +476,7 @@ async def _stdio_round_trip(
     *,
     capture: bool = False,
 ) -> tuple[list[object], object, str]:
-    with tempfile.TemporaryFile(mode="w+", encoding="utf-8") as errlog:
+    with _stderr_log() as errlog:
         params = StdioServerParameters(
             command=sys.executable,
             args=["-m", package],
