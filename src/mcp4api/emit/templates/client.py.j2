@@ -264,7 +264,7 @@ def _message_from(value: object) -> str:
 
 def _redact(text: str) -> str:
     redacted = text
-    for name in {{ secret_envs }}:
+    for name in {{ redact_env_names }}:
         secret = os.environ.get(name)
         if not secret:
             continue

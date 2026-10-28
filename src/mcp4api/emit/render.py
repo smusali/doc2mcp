@@ -45,7 +45,7 @@ class Rendered:
     package: str
     base_url_env: str
     timeout_env: str
-    secret_envs: tuple[str, ...]
+    redact_env_names: tuple[str, ...]
 
 
 @dataclass(frozen=True)
@@ -137,7 +137,7 @@ def render_files(spec: ApiSpec, manifest: Manifest, *, tools_sha256: str) -> Ren
                 "has_bearer": flags.bearer,
                 "token_env": _py(f"{env_name}_TOKEN"),
                 "has_pick": flags.pick,
-                "secret_envs": _tuple(_secret_names(env_name, flags)),
+                "redact_env_names": _tuple(_redact_env_names(env_name, flags)),
             },
         ),
         f"{module}/models.py": _render(
@@ -162,7 +162,7 @@ def render_files(spec: ApiSpec, manifest: Manifest, *, tools_sha256: str) -> Ren
         package=module,
         base_url_env=f"{env_name}_BASE_URL",
         timeout_env=f"{env_name}_TIMEOUT",
-        secret_envs=tuple(_secret_names(env_name, flags)),
+        redact_env_names=tuple(_redact_env_names(env_name, flags)),
     )
 
 
@@ -816,7 +816,7 @@ def _flat(text: str) -> str:
     return " ".join(text.split())
 
 
-def _secret_names(env_name: str, flags: _Flags) -> list[str]:
+def _redact_env_names(env_name: str, flags: _Flags) -> list[str]:
     names: list[str] = []
     if flags.api_key:
         names.append(f"{env_name}_API_KEY")

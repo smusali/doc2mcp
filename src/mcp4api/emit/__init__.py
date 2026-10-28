@@ -23,7 +23,7 @@ class Emitted:
     package: str
     base_url_env: str
     timeout_env: str
-    secret_envs: tuple[str, ...]
+    redact_env_names: tuple[str, ...]
 
 
 def emit(
@@ -62,7 +62,7 @@ def emit(
         package=rendered.package,
         base_url_env=rendered.base_url_env,
         timeout_env=rendered.timeout_env,
-        secret_envs=rendered.secret_envs,
+        redact_env_names=rendered.redact_env_names,
     )
 
 

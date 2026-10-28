@@ -33,7 +33,7 @@ class Plan(TypedDict):
     calls: list[JsonObject]
     generated: str
     module: str
-    secret_envs: list[str]
+    redact_env_names: list[str]
     timeout_env: str
     timeout_seconds: float
     upstream: str
@@ -48,7 +48,7 @@ def plan_from(
     calls: Sequence[object],
     generated: str,
     module: str,
-    secret_envs: list[str],
+    redact_env_names: list[str],
     timeout_env: str,
     timeout_seconds: float,
     upstream: str,
@@ -63,7 +63,7 @@ def plan_from(
         calls: Calls the suite will make.
         generated: Directory that contains the generated server, relative to the plan.
         module: Import name of the generated server.
-        secret_envs: Credential environment variables.
+        redact_env_names: Names of environment variables whose values are redacted.
         timeout_env: Environment variable that sets the request timeout.
         timeout_seconds: Request timeout.
         upstream: ``fixture``, ``sandbox``, or ``live``.
@@ -79,7 +79,7 @@ def plan_from(
         "calls": _object_list(calls, "calls"),
         "generated": generated,
         "module": module,
-        "secret_envs": secret_envs,
+        "redact_env_names": redact_env_names,
         "timeout_env": timeout_env,
         "timeout_seconds": timeout_seconds,
         "upstream": upstream,
@@ -373,7 +373,7 @@ class _Plan:
     generated: str
     base_url_env: str
     timeout_env: str
-    secret_envs: tuple[str, ...]
+    redact_env_names: tuple[str, ...]
     timeout_seconds: float
     allowlist: tuple[str, ...]
     upstream: str
@@ -899,7 +899,7 @@ def _child_env(plan: _Plan, proxy_url: str, base_url: str) -> dict[str, str]:
     env[plan.base_url_env] = base_url
     env[plan.timeout_env] = _number(plan.timeout_seconds)
     if plan.upstream == "fixture":
-        for name in plan.secret_envs:
+        for name in plan.redact_env_names:
             if not env.get(name):
                 env[name] = "fixture"
     return env
@@ -999,8 +999,8 @@ def _parse_plan(plan: object) -> _Plan:
             )
     allow = plan.get("allowlist")
     hosts = [item for item in allow if isinstance(item, str)] if isinstance(allow, list) else []
-    secrets = plan.get("secret_envs")
-    secret_envs = (
+    secrets = plan.get("redact_env_names")
+    redact_env_names = (
         tuple(item for item in secrets if isinstance(item, str))
         if isinstance(secrets, list)
         else ()
@@ -1016,7 +1016,7 @@ def _parse_plan(plan: object) -> _Plan:
         generated=_resolve_generated(generated),
         base_url_env=_str(plan, "base_url_env"),
         timeout_env=_str(plan, "timeout_env"),
-        secret_envs=secret_envs,
+        redact_env_names=redact_env_names,
         timeout_seconds=seconds,
         allowlist=tuple(hosts or ["127.0.0.1"]),
         upstream=_str(plan, "upstream") or "fixture",

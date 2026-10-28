@@ -107,7 +107,7 @@ class _Prepared:
     manifest_sha: str
     plan: JsonObject
     skipped: list[str]
-    secret_envs: tuple[str, ...]
+    redact_env_names: tuple[str, ...]
 
 
 def verify(out: Path, options: VerifyOptions) -> VerifyOutcome:
@@ -161,7 +161,7 @@ def record(out: Path, options: VerifyOptions) -> None:
     failure = _connection_failure(results, "sandbox")
     if failure:
         raise UpstreamError(failure)
-    write_cassettes(out, results, secret_values(prepared.secret_envs))
+    write_cassettes(out, results, secret_values(prepared.redact_env_names))
 
 
 def run_saved(path: Path) -> int:
@@ -226,7 +226,7 @@ def _prepare(out: Path, options: VerifyOptions) -> _Prepared:
         manifest_sha=manifest_sha,
         plan=plan,
         skipped=skipped,
-        secret_envs=emitted.secret_envs,
+        redact_env_names=emitted.redact_env_names,
     )
 
 
@@ -411,7 +411,7 @@ def _plan(
             calls=calls,
             generated="generated",
             module=emitted.package,
-            secret_envs=list(emitted.secret_envs),
+            redact_env_names=list(emitted.redact_env_names),
             timeout_env=emitted.timeout_env,
             timeout_seconds=options.timeout_seconds,
             upstream=upstream,

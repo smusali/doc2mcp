@@ -1,6 +1,6 @@
 {
   "files": {
-    "README.md": "655fbff27092af9ba0fa5d7f93691d863e7f4bb225c8181e355b763f026f7e61",
+    "README.md": "180e4727664919cc1d24270cbef6ef53e05f6a75fa3aa84c7e4f97e8688ffa69",
     "pyproject.toml": "129cdaa3afd3df59383a62074d73ef39beaa1388d1193465e355ddc59a3530f6",
     "shelf_mcp/__init__.py": "b9051937849ec1b2e469e9db4ca8e8fe1eba6c5ba778e4e3e2b81db6235e1e36",
     "shelf_mcp/__main__.py": "292c53db8166b43460735bd64ca26689a55908552c4cc31680d188e2ec10ee06",
