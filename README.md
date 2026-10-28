@@ -100,18 +100,12 @@ async def upload_book_file(
 
 ## Limitations
 
-- OpenAPI input only (3.0, 3.1, 3.2, and Swagger 2.0). No HTML docs pages, runbooks, Postman collections, or GraphQL.
-- The emitted server authenticates with an API key or a bearer token from environment variables. Endpoints that need another scheme are excluded and listed in the report.
-- The emitted server does not paginate, retry, or rate-limit. List tools return the first page.
-- No repair loop. A failing tool is reported as a known gap and left out of the server. It is not fixed automatically.
-- No PII redaction. The emitted server never logs bodies, but the report's failure details include trimmed upstream responses, which can hold real data when you verify against a sandbox or a live API.
-- Python output only.
-- No hosted service and no GitHub Action. The exit codes are the CI interface.
-- Agent curation needs an Anthropic API key. `--curation heuristic` does not.
-- Model output is not deterministic, so reproducibility comes from committing `tools.yaml`.
-- `--isolate` is Linux-only, and synthesized fixtures are weaker evidence than recorded ones.
+- OpenAPI 3.0, 3.1, 3.2, and Swagger 2.0 only.
+- API key or bearer token authentication only.
+- A failing tool is a known gap. It is not repaired.
+- Agent curation needs an Anthropic API key.
 
-The same limits, with the mechanics behind them, are in [Limitations](https://github.com/smusali/mcp4api/blob/main/docs/limitations.md).
+The full list is in [Limitations](https://github.com/smusali/mcp4api/blob/main/docs/limitations.md).
 
 ## Contributing
 

@@ -1,31 +1,31 @@
 repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: check-yaml
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
   - repo: https://github.com/astral-sh/ruff-pre-commit
     rev: v0.17.2
     hooks:
       - id: ruff-check
-        args: [--fix]
+        args: [--fix, --show-fixes]
       - id: ruff-format
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v2.4.0
+  - repo: https://github.com/rvben/rumdl-pre-commit
+    rev: v0.3.0
+    hooks:
+      - id: rumdl
+  - repo: local
     hooks:
       - id: mypy
-        files: ^mcp4api/
+        name: mypy
+        entry: uv run mypy
+        language: system
         pass_filenames: false
-        args: [--strict, mcp4api]
-        additional_dependencies:
-          - anthropic==2.3.0
-          - typer==0.27.3
-          - pydantic==2.14.1
-          - PyYAML==6.0.3
-          - types-PyYAML==6.0.12.20260906
-          - httpx2==2.16.0
-          - jinja2==3.1.6
-          - markupsafe==3.0.4
-          - openapi-spec-validator==0.9.0
-          - jsonschema==4.26.0
-          - jsonschema-rs==0.60.1
-          - types-jsonschema==4.26.0.20261006
-          - mcp==2.3.0
-          - hypothesis==6.170.12
-          - hypothesis-jsonschema==0.23.2
-          - rich==15.0.0
+        types: [python]
+      - id: changelog
+        name: changelog
+        entry: uv run python tools/check_changelog.py
+        language: system
+        pass_filenames: false
+        files: CHANGELOG\.md$

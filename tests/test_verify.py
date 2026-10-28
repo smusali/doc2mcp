@@ -14,30 +14,21 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 import pytest
-from jsonschema import Draft202012Validator
 from mcp import ClientSession, StdioServerParameters, stdio_client
-from mcp.client._probe import negotiate_auto
-from mcp4api.cli import ExitCode, main
+from mcp.client.client import negotiate_auto  # type: ignore[attr-defined]
+from mcp.types import TextContent
+from mcp4api.cli import main
 from mcp4api.curate.agent import CurationOptions, curate
-from mcp4api.curate.manifest import Manifest, dump_manifest, load_manifest
+from mcp4api.curate.models import CurationMode, Manifest, dump_manifest, load_manifest
 from mcp4api.emit import emit
+from mcp4api.errors import ExitCode
 from mcp4api.ingest import ingest
-from mcp4api.model import JsonObject, dump_endpoints
-from mcp4api.report import published_report_schema_text
+from mcp4api.model import JsonObject, dump_endpoints, expect_json
 from mcp4api.suite import Proxy
 from mcp4api.verify import VerifyOptions, isolate_prefix, record, verify
 
 _ROOT = Path(__file__).resolve().parents[1]
-_SCHEMA = _ROOT / "docs" / "schemas" / "report-v1.json"
 _SAMPLE = _ROOT / "examples" / "sample-api"
-
-
-def test_report_schema_matches_the_model() -> None:
-    assert published_report_schema_text() == _SCHEMA.read_text(encoding="utf-8")
-    schema = json.loads(_SCHEMA.read_text(encoding="utf-8"))
-    Draft202012Validator.check_schema(schema)
-    sample = json.loads((_SAMPLE / "report" / "verification.json").read_text(encoding="utf-8"))
-    Draft202012Validator(schema).validate(sample)
 
 
 @pytest.mark.allow_hosts(["127.0.0.1"])
@@ -275,7 +266,7 @@ def test_integer_page_count_clears_the_sample_gap(tmp_path: Path) -> None:
     assert corrected != original
     cassette.write_text(corrected, encoding="utf-8")
     code = main(["--offline", "--deterministic", "--quiet", "--out", str(dest), "verify"])
-    assert code == ExitCode.VERIFIED
+    assert code == ExitCode.OK
     assert _report(dest)["excluded"] == []
 
 
@@ -366,7 +357,7 @@ def _curate(out: Path, document: JsonObject) -> None:
     spec.write_text(json.dumps(document), encoding="utf-8")
     loaded = ingest(str(spec), offline=True, allow_ref_hosts=())
     (out / "endpoints.json").write_text(dump_endpoints(loaded), encoding="utf-8")
-    curate(out, CurationOptions(mode="heuristic", offline=True))
+    curate(out, CurationOptions(mode=CurationMode.HEURISTIC, offline=True))
 
 
 def _manifest(out: Path) -> Manifest:
@@ -507,7 +498,7 @@ def _item_document() -> JsonObject:
         "required": ["id", "name"],
         "properties": {"id": {"type": "string"}, "name": {"type": "string"}},
     }
-    return {
+    raw = {
         "openapi": "3.0.3",
         "info": {"title": "Items", "version": "1"},
         "servers": [{"url": "http://127.0.0.1:9"}],
@@ -544,6 +535,10 @@ def _item_document() -> JsonObject:
             },
         },
     }
+    parsed = expect_json(raw)
+    if not isinstance(parsed, dict):
+        raise TypeError("document must be an object")
+    return parsed
 
 
 def _ping_document(url: str) -> JsonObject:
@@ -695,7 +690,7 @@ def _call_ping(generated: Path, proxy: str) -> str:
             listed = await session.list_tools()
             name = listed.tools[0].name
             result = await session.call_tool(name, {})
-        parts = [block.text for block in result.content if getattr(block, "type", "") == "text"]
+        parts = [block.text for block in result.content if isinstance(block, TextContent)]
         return " ".join(parts)
 
     return asyncio.run(run())

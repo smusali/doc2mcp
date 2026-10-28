@@ -45,7 +45,6 @@
     }
   ],
   "findings": [],
-  "model_version": "endpoint-v1",
   "security_schemes": {},
   "servers": [
     {

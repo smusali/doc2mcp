@@ -1,0 +1,802 @@
+{
+  "$defs": {
+    "Endpoint": {
+      "properties": {
+        "deprecated": {
+          "default": false,
+          "title": "Deprecated",
+          "type": "boolean"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "id": {
+          "title": "Id",
+          "type": "string"
+        },
+        "method": {
+          "title": "Method",
+          "type": "string"
+        },
+        "operation_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Operation Id"
+        },
+        "parameters": {
+          "items": {
+            "$ref": "#/$defs/Parameter"
+          },
+          "title": "Parameters",
+          "type": "array"
+        },
+        "path": {
+          "title": "Path",
+          "type": "string"
+        },
+        "provenance": {
+          "title": "Provenance",
+          "type": "string"
+        },
+        "request_body": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/RequestBody"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null
+        },
+        "responses": {
+          "additionalProperties": {
+            "$ref": "#/$defs/Response"
+          },
+          "title": "Responses",
+          "type": "object"
+        },
+        "security": {
+          "items": {
+            "additionalProperties": {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            "type": "object"
+          },
+          "title": "Security",
+          "type": "array"
+        },
+        "servers": {
+          "anyOf": [
+            {
+              "items": {
+                "$ref": "#/$defs/Server"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Servers"
+        },
+        "summary": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Summary"
+        },
+        "tags": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Tags"
+        }
+      },
+      "required": [
+        "id",
+        "method",
+        "path",
+        "parameters",
+        "responses",
+        "security",
+        "provenance"
+      ],
+      "title": "Endpoint",
+      "type": "object"
+    },
+    "Finding": {
+      "properties": {
+        "code": {
+          "enum": [
+            "missing-operation-id",
+            "duplicate-operation-id",
+            "no-success-response",
+            "no-response-schema",
+            "unresolvable-ref",
+            "non-json-body",
+            "missing-server",
+            "undocumented-security",
+            "invalid-against-spec",
+            "unsupported-feature"
+          ],
+          "title": "Code",
+          "type": "string"
+        },
+        "endpoint_id": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Endpoint Id"
+        },
+        "message": {
+          "title": "Message",
+          "type": "string"
+        },
+        "pointer": {
+          "title": "Pointer",
+          "type": "string"
+        },
+        "severity": {
+          "enum": [
+            "error",
+            "warning",
+            "info"
+          ],
+          "title": "Severity",
+          "type": "string"
+        }
+      },
+      "required": [
+        "code",
+        "severity",
+        "pointer",
+        "message"
+      ],
+      "title": "Finding",
+      "type": "object"
+    },
+    "Header": {
+      "properties": {
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "examples": {
+          "anyOf": [
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "items": {},
+                    "type": "array"
+                  },
+                  {
+                    "type": "object"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Examples"
+        },
+        "required": {
+          "title": "Required",
+          "type": "boolean"
+        },
+        "schema": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object"
+            }
+          ],
+          "title": "Schema"
+        }
+      },
+      "required": [
+        "required",
+        "schema"
+      ],
+      "title": "Header",
+      "type": "object"
+    },
+    "Parameter": {
+      "properties": {
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "examples": {
+          "anyOf": [
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "items": {},
+                    "type": "array"
+                  },
+                  {
+                    "type": "object"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Examples"
+        },
+        "explode": {
+          "title": "Explode",
+          "type": "boolean"
+        },
+        "in": {
+          "enum": [
+            "path",
+            "query",
+            "header",
+            "cookie"
+          ],
+          "title": "In",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "required": {
+          "title": "Required",
+          "type": "boolean"
+        },
+        "schema": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object"
+            }
+          ],
+          "title": "Schema"
+        },
+        "style": {
+          "title": "Style",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "in",
+        "required",
+        "schema",
+        "style",
+        "explode"
+      ],
+      "title": "Parameter",
+      "type": "object"
+    },
+    "RequestBody": {
+      "properties": {
+        "content_type": {
+          "title": "Content Type",
+          "type": "string"
+        },
+        "examples": {
+          "anyOf": [
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "items": {},
+                    "type": "array"
+                  },
+                  {
+                    "type": "object"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Examples"
+        },
+        "required": {
+          "title": "Required",
+          "type": "boolean"
+        },
+        "schema": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object"
+            }
+          ],
+          "title": "Schema"
+        }
+      },
+      "required": [
+        "content_type",
+        "schema",
+        "required"
+      ],
+      "title": "RequestBody",
+      "type": "object"
+    },
+    "Response": {
+      "properties": {
+        "content_type": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Content Type"
+        },
+        "examples": {
+          "anyOf": [
+            {
+              "items": {
+                "anyOf": [
+                  {
+                    "type": "null"
+                  },
+                  {
+                    "type": "boolean"
+                  },
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "items": {},
+                    "type": "array"
+                  },
+                  {
+                    "type": "object"
+                  }
+                ]
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Examples"
+        },
+        "headers": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "$ref": "#/$defs/Header"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Headers"
+        },
+        "schema": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Schema"
+        }
+      },
+      "title": "Response",
+      "type": "object"
+    },
+    "SecurityScheme": {
+      "properties": {
+        "bearer_format": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Bearer Format"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "flows": {
+          "anyOf": [
+            {
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Flows"
+        },
+        "in": {
+          "anyOf": [
+            {
+              "enum": [
+                "query",
+                "header",
+                "cookie"
+              ],
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "In"
+        },
+        "name": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Name"
+        },
+        "open_id_connect_url": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Open Id Connect Url"
+        },
+        "scheme": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Scheme"
+        },
+        "type": {
+          "enum": [
+            "apiKey",
+            "http",
+            "mutualTLS",
+            "oauth2",
+            "openIdConnect"
+          ],
+          "title": "Type",
+          "type": "string"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "title": "SecurityScheme",
+      "type": "object"
+    },
+    "Server": {
+      "properties": {
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "url": {
+          "title": "Url",
+          "type": "string"
+        },
+        "variables": {
+          "anyOf": [
+            {
+              "additionalProperties": {
+                "$ref": "#/$defs/ServerVariable"
+              },
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Variables"
+        }
+      },
+      "required": [
+        "url"
+      ],
+      "title": "Server",
+      "type": "object"
+    },
+    "ServerVariable": {
+      "properties": {
+        "default": {
+          "title": "Default",
+          "type": "string"
+        },
+        "description": {
+          "anyOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Description"
+        },
+        "enum": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Enum"
+        }
+      },
+      "required": [
+        "default"
+      ],
+      "title": "ServerVariable",
+      "type": "object"
+    },
+    "Source": {
+      "properties": {
+        "kind": {
+          "enum": [
+            "openapi",
+            "swagger"
+          ],
+          "title": "Kind",
+          "type": "string"
+        },
+        "sha256": {
+          "title": "Sha256",
+          "type": "string"
+        },
+        "uri": {
+          "title": "Uri",
+          "type": "string"
+        }
+      },
+      "required": [
+        "kind",
+        "uri",
+        "sha256"
+      ],
+      "title": "Source",
+      "type": "object"
+    }
+  },
+  "properties": {
+    "defs": {
+      "additionalProperties": {
+        "anyOf": [
+          {
+            "type": "boolean"
+          },
+          {
+            "type": "object"
+          }
+        ]
+      },
+      "title": "Defs",
+      "type": "object"
+    },
+    "endpoints": {
+      "items": {
+        "$ref": "#/$defs/Endpoint"
+      },
+      "title": "Endpoints",
+      "type": "array"
+    },
+    "findings": {
+      "items": {
+        "$ref": "#/$defs/Finding"
+      },
+      "title": "Findings",
+      "type": "array"
+    },
+    "security_schemes": {
+      "additionalProperties": {
+        "$ref": "#/$defs/SecurityScheme"
+      },
+      "title": "Security Schemes",
+      "type": "object"
+    },
+    "servers": {
+      "items": {
+        "$ref": "#/$defs/Server"
+      },
+      "title": "Servers",
+      "type": "array"
+    },
+    "source": {
+      "$ref": "#/$defs/Source"
+    },
+    "title": {
+      "title": "Title",
+      "type": "string"
+    },
+    "version": {
+      "title": "Version",
+      "type": "string"
+    }
+  },
+  "required": [
+    "title",
+    "version",
+    "servers",
+    "security_schemes",
+    "defs",
+    "endpoints",
+    "findings",
+    "source"
+  ],
+  "title": "ApiSpec",
+  "type": "object"
+}

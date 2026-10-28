@@ -5,7 +5,7 @@
 Python 3.11 or newer and [uv](https://docs.astral.sh/uv/).
 
 ```bash
-uv sync --extra dev
+uv sync --group dev
 ```
 
 ## Checks
@@ -15,16 +15,11 @@ These commands stay offline and do not need an API key:
 ```bash
 uv run ruff check .
 uv run ruff format --check .
-uv run mypy --strict mcp4api
-uv run mypy --strict examples/sample-api/generated/shelf_mcp
+uv run mypy
 uv run pytest
 ```
 
-`pytest` disables network sockets and skips the `eval` marker.
-
-## Paid eval
-
-`uv run pytest -m eval` calls the live curation model. It needs `ANTHROPIC_API_KEY` and is not part of the default run or CI. Without that variable the tests are skipped.
+`pytest` disables network sockets.
 
 ## Demo recording
 

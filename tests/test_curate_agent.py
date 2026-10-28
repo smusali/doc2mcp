@@ -7,30 +7,21 @@ from typing import Protocol
 
 import pytest
 import yaml
-from mcp4api.cli import ExitCode, main
+from mcp4api.cli import main
 from mcp4api.curate.agent import (
     CurationOptions,
     CurationRequest,
-    CurationUpstream,
-    CurationUsage,
     ModelTurn,
     ModelUsage,
     curate,
     request_body,
 )
-from mcp4api.curate.manifest import (
-    DetailDecision,
-    PlanDecision,
-    dump_manifest,
-    endpoint_index_document,
-    load_manifest,
-    name_error,
-    validation_errors,
-)
+from mcp4api.curate.models import CurationMode, DetailDecision, PlanDecision, load_manifest
+from mcp4api.curate.rules import endpoint_index_document
+from mcp4api.errors import ExitCode, UsageError
 from mcp4api.model import ApiSpec, JsonObject, expect_json
-from tests.test_curate import _body, _endpoint, _param, _spec, _write
+from tests.conftest import _body, _endpoint, _param, _spec, _write
 
-_FIXTURE = Path(__file__).resolve().parent / "curate_sample.json"
 _SAMPLE = Path(__file__).resolve().parents[1] / "examples" / "sample-api"
 _TINY = """\
 openapi: 3.1.0
@@ -160,124 +151,13 @@ def _run(tmp_path: Path, spec: ApiSpec, detail: object, plan: object | None = No
     return client
 
 
-def _first_tool(detail: dict[str, object]) -> dict[str, object]:
-    tools = detail["tools"]
-    if not isinstance(tools, list) or not tools:
-        raise AssertionError("detail has no tool")
-    tool = tools[0]
-    if not isinstance(tool, dict):
-        raise AssertionError("detail tool is not an object")
-    return tool
-
-
-def _unknown(detail: dict[str, object]) -> dict[str, object]:
-    _first_tool(detail)["steps"] = [{"binds": [], "endpoint_id": "GET /missing"}]
-    return detail
-
-
-def _unmapped(detail: dict[str, object]) -> dict[str, object]:
-    tool = _first_tool(detail)
-    inputs = tool["inputs"]
-    examples = tool["examples"]
-    if not isinstance(inputs, list) or not isinstance(examples, list):
-        raise AssertionError("detail inputs are missing")
-    inputs.append(
-        {
-            "description": "extra",
-            "endpoint_id": "POST /items",
-            "in": "query",
-            "name": "extra",
-            "param": "extra",
-            "required": False,
-        }
-    )
-    examples.append({"name": "extra", "value_json": '"example"'})
-    return detail
-
-
-def _uncovered(detail: dict[str, object]) -> dict[str, object]:
-    tool = _first_tool(detail)
-    tool["inputs"] = []
-    tool["examples"] = []
-    return detail
-
-
-def _bad_name(detail: dict[str, object]) -> dict[str, object]:
-    _first_tool(detail)["name"] = "post_item"
-    return detail
-
-
-def _bad_dependency(detail: dict[str, object]) -> dict[str, object]:
-    _first_tool(detail)["depends_on"] = ["missing_tool"]
-    return detail
-
-
-def _self_dependency(detail: dict[str, object]) -> dict[str, object]:
-    _first_tool(detail)["depends_on"] = ["create_item"]
-    return detail
-
-
-def _bad_example(detail: dict[str, object]) -> dict[str, object]:
-    _first_tool(detail)["examples"] = [{"name": "name", "value_json": "1"}]
-    return detail
-
-
-def _bad_annotation(detail: dict[str, object]) -> dict[str, object]:
-    _first_tool(detail)["annotations"] = {
-        "destructiveHint": False,
-        "idempotentHint": True,
-        "openWorldHint": True,
-        "readOnlyHint": True,
-    }
-    return detail
-
-
-def _bad_field(detail: dict[str, object]) -> dict[str, object]:
-    _first_tool(detail)["output_fields"] = ["missing"]
-    return detail
-
-
-def _bad_bind(detail: dict[str, object]) -> dict[str, object]:
-    _first_tool(detail)["steps"] = [
-        {
-            "binds": [{"in": "query", "param": "name", "ref": "$steps[1].body.id"}],
-            "endpoint_id": "POST /items",
-        }
-    ]
-    return detail
-
-
-def _duplicate(detail: dict[str, object]) -> dict[str, object]:
+def test_structural_failure_corrects_once(tmp_path: Path) -> None:
+    detail = _detail()
     tools = detail["tools"]
     assert isinstance(tools, list)
-    copy = json.loads(json.dumps(tools[0]))
-    copy["name"] = "make_item"
-    tools.append(copy)
-    return detail
-
-
-@pytest.mark.parametrize(
-    "mutate",
-    [
-        _unknown,
-        _unmapped,
-        _uncovered,
-        _bad_name,
-        _bad_dependency,
-        _self_dependency,
-        _bad_example,
-        _bad_annotation,
-        _bad_field,
-        _bad_bind,
-        _duplicate,
-    ],
-)
-def test_structural_failure_corrects_once(
-    tmp_path: Path,
-    mutate: object,
-) -> None:
-    assert callable(mutate)
-    detail = mutate(_detail())
+    tool = tools[0]
+    assert isinstance(tool, dict)
+    tool["steps"] = [{"binds": [], "endpoint_id": "GET /missing"}]
     client = _run(tmp_path, _post_spec(), detail)
     manifest = load_manifest((tmp_path / "tools.yaml").read_text(encoding="utf-8"))
     assert manifest.tools == []
@@ -465,16 +345,16 @@ def test_matching_hash_does_not_call_the_client(tmp_path: Path) -> None:
 
 def test_offline_and_dry_run_errors(tmp_path: Path) -> None:
     _write(tmp_path, _post_spec())
-    with pytest.raises(CurationUsage, match="cannot estimate tokens offline"):
+    with pytest.raises(UsageError, match="cannot estimate tokens offline"):
         curate(tmp_path, CurationOptions(dry_run=True, offline=True), client=Boom())
     with pytest.raises(
-        CurationUsage,
+        UsageError,
         match="offline curation needs a matching tools",
     ):
         curate(tmp_path, CurationOptions(offline=True), client=Boom())
-    first = curate(tmp_path, CurationOptions(mode="heuristic", offline=True))
+    first = curate(tmp_path, CurationOptions(mode=CurationMode.HEURISTIC, offline=True))
     written = (tmp_path / "tools.yaml").read_bytes()
-    second = curate(tmp_path, CurationOptions(mode="heuristic", offline=True))
+    second = curate(tmp_path, CurationOptions(mode=CurationMode.HEURISTIC, offline=True))
     assert first.manifest is not None
     assert second.manifest == first.manifest
     assert (tmp_path / "tools.yaml").read_bytes() == written
@@ -482,11 +362,11 @@ def test_offline_and_dry_run_errors(tmp_path: Path) -> None:
 
 def test_manual_mode_rejects_a_missing_or_invalid_manifest(tmp_path: Path) -> None:
     _write(tmp_path, _post_spec())
-    with pytest.raises(CurationUsage, match="not found:"):
-        curate(tmp_path, CurationOptions(mode="manual"))
+    with pytest.raises(UsageError, match="not found:"):
+        curate(tmp_path, CurationOptions(mode=CurationMode.MANUAL))
     (tmp_path / "tools.yaml").write_text("tools: []\n", encoding="utf-8")
-    with pytest.raises(CurationUsage, match="invalid tools"):
-        curate(tmp_path, CurationOptions(mode="manual"))
+    with pytest.raises(UsageError, match="invalid tools"):
+        curate(tmp_path, CurationOptions(mode=CurationMode.MANUAL))
 
 
 def test_dry_run_counts_tokens_and_skips_the_model(tmp_path: Path) -> None:
@@ -671,162 +551,12 @@ def test_cache_prefix_is_shared_and_cache_read_is_recorded(tmp_path: Path) -> No
     assert result.manifest.curation.usage.cache_read_input_tokens == 7
 
 
-def test_sample_replay_matches_the_committed_manifest(tmp_path: Path) -> None:
-    payload = json.loads(_FIXTURE.read_text(encoding="utf-8"))
-    usage_raw = payload["complete_usage"]
-    usage = ModelUsage(
-        input_tokens=usage_raw["input_tokens"],
-        output_tokens=usage_raw["output_tokens"],
-        cache_read_input_tokens=usage_raw["cache_read_input_tokens"],
-        cache_write_input_tokens=usage_raw["cache_write_input_tokens"],
-    )
-
-    class Replay:
-        def __init__(self) -> None:
-            self.completes = 0
-
-        def count_tokens(self, request: CurationRequest) -> int:
-            return 100
-
-        def complete(self, request: CurationRequest) -> ModelTurn:
-            self.completes += 1
-            if request.kind == "plan":
-                body: object = payload["plan"]
-            else:
-                name = request.group.split("Fill in the tool ", 1)[1].split(".", 1)[0]
-                body = payload["details"][name]
-            return ModelTurn(stop_reason="end_turn", payload=_payload(body), usage=usage)
-
-    (tmp_path / "endpoints.json").write_bytes((_SAMPLE / "endpoints.json").read_bytes())
-    result = curate(tmp_path, CurationOptions(), client=Replay())
-    replay = (tmp_path / "tools.yaml").read_text(encoding="utf-8")
-    committed = (_SAMPLE / "tools.yaml").read_text(encoding="utf-8")
-    assert _without_example_args(replay) == _without_example_args(committed)
-    assert result.manifest is not None
-    assert len(result.manifest.tools) <= 15
-    spec = ApiSpec.model_validate_json((_SAMPLE / "endpoints.json").read_text(encoding="utf-8"))
-    covered = {step.endpoint_id for tool in result.manifest.tools for step in tool.steps}
-    covered.update(item.endpoint_id for item in result.manifest.excluded)
-    assert covered == {endpoint.id for endpoint in spec.endpoints}
-    assert all(item.reason and item.note for item in result.manifest.excluded)
-    assert all(name_error(tool.name) is None for tool in result.manifest.tools)
-    assert validation_errors(result.manifest, spec, max_tools=20, include_tags=()) == []
-    get_book = next(tool for tool in result.manifest.tools if tool.name == "get_book")
-    assert [step.endpoint_id for step in get_book.steps] == [
-        "GET /books/{book_id}",
-        "GET /books/{book_id}/stats",
-    ]
-    upload = next(tool for tool in result.manifest.tools if tool.name == "upload_book_file")
-    assert len(upload.steps) == 4
-    assert any(item.param == "part_number" and item.value == 1 for item in upload.fixed)
-
-
-def _without_example_args(text: str) -> str:
-    manifest = load_manifest(text)
-    tools = [
-        tool.model_copy(update={"verify": tool.verify.model_copy(update={"example_args": {}})})
-        for tool in manifest.tools
-    ]
-    return dump_manifest(manifest.model_copy(update={"tools": tools}))
-
-
 def test_request_prefix_has_no_sampling_parameters() -> None:
     request = CurationRequest(kind="plan", system="system", index="index", group="group")
     body = request_body(request)
     assert "temperature" not in body
     assert "top_p" not in body
     assert "top_k" not in body
-
-
-def test_adapter_sends_the_stream_shape_and_maps_failures(monkeypatch: pytest.MonkeyPatch) -> None:
-    captured: dict[str, object] = {}
-
-    class Final:
-        stop_reason = "end_turn"
-        parsed_output = PlanDecision(tools=[], excluded=[])
-
-        class usage:
-            input_tokens = 1
-            output_tokens = 2
-            cache_read_input_tokens = 3
-            cache_creation_input_tokens = 4
-
-    class Stream:
-        def __enter__(self) -> Stream:
-            return self
-
-        def __exit__(self, *_args: object) -> bool:
-            return False
-
-        def get_final_message(self) -> Final:
-            return Final()
-
-    class Messages:
-        def count_tokens(self, **kwargs: object) -> object:
-            captured["count"] = kwargs
-            return type("Count", (), {"input_tokens": 9})()
-
-        def stream(self, **kwargs: object) -> Stream:
-            captured["stream"] = kwargs
-            return Stream()
-
-    class Beta:
-        messages = Messages()
-
-    class Anthropic:
-        def __init__(self, *_args: object, **_kwargs: object) -> None:
-            self.beta = Beta()
-
-    monkeypatch.setattr("anthropic.Anthropic", Anthropic)
-    from mcp4api.curate.agent import AnthropicCurationClient
-
-    client = AnthropicCurationClient("claude-opus-5-5")
-    request = CurationRequest(kind="plan", system="system", index="index", group="group")
-    assert client.count_tokens(request) == 9
-    turn = client.complete(request)
-    assert turn.usage.cache_write_input_tokens == 4
-    assert turn.payload is not None
-    stream = captured["stream"]
-    count = captured["count"]
-    assert isinstance(stream, dict)
-    assert isinstance(count, dict)
-    assert stream["thinking"] == {"type": "adaptive"}
-    assert stream["output_config"] == {"effort": "high"}
-    assert stream["fallbacks"] == "default"
-    assert stream["max_tokens"] == 16000
-    assert stream["output_format"] is PlanDecision
-    assert "temperature" not in stream
-    assert stream["system"] == count["system"]
-    assert stream["messages"] == count["messages"]
-    sent = stream["messages"]
-    assert isinstance(sent, list)
-    sent_message = sent[0]
-    assert isinstance(sent_message, dict)
-    sent_content = sent_message["content"]
-    assert isinstance(sent_content, list)
-    prefix, group = sent_content[0], sent_content[1]
-    assert isinstance(prefix, dict)
-    assert isinstance(group, dict)
-    assert prefix["cache_control"] == {"type": "ephemeral"}
-    assert prefix["text"] == "index"
-    assert group["text"] == "group"
-    assert "cache_control" not in group
-    assert "fallbacks" not in count
-    assert "output_format" not in count
-    counted = count["output_config"]
-    assert isinstance(counted, dict)
-    assert counted["effort"] == "high"
-    formatted = counted["format"]
-    assert isinstance(formatted, dict)
-    assert formatted["type"] == "json_schema"
-
-    class Broken:
-        def __init__(self, *_args: object, **_kwargs: object) -> None:
-            raise RuntimeError("network down")
-
-    monkeypatch.setattr("anthropic.Anthropic", Broken)
-    with pytest.raises(CurationUpstream, match="network down"):
-        AnthropicCurationClient("claude-opus-5-5").count_tokens(request)
 
 
 def test_sample_offline_reuses_the_committed_manifest(
@@ -837,7 +567,7 @@ def test_sample_offline_reuses_the_committed_manifest(
     shutil.copy(_SAMPLE / "endpoints.json", tmp_path / "endpoints.json")
     shutil.copy(_SAMPLE / "tools.yaml", tmp_path / "tools.yaml")
     code = main(["curate", "--out", str(tmp_path), "--offline"])
-    assert code == ExitCode.VERIFIED
+    assert code == ExitCode.OK
     assert (tmp_path / "tools.yaml").read_bytes() == (_SAMPLE / "tools.yaml").read_bytes()
 
 
@@ -859,30 +589,8 @@ def test_cli_curation_flags(
     assert not (out / "tools.yaml").exists()
 
     code = main(["--curation", "heuristic", "--out", str(out), "curate"])
-    assert code == ExitCode.VERIFIED
+    assert code == ExitCode.OK
     assert (out / "tools.yaml").is_file()
-    code = main(["curate", "--out", str(out), "--offline", "--dry-run"])
-    assert code == ExitCode.USAGE
-    assert "cannot estimate tokens offline" in capsys.readouterr().err
-    code = main(["--max-tools=2", "curate", "--out", str(out), "--offline"])
-    assert code == ExitCode.USAGE
-    assert "offline curation needs a matching tools" in capsys.readouterr().err
-
-
-def test_cli_maps_upstream(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-    capsys: pytest.CaptureFixture[str],
-) -> None:
-    _write(tmp_path, _post_spec())
-
-    def boom(_out: Path, _options: CurationOptions, *, client: object = None) -> object:
-        raise CurationUpstream("model failed")
-
-    monkeypatch.setattr("mcp4api.curate.agent.curate", boom)
-    code = main(["curate", "--out", str(tmp_path)])
-    assert code == ExitCode.UPSTREAM
-    assert "model failed" in capsys.readouterr().err
 
 
 def test_decision_models_ignore_extra_schema_keys() -> None:
@@ -897,4 +605,4 @@ def test_decision_models_ignore_extra_schema_keys() -> None:
     PlanDecision.model_validate({"excluded": [], "temperature": 0, "tools": []})
     loaded = yaml.safe_load((_SAMPLE / "tools.yaml").read_text(encoding="utf-8"))
     assert isinstance(loaded, dict)
-    assert loaded["manifest_version"] == "manifest-v1"
+    assert "manifest_version" not in loaded

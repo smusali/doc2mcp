@@ -1,4 +1,3 @@
-manifest_version: manifest-v1
 api:
   title: Shelf
   base_url: http://127.0.0.1:8765
@@ -1150,12 +1149,11 @@ excluded:
 curation:
   mode: agent
   model: claude-opus-5-5
-  criteria_version: criteria-v1
-  input_hash: b3d1d01e92bc48aea42e797949fbfca3e436b2a05c64aea004fa3f4e9ebf7799
+  input_hash: 6d558f579ad2051746b7652dd12d8f2910904b024ff165d53591a0ecef276283
   usage:
-    input_tokens: 1600
-    output_tokens: 320
+    input_tokens: 0
+    output_tokens: 0
     cache_read_input_tokens: 0
     cache_write_input_tokens: 0
-    estimated_usd: 0.0128
+    estimated_usd: 0.0
   fallback_tools: []

@@ -52,14 +52,12 @@ dependencies = [
     "openapi-spec-validator>=0.9.0,<1",
     "typer>=0.27.3,<1",
     "rich>=15.0.0,<16",
-    "jsonschema-rs>=0.60,<1",
 ]
 
-[project.optional-dependencies]
+[dependency-groups]
 dev = [
     "pytest>=9.1.1,<10",
     "pytest-socket>=0.8.1,<1",
-    "hypothesis>=6.170.8,<7",
     "ruff>=0.17.2,<1",
     "mypy>=2.4,<3",
     "pre-commit>=4.7.0,<5",
@@ -68,6 +66,8 @@ dev = [
     "uvicorn>=0.54.0,<1",
     "types-PyYAML>=6.0.12,<7",
     "types-jsonschema>=4.26.0,<5",
+    "deptry>=0.25.0,<1",
+    "pip-audit>=2.10.0,<3",
 ]
 
 [project.urls]
@@ -75,20 +75,35 @@ Homepage = "https://github.com/smusali/mcp4api"
 Repository = "https://github.com/smusali/mcp4api"
 Issues = "https://github.com/smusali/mcp4api/issues"
 Changelog = "https://github.com/smusali/mcp4api/blob/main/CHANGELOG.md"
+Documentation = "https://github.com/smusali/mcp4api/blob/main/docs/USAGE.md"
 
 [project.scripts]
 mcp4api = "mcp4api.cli:main"
 
 [tool.hatch.version]
-path = "mcp4api/__init__.py"
+path = "src/mcp4api/__init__.py"
 
 [tool.hatch.build.targets.wheel]
-packages = ["mcp4api"]
+packages = ["src/mcp4api"]
+
+[tool.hatch.build.targets.sdist]
+only-include = [
+    "src/mcp4api",
+    "tests",
+    "docs",
+    "examples/sample-api",
+    "README.md",
+    "LICENSE",
+    "SECURITY.md",
+    "CONTRIBUTING.md",
+    "CHANGELOG.md",
+    "CODE_OF_CONDUCT.md",
+]
 
 [tool.ruff]
 target-version = "py311"
 line-length = 100
-src = ["mcp4api", "tests", "tools"]
+src = ["src/mcp4api", "tests", "tools"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM", "ANN", "RUF"]
@@ -99,9 +114,25 @@ quote-style = "double"
 [tool.mypy]
 strict = true
 python_version = "3.11"
-files = ["mcp4api"]
+files = ["src/mcp4api", "tests", "examples/sample-api/generated/shelf_mcp"]
+mypy_path = "src"
+explicit_package_bases = true
+namespace_packages = true
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
-addopts = ["--disable-socket", "--allow-unix-socket", "-m", "not eval"]
-markers = ["eval: live model curation, excluded from the default run"]
+addopts = [
+    "--disable-socket",
+    "--allow-unix-socket",
+    "--import-mode=importlib",
+    "--strict-markers",
+    "--strict-config",
+]
+xfail_strict = true
+filterwarnings = ["error"]
+
+[tool.deptry]
+known_first_party = ["mcp4api"]
+
+[tool.deptry.per_rule_ignores]
+DEP003 = ["pydantic_core", "referencing"]

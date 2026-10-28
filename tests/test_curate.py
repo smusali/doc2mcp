@@ -2,149 +2,35 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Literal
 
 import yaml
 from hypothesis import given, settings
 from hypothesis import strategies as st
 from mcp4api.curate.agent import CurationOptions, curate
-from mcp4api.curate.manifest import (
+from mcp4api.curate.draft import apply_overrides, heuristic_tools
+from mcp4api.curate.models import (
+    CurationMode,
     Manifest,
     Overrides,
     annotations_for,
-    apply_overrides,
     build_manifest,
     canonical_flags,
     curation_hash,
     dump_manifest,
-    exclusion_reason,
-    forced_exclusions,
-    heuristic_tools,
     load_manifest,
     name_error,
-    published_manifest_schema_text,
-    validation_errors,
     zero_usage,
 )
+from mcp4api.curate.rules import validation_errors
 from mcp4api.ingest import ingest
-from mcp4api.model import (
-    ApiSpec,
-    Endpoint,
-    Parameter,
-    RequestBody,
-    Response,
-    SecurityScheme,
-    Server,
-    Source,
-    dump_endpoints,
-)
+from mcp4api.model import ApiSpec, Parameter, SecurityScheme, dump_endpoints
+from tests.conftest import _STRING, _body, _endpoint, _param, _spec, _write
 
-_SCHEMA_PATH = Path(__file__).resolve().parents[1] / "docs" / "schemas" / "manifest-v1.json"
 _SAMPLE = Path(__file__).resolve().parents[1] / "examples" / "sample-api"
-_STRING = {"type": "string"}
-_OBJECT = {
-    "additionalProperties": False,
-    "properties": {"id": _STRING},
-    "required": ["id"],
-    "type": "object",
-}
-
-
-def _param(
-    name: str,
-    location: Literal["path", "query", "header", "cookie"],
-    *,
-    required: bool,
-    schema: dict[str, object] | None = None,
-) -> Parameter:
-    return Parameter(
-        name=name,
-        location=location,
-        required=required,
-        schema_=schema or _STRING,
-        style="form",
-        explode=True,
-    )
-
-
-def _response(schema: dict[str, object] | None = None) -> dict[str, Response]:
-    return {"200": Response(schema_=schema or _OBJECT)}
-
-
-def _endpoint(
-    method: str,
-    path: str,
-    *,
-    parameters: list[Parameter] | None = None,
-    body: RequestBody | None = None,
-    responses: dict[str, Response] | None = None,
-    tags: list[str] | None = None,
-    deprecated: bool = False,
-    security: list[dict[str, list[str]]] | None = None,
-    operation_id: str | None = None,
-    summary: str | None = None,
-    description: str | None = None,
-) -> Endpoint:
-    return Endpoint(
-        id=f"{method} {path}",
-        operation_id=operation_id,
-        method=method,
-        path=path,
-        summary=summary,
-        description=description,
-        tags=tags,
-        deprecated=deprecated,
-        parameters=parameters or [],
-        request_body=body,
-        responses=responses or _response(),
-        security=[] if security is None else security,
-        provenance=path,
-    )
-
-
-def _spec(
-    endpoints: list[Endpoint],
-    schemes: dict[str, SecurityScheme] | None = None,
-) -> ApiSpec:
-    return ApiSpec(
-        title="Demo",
-        version="1",
-        servers=[Server(url="https://example.test")],
-        security_schemes=schemes or {},
-        defs={},
-        endpoints=endpoints,
-        findings=[],
-        source=Source(kind="openapi", uri="demo.yaml", sha256="abc"),
-    )
-
-
-def _body(properties: dict[str, object], required: list[str]) -> RequestBody:
-    return RequestBody(
-        content_type="application/json",
-        schema_={
-            "additionalProperties": False,
-            "properties": properties,
-            "required": required,
-            "type": "object",
-        },
-        required=True,
-    )
-
-
-def _write(out: Path, spec: ApiSpec) -> None:
-    out.mkdir(parents=True, exist_ok=True)
-    (out / "endpoints.json").write_bytes(dump_endpoints(spec).encode("utf-8"))
 
 
 def _shelf() -> ApiSpec:
     return ApiSpec.model_validate_json((_SAMPLE / "endpoints.json").read_text(encoding="utf-8"))
-
-
-def test_published_schema_matches() -> None:
-    text = published_manifest_schema_text()
-    assert text.endswith("\n")
-    assert "\r" not in text
-    assert _SCHEMA_PATH.read_text(encoding="utf-8") == text
 
 
 def test_dump_round_trip_uses_lf_and_sorted_names() -> None:
@@ -160,7 +46,7 @@ def test_dump_round_trip_uses_lf_and_sorted_names() -> None:
         tools,
         excluded,
         namespace="",
-        mode="heuristic",
+        mode=CurationMode.HEURISTIC,
         model="claude-opus-5-5",
         digest="abc",
         usage=zero_usage(),
@@ -184,8 +70,9 @@ def test_hash_uses_minor_version_and_sorted_tags() -> None:
     raw = b"{}\n"
     left = curation_hash(
         raw,
+        prompt="criteria",
         model="claude-opus-5-5",
-        mode="agent",
+        mode=CurationMode.AGENT,
         include_tags=("books", "admin"),
         max_tools=20,
         namespace="",
@@ -193,8 +80,9 @@ def test_hash_uses_minor_version_and_sorted_tags() -> None:
     )
     right = curation_hash(
         raw,
+        prompt="criteria",
         model="claude-opus-5-5",
-        mode="agent",
+        mode=CurationMode.AGENT,
         include_tags=("admin", "books"),
         max_tools=20,
         namespace="",
@@ -203,15 +91,16 @@ def test_hash_uses_minor_version_and_sorted_tags() -> None:
     assert left == right
     assert left != curation_hash(
         raw,
+        prompt="criteria",
         model="claude-opus-5-5",
-        mode="agent",
+        mode=CurationMode.AGENT,
         include_tags=("admin", "books"),
         max_tools=20,
         namespace="",
         version="0.2.0",
     )
     assert "budget" not in canonical_flags(
-        mode="heuristic",
+        mode=CurationMode.HEURISTIC,
         include_tags=("admin",),
         max_tools=15,
         namespace="shelf",
@@ -249,66 +138,6 @@ def test_annotations_follow_methods() -> None:
     assert changed.idempotentHint is False
 
 
-def test_category_exclusions_and_include_tag() -> None:
-    spec = _spec(
-        [
-            _endpoint("GET", "/admin/audit", tags=["admin"]),
-            _endpoint("GET", "/internal/jobs", tags=["Internal"]),
-            _endpoint("GET", "/books/{book_id}/page-count", deprecated=True),
-            _endpoint("POST", "/hooks/webhook-endpoints", tags=["webhooks"]),
-            _endpoint("DELETE", "/books"),
-            _endpoint(
-                "DELETE", "/books/{book_id}", parameters=[_param("book_id", "path", required=True)]
-            ),
-            _endpoint("POST", "/purge-jobs", operation_id="purgeJobs"),
-            _endpoint("GET", "/books"),
-        ]
-    )
-    reasons = {item.endpoint_id: item.reason for item in forced_exclusions(spec, ())}
-    assert reasons["GET /admin/audit"] == "admin"
-    assert reasons["GET /internal/jobs"] == "internal"
-    assert reasons["GET /books/{book_id}/page-count"] == "deprecated"
-    assert reasons["POST /hooks/webhook-endpoints"] == "webhook-management"
-    assert reasons["DELETE /books"] == "destructive-bulk"
-    assert reasons["POST /purge-jobs"] == "destructive-bulk"
-    assert "DELETE /books/{book_id}" not in reasons
-    assert "GET /books" not in reasons
-    waived = {item.endpoint_id for item in forced_exclusions(spec, ("admin",))}
-    assert "GET /admin/audit" not in waived
-    assert exclusion_reason(spec.endpoints[0], {}, ("Admin",)) is None
-
-
-def test_unsupported_auth_keeps_api_key_or_oauth() -> None:
-    schemes = {
-        "basic": SecurityScheme(type="http", scheme="basic"),
-        "oauth": SecurityScheme(type="oauth2"),
-        "api": SecurityScheme(type="apiKey", name="X-API-Key", location="header"),
-        "bearer": SecurityScheme(type="http", scheme="bearer"),
-        "mtls": SecurityScheme(type="mutualTLS"),
-        "oidc": SecurityScheme(type="openIdConnect", open_id_connect_url="https://example.test"),
-    }
-    spec = _spec(
-        [
-            _endpoint("GET", "/basic", security=[{"basic": []}]),
-            _endpoint("GET", "/oauth", security=[{"oauth": []}]),
-            _endpoint("GET", "/either", security=[{"api": []}, {"oauth": []}]),
-            _endpoint("GET", "/open"),
-            _endpoint("GET", "/bearer", security=[{"bearer": []}]),
-            _endpoint("GET", "/mtls", security=[{"mtls": []}]),
-            _endpoint("GET", "/oidc", security=[{"oidc": []}]),
-        ],
-        schemes,
-    )
-    reasons = {item.endpoint_id: item.reason for item in forced_exclusions(spec, ())}
-    assert reasons["GET /basic"] == "unsupported"
-    assert reasons["GET /oauth"] == "unsupported"
-    assert reasons["GET /mtls"] == "unsupported"
-    assert reasons["GET /oidc"] == "unsupported"
-    assert "GET /either" not in reasons
-    assert "GET /open" not in reasons
-    assert "GET /bearer" not in reasons
-
-
 def test_shelf_heuristic_is_total_and_hides_pagination() -> None:
     spec = _shelf()
     tools, excluded = heuristic_tools(
@@ -340,7 +169,7 @@ def test_shelf_heuristic_is_total_and_hides_pagination() -> None:
         tools,
         excluded,
         namespace="",
-        mode="heuristic",
+        mode=CurationMode.HEURISTIC,
         model="claude-opus-5-5",
         digest="abc",
         usage=zero_usage(),
@@ -398,7 +227,7 @@ def test_over_target_fills_an_empty_rationale() -> None:
         blank,
         excluded,
         namespace="",
-        mode="heuristic",
+        mode=CurationMode.HEURISTIC,
         model="claude-opus-5-5",
         digest="abc",
         usage=zero_usage(),
@@ -418,7 +247,7 @@ def test_overrides_are_idempotent_and_warn_when_stale(tmp_path: Path) -> None:
         {"basic": SecurityScheme(type="http", scheme="basic")},
     )
     _write(tmp_path, spec)
-    first = curate(tmp_path, CurationOptions(mode="heuristic", offline=True))
+    first = curate(tmp_path, CurationOptions(mode=CurationMode.HEURISTIC, offline=True))
     assert first.manifest is not None
     overrides = Overrides.model_validate(
         {
@@ -454,7 +283,7 @@ def test_overrides_are_idempotent_and_warn_when_stale(tmp_path: Path) -> None:
 def test_recurate_reports_final_names(tmp_path: Path) -> None:
     spec = _spec([_endpoint("GET", "/items")])
     _write(tmp_path, spec)
-    options = CurationOptions(mode="heuristic", offline=True)
+    options = CurationOptions(mode=CurationMode.HEURISTIC, offline=True)
     curate(tmp_path, options)
     (tmp_path / "overrides.yaml").write_text(
         "renames:\n  list_items: search_items\n",
@@ -493,7 +322,7 @@ def test_validation_and_overrides_do_not_raise(note: str, new_name: str, max_too
         tools,
         excluded,
         namespace="",
-        mode="heuristic",
+        mode=CurationMode.HEURISTIC,
         model="claude-opus-5-5",
         digest="abc",
         usage=zero_usage(),

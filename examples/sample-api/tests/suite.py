@@ -10,20 +10,82 @@ import sys
 import tempfile
 import threading
 import time
-from collections.abc import Mapping
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TextIO, TypeAlias
+from typing import TextIO, TypeAlias, TypedDict
 from urllib.parse import parse_qsl, urlsplit
 
 from jsonschema import Draft202012Validator
 from jsonschema.exceptions import ValidationError
 from mcp import ClientSession, StdioServerParameters, stdio_client
-from mcp.client._probe import negotiate_auto
+from mcp.client.client import negotiate_auto  # type: ignore[attr-defined]
 from mcp.types import CallToolResult
 
 JsonValue: TypeAlias = bool | int | float | str | list["JsonValue"] | dict[str, "JsonValue"] | None
 JsonObject: TypeAlias = dict[str, JsonValue]
+
+
+class Plan(TypedDict):
+    allowlist: list[str]
+    base_url_env: str
+    bindings: list[JsonObject]
+    calls: list[JsonObject]
+    generated: str
+    module: str
+    secret_envs: list[str]
+    timeout_env: str
+    timeout_seconds: float
+    upstream: str
+    upstream_url: str
+
+
+def plan_from(
+    *,
+    allowlist: list[str],
+    base_url_env: str,
+    bindings: Sequence[object],
+    calls: Sequence[object],
+    generated: str,
+    module: str,
+    secret_envs: list[str],
+    timeout_env: str,
+    timeout_seconds: float,
+    upstream: str,
+    upstream_url: str,
+) -> Plan:
+    """Check a plan object and return it as a typed plan.
+
+    Args:
+        allowlist: Hosts the proxy may dial.
+        base_url_env: Environment variable that sets the API base URL.
+        bindings: Values copied from an earlier tool into a later call.
+        calls: Calls the suite will make.
+        generated: Directory that contains the generated server, relative to the plan.
+        module: Import name of the generated server.
+        secret_envs: Credential environment variables.
+        timeout_env: Environment variable that sets the request timeout.
+        timeout_seconds: Request timeout.
+        upstream: ``fixture``, ``sandbox``, or ``live``.
+        upstream_url: Upstream base URL. Empty for fixtures.
+
+    Returns:
+        The same plan, checked field by field.
+    """
+    return {
+        "allowlist": allowlist,
+        "base_url_env": base_url_env,
+        "bindings": _object_list(bindings, "bindings"),
+        "calls": _object_list(calls, "calls"),
+        "generated": generated,
+        "module": module,
+        "secret_envs": secret_envs,
+        "timeout_env": timeout_env,
+        "timeout_seconds": timeout_seconds,
+        "upstream": upstream,
+        "upstream_url": upstream_url,
+    }
+
 
 _BODY_LIMIT = 1_000_000
 _HEADER_LIMIT = 64 * 1024
@@ -1233,6 +1295,15 @@ def _json(value: object) -> JsonValue:
                 result[key] = _json(item)
         return result
     return str(value)
+
+
+def _object_list(items: Sequence[object], label: str) -> list[JsonObject]:
+    found: list[JsonObject] = []
+    for item in items:
+        if not isinstance(item, dict):
+            raise ValueError(f"plan {label} must be objects")
+        found.append(_object(item))
+    return found
 
 
 def _object(value: object) -> JsonObject:

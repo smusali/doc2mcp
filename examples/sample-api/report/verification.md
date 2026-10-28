@@ -2,13 +2,13 @@
 
 - mcp4api: 0.1.0
 - source: openapi.yaml (`f675b645e7dcbcbb5c368ac9cda37338c57849e10fc14abc4dfe40f3e91edc96`)
-- manifest: `1af5f2040ec5b3a416cdf8510e009a252a83f88d9c58398d9bcc27e811dd7983`
+- manifest: `ba22406b583b763895988d80f2edc571786bf992d1e02ac102bf9c7e515bc238`
 - model: claude-opus-5-5
 - curation: agent
 - evidence: fixtures
 - allowlist: 127.0.0.1
 
-15 tools generated · 14 verified · 1 known gaps · 0 skipped
+15 tools generated · 14 verified · 1 known gap · 0 skipped
 
 ## Tools
 
@@ -41,11 +41,9 @@
 - actual: string
 - upstream status: 200
 
-```
+```json
 {"book_id": "book_001", "page_count": "320", "word_count": 84000}
 ```
-
-### get_book
 
 - call: `get_book:all`
 - assertion: schema
@@ -54,14 +52,13 @@
 - actual: string
 - upstream status: 200
 
-```
+```json
 {"book_id": "book_001", "page_count": "320", "word_count": 84000}
 ```
 
-
 ## Excluded
 
-- get_book
+get_book is excluded.
 
 ## Findings
 
@@ -69,8 +66,8 @@ None.
 
 ## Tokens
 
-- input: 1600
-- output: 320
+- input: 0
+- output: 0
 - cache read: 0
 - cache write: 0
-- estimated USD: 0.0128
+- estimated USD: 0.0
