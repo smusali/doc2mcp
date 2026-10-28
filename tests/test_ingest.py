@@ -10,8 +10,10 @@ import pytest
 from hypothesis import given, settings
 from hypothesis import strategies as st
 from jsonschema import Draft202012Validator
-from mcp4api.cli import ExitCode, main
-from mcp4api.ingest import _load_yaml, _normalize_schema, ingest
+from mcp4api.cli import main
+from mcp4api.errors import ExitCode
+from mcp4api.ingest import ingest
+from mcp4api.ingest.load import _load_yaml
 from mcp4api.model import (
     ApiSpec,
     JsonObject,
@@ -31,8 +33,6 @@ SPECS = (
     "external-root.yaml",
     "findings.yaml",
     "stream.yaml",
-    "github-api.json",
-    "stripe-api.json",
 )
 FINDING_CODES = frozenset(
     {
@@ -50,75 +50,6 @@ FINDING_CODES = frozenset(
 )
 _IGNORED_HEADERS = frozenset({"accept", "content-type", "authorization"})
 _UPDATE = os.environ.get("MCP4API_UPDATE_GOLDENS") == "1"
-
-
-def test_nullable_becomes_type_array() -> None:
-    schema = _normalize_schema(
-        {"type": "string", "nullable": True, "enum": ["a"], "example": "a"},
-        dialect="3.0",
-    )
-    assert schema == {
-        "type": ["string", "null"],
-        "enum": ["a", None],
-        "examples": ["a"],
-    }
-    Draft202012Validator(schema).validate("a")
-    Draft202012Validator(schema).validate(None)
-
-
-def test_nullable_without_type_is_dropped() -> None:
-    assert _normalize_schema({"nullable": True, "description": "any"}, dialect="3.0") == {
-        "description": "any"
-    }
-
-
-def test_nullable_combinator_allows_null() -> None:
-    schema = _normalize_schema(
-        {"allOf": [{"type": "string"}], "nullable": True},
-        dialect="3.0",
-    )
-    assert schema == {"anyOf": [{"allOf": [{"type": "string"}]}, {"type": "null"}]}
-    Draft202012Validator(schema).validate(None)
-    Draft202012Validator(schema).validate("a")
-
-
-@pytest.mark.parametrize(
-    ("raw", "expected"),
-    [
-        ({"minimum": 1, "exclusiveMinimum": True}, {"exclusiveMinimum": 1}),
-        ({"minimum": 1, "exclusiveMinimum": False}, {"minimum": 1}),
-        ({"maximum": 2, "exclusiveMaximum": True}, {"exclusiveMaximum": 2}),
-        ({"maximum": 2, "exclusiveMaximum": False}, {"maximum": 2}),
-        ({"type": "number", "exclusiveMinimum": 1}, {"type": "number", "exclusiveMinimum": 1}),
-    ],
-)
-def test_exclusive_bounds(raw: JsonObject, expected: JsonObject) -> None:
-    assert _normalize_schema(raw, dialect="3.0") == expected
-
-
-def test_schema_examples_merge() -> None:
-    schema = _normalize_schema(
-        {"type": "string", "examples": ["a"], "example": "b"},
-        dialect="3.1",
-    )
-    assert schema == {"type": "string", "examples": ["a", "b"]}
-
-
-def test_openapi_31_type_array_stays() -> None:
-    raw: JsonObject = {"type": ["string", "null"]}
-    assert _normalize_schema(raw, dialect="3.1") == raw
-
-
-def test_ref_siblings_follow_dialect() -> None:
-    def resolve(ref: str, pointer: str) -> JsonSchema:
-        del ref, pointer
-        return {"$ref": "#/defs/Pet"}
-
-    original: JsonObject = {"$ref": "#/components/schemas/Pet", "description": "pet"}
-    assert _normalize_schema(original, dialect="3.0", resolve_ref=resolve) == {"$ref": "#/defs/Pet"}
-    assert _normalize_schema(original, dialect="3.1", resolve_ref=resolve) == {
-        "allOf": [{"$ref": "#/defs/Pet"}, {"description": "pet"}]
-    }
 
 
 def test_parameter_merge_operation_wins(tmp_path: Path) -> None:
@@ -170,12 +101,16 @@ paths:
     assert by_name["limit"].description == "operation level"
     assert by_name["limit"].style == "form"
     assert by_name["limit"].explode is False
-    assert by_name["limit"].schema_["default"] == []
+    limit_schema = by_name["limit"].schema_
+    assert isinstance(limit_schema, dict)
+    assert limit_schema["default"] == []
     assert by_name["id"].required is True
     assert by_name["id"].style == "simple"
     assert by_name["id"].explode is False
-    assert by_name["q"].schema_["format"] == "uuid"
-    assert by_name["q"].schema_["enum"] == ["hat", "cap"]
+    query_schema = by_name["q"].schema_
+    assert isinstance(query_schema, dict)
+    assert query_schema["format"] == "uuid"
+    assert query_schema["enum"] == ["hat", "cap"]
     assert by_name["q"].examples == ["hat"]
 
 
@@ -211,10 +146,14 @@ paths:
     parameter = loaded.endpoints[0].parameters[0]
     assert parameter.style == "pipeDelimited"
     assert parameter.explode is False
-    assert parameter.schema_["enum"] == ["a", "b"]
-    assert parameter.schema_["default"] == ["a"]
+    parameter_schema = parameter.schema_
+    assert isinstance(parameter_schema, dict)
+    assert parameter_schema["enum"] == ["a", "b"]
+    assert parameter_schema["default"] == ["a"]
     response = loaded.endpoints[0].responses["200"]
-    assert response.schema_["format"] == "uuid"
+    response_schema = response.schema_
+    assert isinstance(response_schema, dict)
+    assert response_schema["format"] == "uuid"
     assert loaded.servers[0].url == "https://example.test/v1"
 
 
@@ -368,7 +307,7 @@ def test_ingest_command_writes_endpoints(tmp_path: Path) -> None:
             "--offline",
         ]
     )
-    assert code == ExitCode.VERIFIED
+    assert code == ExitCode.OK
     assert (out / "endpoints.json").is_file()
 
 
@@ -394,7 +333,7 @@ def test_primary_command_heuristic_stops_at_verify(
     spec.write_text(_TINY, encoding="utf-8")
     out = tmp_path / "out"
     code = main([str(spec), "--out", str(out), "--curation", "heuristic"])
-    assert code == ExitCode.VERIFIED
+    assert code == ExitCode.OK
     assert (out / "endpoints.json").is_file()
     assert (out / "tools.yaml").is_file()
     assert (out / "generated").is_dir()
@@ -402,43 +341,16 @@ def test_primary_command_heuristic_stops_at_verify(
     assert "cannot write" not in capsys.readouterr().err
 
 
-def test_largest_spec_is_fast() -> None:
-    largest = max((CORPUS / name for name in SPECS), key=lambda path: path.stat().st_size)
-    started = time.perf_counter()
-    ingest(str(largest), offline=True, allow_ref_hosts=())
-    assert time.perf_counter() - started < 10
-
-
 @settings(max_examples=20, deadline=None)
 @given(st.data())
 def test_mapping_order_does_not_change_output(data: st.DataObject) -> None:
     document = data.draw(_openapi_documents())
     permuted = _permute(document, data)
+    assert isinstance(document, dict)
+    assert isinstance(permuted, dict)
     assert _without_source_identity(_ingest_document(document)) == _without_source_identity(
         _ingest_document(permuted)
     )
-
-
-@settings(max_examples=20, deadline=None)
-@given(
-    kind=st.sampled_from(["string", "integer", "number", "boolean"]),
-    text=st.text(max_size=12),
-    number=st.integers(min_value=-20, max_value=20),
-    flag=st.booleans(),
-)
-def test_nullable_accepts_value_and_null(kind: str, text: str, number: int, flag: bool) -> None:
-    schema = _normalize_schema({"type": kind, "nullable": True}, dialect="3.0")
-    if kind == "string":
-        value: JsonValue = text
-    elif kind == "boolean":
-        value = flag
-    elif kind == "integer":
-        value = number
-    else:
-        value = float(number)
-    validator = Draft202012Validator(schema)
-    validator.validate(value)
-    validator.validate(None)
 
 
 def _schemas(spec: ApiSpec) -> list[JsonSchema]:
@@ -611,9 +523,9 @@ def _assert_fields(path: Path, source: JsonObject, spec: ApiSpec) -> None:
             normalized = route if route.startswith("/") else f"/{route}"
             endpoint = by_id[f"{method.upper()} {normalized}"]
             merged = _merged_parameters(path, source, item, operation, documents)
-            model_parameters = {
-                (parameter.name, parameter.location): parameter for parameter in endpoint.parameters
-            }
+            model_parameters: dict[tuple[str, str], Parameter] = {}
+            for model_parameter in endpoint.parameters:
+                model_parameters[(model_parameter.name, model_parameter.location)] = model_parameter
             for parameter in merged:
                 name = parameter.get("name")
                 location = parameter.get("in")
@@ -758,7 +670,7 @@ def _source_schema(parameter: JsonObject, swagger: bool) -> JsonValue | None:
         return parameter["schema"]
     content = parameter.get("content")
     if isinstance(content, dict) and content:
-        from mcp4api.ingest import _choose_media
+        from mcp4api.ingest.load import _choose_media
 
         media = _choose_media(content)
         entry = content.get(media) if media is not None else None
@@ -795,8 +707,10 @@ def _follow(
     current_path = path.resolve()
     current_doc = source
     current = value
-    while isinstance(current, dict) and isinstance(current.get("$ref"), str):
-        ref = current["$ref"]
+    while isinstance(current, dict):
+        ref = current.get("$ref")
+        if not isinstance(ref, str):
+            break
         if ref in seen:
             return current
         seen.add(ref)

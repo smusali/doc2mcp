@@ -9,12 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- README quickstart, an offline demo recording, and the 0.1.0 limitations.
-- Verify calls every generated tool over stdio, replays cassettes, enforces a loopback allowlist, and writes `report/`. A known gap exits 3. `mcp4api record` writes scrubbed cassettes from a sandbox.
-- Emit writes a Python MCP server under `generated/` from `tools.yaml` and `endpoints.json`, with a hand-edit guard and `--force`.
-- Curation writes `tools.yaml` (`manifest-v1`) from `endpoints.json`, with an agent, a heuristic fallback, human overrides, and a budget.
-- Sample Shelf library API and in-memory reference server under `examples/sample-api`.
-- OpenAPI 3.0, 3.1, 3.2, and Swagger 2.0 ingest that writes a deterministic `endpoints.json` in the `endpoint-v1` model.
-- Installable `mcp4api` package and command line interface, with stage commands, shared flags, and documented exit codes.
-- Continuous integration for Python 3.11 through 3.15 on Linux, macOS, and Windows, including lint, format, strict typing, and offline tests.
-- Security policy, changelog check, and a bug report form.
+- `mcp4api SPEC` runs ingest, curate, emit, and verify on an OpenAPI 3.0, 3.1, 3.2, or Swagger 2.0 document.
+- `mcp4api ingest` writes a deterministic `endpoints.json` with every schema in JSON Schema 2020-12.
+- `mcp4api curate` writes `tools.yaml` with Claude, a local heuristic, or a hand-edited manifest, within a token and USD budget.
+- `overrides.yaml` renames, describes, excludes, restores, or fixes inputs on curated tools without editing `tools.yaml`.
+- `mcp4api emit` writes a standalone Python MCP server to `generated/` and refuses to overwrite hand edits without `--force`.
+- `mcp4api verify` calls every generated tool behind a host allowlist, writes `report/`, and exits 3 on a known gap.
+- `mcp4api record` writes scrubbed cassettes from a sandbox, so later `--offline` verification needs no network.
+- The Shelf sample under `examples/sample-api` runs the whole pipeline offline.

@@ -13,16 +13,6 @@ SPDX: Apache-2.0
 Source: https://petstore31.swagger.io/api/v31/openapi.json
 Snapshot of the Swagger Petstore 3.1 sample. The Swagger Petstore project is Apache-2.0.
 
-github-api.json
-SPDX: MIT
-Source: https://github.com/github/rest-api-description/blob/755ee33b4a81d51f6f07a902cce26cbec3b822f2/descriptions/api.github.com/api.github.com.json
-Commit 755ee33b4a81d51f6f07a902cce26cbec3b822f2.
-
-stripe-api.json
-SPDX: MIT
-Source: https://github.com/stripe/openapi/blob/840c295318a1602dcc78e3c606bdbbac118bf8ef/latest/openapi.spec3.json
-Commit 840c295318a1602dcc78e3c606bdbbac118bf8ef.
-
 recursive.yaml
 external-root.yaml
 external-schemas.yaml

@@ -3075,7 +3075,6 @@
     }
   ],
   "findings": [],
-  "model_version": "endpoint-v1",
   "security_schemes": {
     "apiKeyAuth": {
       "description": "Send the sample key in this header.",

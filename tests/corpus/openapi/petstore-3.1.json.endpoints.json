@@ -316,7 +316,6 @@
       "severity": "info"
     }
   ],
-  "model_version": "endpoint-v1",
   "security_schemes": {
     "api_key": {
       "in": "header",

@@ -3918,7 +3918,7 @@
   ],
   "generated": "generated",
   "module": "shelf_mcp",
-  "secret_envs": [
+  "redact_env_names": [
     "SHELF_API_KEY"
   ],
   "timeout_env": "SHELF_TIMEOUT",

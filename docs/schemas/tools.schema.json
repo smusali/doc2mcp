@@ -1,0 +1,510 @@
+{
+  "$defs": {
+    "Annotations": {
+      "additionalProperties": false,
+      "properties": {
+        "destructiveHint": {
+          "title": "Destructivehint",
+          "type": "boolean"
+        },
+        "idempotentHint": {
+          "title": "Idempotenthint",
+          "type": "boolean"
+        },
+        "openWorldHint": {
+          "title": "Openworldhint",
+          "type": "boolean"
+        },
+        "readOnlyHint": {
+          "title": "Readonlyhint",
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "readOnlyHint",
+        "destructiveHint",
+        "idempotentHint",
+        "openWorldHint"
+      ],
+      "title": "Annotations",
+      "type": "object"
+    },
+    "ApiInfo": {
+      "additionalProperties": false,
+      "properties": {
+        "base_url": {
+          "title": "Base Url",
+          "type": "string"
+        },
+        "namespace": {
+          "title": "Namespace",
+          "type": "string"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        }
+      },
+      "required": [
+        "title",
+        "base_url",
+        "namespace"
+      ],
+      "title": "ApiInfo",
+      "type": "object"
+    },
+    "Bind": {
+      "additionalProperties": false,
+      "properties": {
+        "in": {
+          "enum": [
+            "path",
+            "query",
+            "header",
+            "cookie",
+            "body"
+          ],
+          "title": "In",
+          "type": "string"
+        },
+        "param": {
+          "title": "Param",
+          "type": "string"
+        },
+        "ref": {
+          "title": "Ref",
+          "type": "string"
+        }
+      },
+      "required": [
+        "param",
+        "in",
+        "ref"
+      ],
+      "title": "Bind",
+      "type": "object"
+    },
+    "CurationInfo": {
+      "additionalProperties": false,
+      "properties": {
+        "fallback_tools": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Fallback Tools",
+          "type": "array"
+        },
+        "input_hash": {
+          "title": "Input Hash",
+          "type": "string"
+        },
+        "mode": {
+          "$ref": "#/$defs/CurationMode"
+        },
+        "model": {
+          "title": "Model",
+          "type": "string"
+        },
+        "usage": {
+          "$ref": "#/$defs/Usage"
+        }
+      },
+      "required": [
+        "mode",
+        "model",
+        "input_hash",
+        "usage",
+        "fallback_tools"
+      ],
+      "title": "CurationInfo",
+      "type": "object"
+    },
+    "CurationMode": {
+      "enum": [
+        "agent",
+        "heuristic",
+        "manual"
+      ],
+      "title": "CurationMode",
+      "type": "string"
+    },
+    "Excluded": {
+      "additionalProperties": false,
+      "properties": {
+        "endpoint_id": {
+          "title": "Endpoint Id",
+          "type": "string"
+        },
+        "note": {
+          "title": "Note",
+          "type": "string"
+        },
+        "reason": {
+          "enum": [
+            "admin",
+            "internal",
+            "deprecated",
+            "duplicate",
+            "webhook-management",
+            "destructive-bulk",
+            "low-value",
+            "unsupported",
+            "invalid-curation"
+          ],
+          "title": "Reason",
+          "type": "string"
+        }
+      },
+      "required": [
+        "endpoint_id",
+        "reason",
+        "note"
+      ],
+      "title": "Excluded",
+      "type": "object"
+    },
+    "FixedParam": {
+      "additionalProperties": false,
+      "properties": {
+        "endpoint_id": {
+          "title": "Endpoint Id",
+          "type": "string"
+        },
+        "in": {
+          "enum": [
+            "path",
+            "query",
+            "header",
+            "cookie",
+            "body"
+          ],
+          "title": "In",
+          "type": "string"
+        },
+        "param": {
+          "title": "Param",
+          "type": "string"
+        },
+        "reason": {
+          "title": "Reason",
+          "type": "string"
+        },
+        "value": {
+          "anyOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "number"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "items": {},
+              "type": "array"
+            },
+            {
+              "type": "object"
+            }
+          ],
+          "title": "Value"
+        }
+      },
+      "required": [
+        "endpoint_id",
+        "param",
+        "in",
+        "value",
+        "reason"
+      ],
+      "title": "FixedParam",
+      "type": "object"
+    },
+    "MapsTo": {
+      "additionalProperties": false,
+      "properties": {
+        "endpoint_id": {
+          "title": "Endpoint Id",
+          "type": "string"
+        },
+        "in": {
+          "enum": [
+            "path",
+            "query",
+            "header",
+            "cookie",
+            "body"
+          ],
+          "title": "In",
+          "type": "string"
+        },
+        "param": {
+          "title": "Param",
+          "type": "string"
+        }
+      },
+      "required": [
+        "endpoint_id",
+        "param",
+        "in"
+      ],
+      "title": "MapsTo",
+      "type": "object"
+    },
+    "Step": {
+      "additionalProperties": false,
+      "properties": {
+        "bind": {
+          "items": {
+            "$ref": "#/$defs/Bind"
+          },
+          "title": "Bind",
+          "type": "array"
+        },
+        "endpoint_id": {
+          "title": "Endpoint Id",
+          "type": "string"
+        }
+      },
+      "required": [
+        "endpoint_id",
+        "bind"
+      ],
+      "title": "Step",
+      "type": "object"
+    },
+    "Tool": {
+      "additionalProperties": false,
+      "properties": {
+        "annotations": {
+          "$ref": "#/$defs/Annotations"
+        },
+        "description": {
+          "title": "Description",
+          "type": "string"
+        },
+        "fixed": {
+          "items": {
+            "$ref": "#/$defs/FixedParam"
+          },
+          "title": "Fixed",
+          "type": "array"
+        },
+        "inputs": {
+          "items": {
+            "$ref": "#/$defs/ToolInput"
+          },
+          "title": "Inputs",
+          "type": "array"
+        },
+        "intent": {
+          "title": "Intent",
+          "type": "string"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "output": {
+          "$ref": "#/$defs/ToolOutput"
+        },
+        "rationale": {
+          "title": "Rationale",
+          "type": "string"
+        },
+        "steps": {
+          "items": {
+            "$ref": "#/$defs/Step"
+          },
+          "title": "Steps",
+          "type": "array"
+        },
+        "title": {
+          "title": "Title",
+          "type": "string"
+        },
+        "verify": {
+          "$ref": "#/$defs/Verify"
+        }
+      },
+      "required": [
+        "name",
+        "title",
+        "description",
+        "intent",
+        "annotations",
+        "inputs",
+        "fixed",
+        "steps",
+        "output",
+        "verify",
+        "rationale"
+      ],
+      "title": "Tool",
+      "type": "object"
+    },
+    "ToolInput": {
+      "additionalProperties": false,
+      "properties": {
+        "description": {
+          "title": "Description",
+          "type": "string"
+        },
+        "maps_to": {
+          "$ref": "#/$defs/MapsTo"
+        },
+        "name": {
+          "title": "Name",
+          "type": "string"
+        },
+        "required": {
+          "title": "Required",
+          "type": "boolean"
+        },
+        "schema": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object"
+            }
+          ],
+          "title": "Schema"
+        }
+      },
+      "required": [
+        "name",
+        "schema",
+        "description",
+        "required",
+        "maps_to"
+      ],
+      "title": "ToolInput",
+      "type": "object"
+    },
+    "ToolOutput": {
+      "additionalProperties": false,
+      "properties": {
+        "fields": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Fields",
+          "type": "array"
+        },
+        "from_step": {
+          "title": "From Step",
+          "type": "integer"
+        },
+        "schema": {
+          "anyOf": [
+            {
+              "type": "boolean"
+            },
+            {
+              "type": "object"
+            }
+          ],
+          "title": "Schema"
+        }
+      },
+      "required": [
+        "from_step",
+        "fields",
+        "schema"
+      ],
+      "title": "ToolOutput",
+      "type": "object"
+    },
+    "Usage": {
+      "additionalProperties": false,
+      "properties": {
+        "cache_read_input_tokens": {
+          "default": 0,
+          "title": "Cache Read Input Tokens",
+          "type": "integer"
+        },
+        "cache_write_input_tokens": {
+          "default": 0,
+          "title": "Cache Write Input Tokens",
+          "type": "integer"
+        },
+        "estimated_usd": {
+          "default": 0,
+          "title": "Estimated Usd",
+          "type": "number"
+        },
+        "input_tokens": {
+          "default": 0,
+          "title": "Input Tokens",
+          "type": "integer"
+        },
+        "output_tokens": {
+          "default": 0,
+          "title": "Output Tokens",
+          "type": "integer"
+        }
+      },
+      "title": "Usage",
+      "type": "object"
+    },
+    "Verify": {
+      "additionalProperties": false,
+      "properties": {
+        "depends_on": {
+          "items": {
+            "type": "string"
+          },
+          "title": "Depends On",
+          "type": "array"
+        },
+        "example_args": {
+          "title": "Example Args",
+          "type": "object"
+        }
+      },
+      "required": [
+        "example_args",
+        "depends_on"
+      ],
+      "title": "Verify",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "api": {
+      "$ref": "#/$defs/ApiInfo"
+    },
+    "curation": {
+      "$ref": "#/$defs/CurationInfo"
+    },
+    "excluded": {
+      "items": {
+        "$ref": "#/$defs/Excluded"
+      },
+      "title": "Excluded",
+      "type": "array"
+    },
+    "tools": {
+      "items": {
+        "$ref": "#/$defs/Tool"
+      },
+      "title": "Tools",
+      "type": "array"
+    }
+  },
+  "required": [
+    "api",
+    "tools",
+    "excluded",
+    "curation"
+  ],
+  "title": "Manifest",
+  "type": "object"
+}

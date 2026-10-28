@@ -138,7 +138,7 @@
     },
     {
       "code": "invalid-against-spec",
-      "message": "Additional properties are not allowed ('webhooks' was unexpected)",
+      "message": "'webhooks' does not match any of the regexes: '^x-'",
       "pointer": "/",
       "severity": "error"
     },
@@ -254,7 +254,6 @@
       "severity": "info"
     }
   ],
-  "model_version": "endpoint-v1",
   "security_schemes": {},
   "servers": [],
   "source": {

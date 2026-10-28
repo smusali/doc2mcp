@@ -10,20 +10,83 @@ import sys
 import tempfile
 import threading
 import time
-from collections.abc import Mapping
+from collections.abc import Iterator, Mapping, Sequence
+from contextlib import contextmanager
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import TextIO, TypeAlias
+from typing import TextIO, TypeAlias, TypedDict
 from urllib.parse import parse_qsl, urlsplit
 
 from jsonschema import Draft202012Validator
 from jsonschema.exceptions import ValidationError
 from mcp import ClientSession, StdioServerParameters, stdio_client
-from mcp.client._probe import negotiate_auto
+from mcp.client.client import negotiate_auto  # type: ignore[attr-defined]
 from mcp.types import CallToolResult
 
 JsonValue: TypeAlias = bool | int | float | str | list["JsonValue"] | dict[str, "JsonValue"] | None
 JsonObject: TypeAlias = dict[str, JsonValue]
+
+
+class Plan(TypedDict):
+    allowlist: list[str]
+    base_url_env: str
+    bindings: list[JsonObject]
+    calls: list[JsonObject]
+    generated: str
+    module: str
+    redact_env_names: list[str]
+    timeout_env: str
+    timeout_seconds: float
+    upstream: str
+    upstream_url: str
+
+
+def plan_from(
+    *,
+    allowlist: list[str],
+    base_url_env: str,
+    bindings: Sequence[object],
+    calls: Sequence[object],
+    generated: str,
+    module: str,
+    redact_env_names: list[str],
+    timeout_env: str,
+    timeout_seconds: float,
+    upstream: str,
+    upstream_url: str,
+) -> Plan:
+    """Check a plan object and return it as a typed plan.
+
+    Args:
+        allowlist: Hosts the proxy may dial.
+        base_url_env: Environment variable that sets the API base URL.
+        bindings: Values copied from an earlier tool into a later call.
+        calls: Calls the suite will make.
+        generated: Directory that contains the generated server, relative to the plan.
+        module: Import name of the generated server.
+        redact_env_names: Names of environment variables whose values are redacted.
+        timeout_env: Environment variable that sets the request timeout.
+        timeout_seconds: Request timeout.
+        upstream: ``fixture``, ``sandbox``, or ``live``.
+        upstream_url: Upstream base URL. Empty for fixtures.
+
+    Returns:
+        The same plan, checked field by field.
+    """
+    return {
+        "allowlist": allowlist,
+        "base_url_env": base_url_env,
+        "bindings": _object_list(bindings, "bindings"),
+        "calls": _object_list(calls, "calls"),
+        "generated": generated,
+        "module": module,
+        "redact_env_names": redact_env_names,
+        "timeout_env": timeout_env,
+        "timeout_seconds": timeout_seconds,
+        "upstream": upstream,
+        "upstream_url": upstream_url,
+    }
+
 
 _BODY_LIMIT = 1_000_000
 _HEADER_LIMIT = 64 * 1024
@@ -311,7 +374,7 @@ class _Plan:
     generated: str
     base_url_env: str
     timeout_env: str
-    secret_envs: tuple[str, ...]
+    redact_env_names: tuple[str, ...]
     timeout_seconds: float
     allowlist: tuple[str, ...]
     upstream: str
@@ -331,9 +394,21 @@ def _run(
     produced: dict[str, list[JsonValue]] = {}
     happy_seen: dict[str, int] = {}
     calls: list[JsonObject] = []
-    with tempfile.TemporaryFile(mode="w+", encoding="utf-8") as errlog:
+    with _stderr_log() as errlog:
         asyncio.run(_session(plan, env, fixture, proxy, produced, happy_seen, calls, errlog))
     return _pack({"calls": calls})
+
+
+@contextmanager
+def _stderr_log() -> Iterator[TextIO]:
+    descriptor, name = tempfile.mkstemp(prefix="mcp4api-")
+    os.close(descriptor)
+    path = Path(name)
+    try:
+        with path.open("w+", encoding="utf-8") as handle:
+            yield handle
+    finally:
+        path.unlink(missing_ok=True)
 
 
 async def _session(
@@ -837,7 +912,7 @@ def _child_env(plan: _Plan, proxy_url: str, base_url: str) -> dict[str, str]:
     env[plan.base_url_env] = base_url
     env[plan.timeout_env] = _number(plan.timeout_seconds)
     if plan.upstream == "fixture":
-        for name in plan.secret_envs:
+        for name in plan.redact_env_names:
             if not env.get(name):
                 env[name] = "fixture"
     return env
@@ -937,8 +1012,8 @@ def _parse_plan(plan: object) -> _Plan:
             )
     allow = plan.get("allowlist")
     hosts = [item for item in allow if isinstance(item, str)] if isinstance(allow, list) else []
-    secrets = plan.get("secret_envs")
-    secret_envs = (
+    secrets = plan.get("redact_env_names")
+    redact_env_names = (
         tuple(item for item in secrets if isinstance(item, str))
         if isinstance(secrets, list)
         else ()
@@ -954,7 +1029,7 @@ def _parse_plan(plan: object) -> _Plan:
         generated=_resolve_generated(generated),
         base_url_env=_str(plan, "base_url_env"),
         timeout_env=_str(plan, "timeout_env"),
-        secret_envs=secret_envs,
+        redact_env_names=redact_env_names,
         timeout_seconds=seconds,
         allowlist=tuple(hosts or ["127.0.0.1"]),
         upstream=_str(plan, "upstream") or "fixture",
@@ -1233,6 +1308,15 @@ def _json(value: object) -> JsonValue:
                 result[key] = _json(item)
         return result
     return str(value)
+
+
+def _object_list(items: Sequence[object], label: str) -> list[JsonObject]:
+    found: list[JsonObject] = []
+    for item in items:
+        if not isinstance(item, dict):
+            raise ValueError(f"plan {label} must be objects")
+        found.append(_object(item))
+    return found
 
 
 def _object(value: object) -> JsonObject:

@@ -69,7 +69,7 @@ examples/sample-api/
   report/
 ```
 
-`endpoints.json` is the ingest of `openapi.yaml`. `tools.yaml` is a replayed curation with at most 15 tools and a reason for every other operation. Reuse it without a model call:
+`endpoints.json` is the ingest of `openapi.yaml`. `tools.yaml` is the reviewed, committed manifest, with at most 15 tools and a reason for every other operation. Reuse it without a model call:
 
 ```text
 mcp4api curate --out examples/sample-api --offline
