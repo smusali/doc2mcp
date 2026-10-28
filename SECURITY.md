@@ -2,7 +2,7 @@
 
 ## Supported versions
 
-No release is published yet. There is no supported version until the first release. After that, only the latest published release receives security fixes.
+Only the latest published release receives security fixes.
 
 | Version | Supported |
 | --- | --- |
