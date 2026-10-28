@@ -22,9 +22,9 @@ from openapi_spec_validator.validation.validators import (
 from referencing.exceptions import Unresolvable
 from yaml import MappingNode, Node, SequenceNode
 
-from doc2mcp import __version__
-from doc2mcp.cli import UpstreamError, UsageError
-from doc2mcp.model import (
+from mcp4api import __version__
+from mcp4api.cli import UpstreamError, UsageError
+from mcp4api.model import (
     ApiSpec,
     Endpoint,
     Finding,
@@ -54,7 +54,7 @@ MAX_REF_DEPTH = 64
 MAX_REDIRECTS = 5
 MAX_VALIDATION_FINDINGS = 100
 TIMEOUT = 30.0
-_USER_AGENT = f"doc2mcp/{__version__}"
+_USER_AGENT = f"mcp4api/{__version__}"
 _REDIRECTS = frozenset({301, 302, 303, 307, 308})
 _METHODS = ("get", "put", "post", "delete", "options", "head", "patch", "trace")
 _IGNORED_HEADERS = frozenset({"accept", "content-type", "authorization"})

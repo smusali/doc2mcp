@@ -154,7 +154,7 @@ activemq-data/
 .envrc
 .venv
 /env/
-.doc2mcp/
+.mcp4api/
 venv/
 /ENV/
 env.bak/

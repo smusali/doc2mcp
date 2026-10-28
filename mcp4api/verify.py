@@ -16,10 +16,10 @@ from pathlib import Path
 from types import ModuleType
 from urllib.parse import urlsplit
 
-from doc2mcp import __version__
-from doc2mcp.curate.manifest import Manifest, Tool, ToolInput, load_manifest, success_schema
-from doc2mcp.emit import EmitError, emit
-from doc2mcp.model import (
+from mcp4api import __version__
+from mcp4api.curate.manifest import Manifest, Tool, ToolInput, load_manifest, success_schema
+from mcp4api.emit import EmitError, emit
+from mcp4api.model import (
     ApiSpec,
     Endpoint,
     JsonObject,
@@ -27,7 +27,7 @@ from doc2mcp.model import (
     JsonValue,
     expect_json,
 )
-from doc2mcp.report import (
+from mcp4api.report import (
     Failure,
     FindingRow,
     Report,
@@ -106,7 +106,7 @@ def verify(out: Path, options: VerifyOptions) -> VerifyOutcome:
     Returns:
         The summary line and whether any tool is a known gap.
     """
-    if options.isolate and os.environ.get("DOC2MCP_ISOLATED") != "1":
+    if options.isolate and os.environ.get("MCP4API_ISOLATED") != "1":
         return _reexec(out, options)
     _guard(options)
     spec, manifest, manifest_sha = _load(out)
@@ -231,11 +231,11 @@ def _reexec(out: Path, options: VerifyOptions) -> VerifyOutcome:
         script = (
             "import sys\n"
             "from pathlib import Path\n"
-            "from doc2mcp.verify import run_saved\n"
+            "from mcp4api.verify import run_saved\n"
             "sys.exit(run_saved(Path(sys.argv[1])))\n"
         )
         env = dict(os.environ)
-        env["DOC2MCP_ISOLATED"] = "1"
+        env["MCP4API_ISOLATED"] = "1"
         env["PYTHONDONTWRITEBYTECODE"] = "1"
         completed = subprocess.run(
             [*prefix, sys.executable, "-c", script, str(config)],
@@ -889,11 +889,11 @@ def _execute(out: Path, plan: JsonObject) -> JsonObject:
 
 
 def _load_suite(path: Path) -> ModuleType:
-    spec = importlib.util.spec_from_file_location("doc2mcp_emitted_suite", path)
+    spec = importlib.util.spec_from_file_location("mcp4api_emitted_suite", path)
     if spec is None or spec.loader is None:
         raise VerifyUsage("cannot load verification suite")
     module = importlib.util.module_from_spec(spec)
-    sys.modules["doc2mcp_emitted_suite"] = module
+    sys.modules["mcp4api_emitted_suite"] = module
     spec.loader.exec_module(module)
     return module
 
@@ -919,7 +919,7 @@ def _finish(
         skipped=sum(1 for row in rows if row.status == "skipped: write-guard"),
     )
     report = Report(
-        doc2mcp=__version__,
+        mcp4api=__version__,
         source_uri=spec.source.uri,
         source_sha256=spec.source.sha256,
         manifest_sha256=manifest_sha,

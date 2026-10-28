@@ -1,8 +1,8 @@
 # Verification
 
-- doc2mcp: 0.1.0
-- source: openapi.yaml (`10b6233ec3ce6f2e8b0b0d8248836ce1e78986f3e6fffc5b362f228c12e8f5e2`)
-- manifest: `a2d48b93c0802583fea849310d3a4543bf3e96b682fce70a7512fccac9703874`
+- mcp4api: 0.1.0
+- source: openapi.yaml (`f675b645e7dcbcbb5c368ac9cda37338c57849e10fc14abc4dfe40f3e91edc96`)
+- manifest: `1af5f2040ec5b3a416cdf8510e009a252a83f88d9c58398d9bcc27e811dd7983`
 - model: claude-opus-5-5
 - curation: agent
 - evidence: fixtures

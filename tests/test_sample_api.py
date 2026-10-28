@@ -10,10 +10,10 @@ from pathlib import Path
 from types import ModuleType
 
 import pytest
-from doc2mcp.ingest import _load_yaml, ingest
-from doc2mcp.model import JsonObject, JsonValue
 from jsonschema import Draft202012Validator
 from jsonschema.exceptions import ValidationError
+from mcp4api.ingest import _load_yaml, ingest
+from mcp4api.model import JsonObject, JsonValue
 from openapi_spec_validator import OpenAPIV31SpecValidator, validate
 from referencing import Registry, Resource
 from referencing.jsonschema import DRAFT202012
@@ -279,7 +279,7 @@ def test_server_adds_no_runtime_dependency() -> None:
     assert "uvicorn" not in runtime
     assert "starlette" in dev
     assert "uvicorn" in dev
-    assert "doc2mcp" not in (ROOT / "examples" / "sample-api" / "server.py").read_text(
+    assert "mcp4api" not in (ROOT / "examples" / "sample-api" / "server.py").read_text(
         encoding="utf-8"
     )
 

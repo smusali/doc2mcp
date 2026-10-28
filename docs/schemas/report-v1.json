@@ -231,10 +231,6 @@
       "title": "Curation Mode",
       "type": "string"
     },
-    "doc2mcp": {
-      "title": "Doc2Mcp",
-      "type": "string"
-    },
     "duration_ms": {
       "anyOf": [
         {
@@ -274,6 +270,10 @@
     },
     "manifest_sha256": {
       "title": "Manifest Sha256",
+      "type": "string"
+    },
+    "mcp4api": {
+      "title": "Mcp4Api",
       "type": "string"
     },
     "model": {
@@ -321,7 +321,7 @@
     }
   },
   "required": [
-    "doc2mcp",
+    "mcp4api",
     "source_uri",
     "source_sha256",
     "manifest_sha256",

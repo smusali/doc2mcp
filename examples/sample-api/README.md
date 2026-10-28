@@ -1,6 +1,6 @@
 # Shelf sample API
 
-Shelf is a small library circulation API. It is the shared input for doc2mcp: an OpenAPI 3.1 document and an in-memory reference server, with no doc2mcp code in either file.
+Shelf is a small library circulation API. It is the shared input for mcp4api: an OpenAPI 3.1 document and an in-memory reference server, with no mcp4api code in either file.
 
 The server listens on `127.0.0.1` and a port you pass on the command line. Its data is fixed: the same requests against a fresh process return the same response bytes. Send the sample API key on every request:
 
@@ -34,7 +34,7 @@ The process binds to `127.0.0.1:8765`. That host and port match the server URL i
 ## Record cassettes
 
 ```text
-doc2mcp record --sandbox http://127.0.0.1:8765
+mcp4api record --sandbox http://127.0.0.1:8765
 ```
 
 Use the port the server was given. Set `SHELF_API_KEY` to the sample key before recording. The key is a request header, and cassettes do not store headers.
@@ -46,7 +46,7 @@ That command uses one server process for the whole plan. The committed cassettes
 From the repository root:
 
 ```text
-doc2mcp examples/sample-api/openapi.yaml --offline --deterministic --out examples/sample-api
+mcp4api examples/sample-api/openapi.yaml --offline --deterministic --out examples/sample-api
 ```
 
 That command exits 3. Fourteen tools verify from the committed cassettes. `get_book` is the known gap: `GET /books/{book_id}/stats` returns `page_count` as a string, and the spec says integer. The failure names `page_count`. `tools.yaml` still lists `get_book`. The default `--on-failure exclude` rewrites `generated/` without that tool.
@@ -72,7 +72,7 @@ examples/sample-api/
 `endpoints.json` is the ingest of `openapi.yaml`. `tools.yaml` is a replayed curation with at most 15 tools and a reason for every other operation. Reuse it without a model call:
 
 ```text
-doc2mcp curate --out examples/sample-api --offline
+mcp4api curate --out examples/sample-api --offline
 ```
 
-A later refresh with a key is `doc2mcp curate --recurate --out examples/sample-api`. Emit and verify still write `generated/`, `tests/`, and `report/` next to these files.
+A later refresh with a key is `mcp4api curate --recurate --out examples/sample-api`. Emit and verify still write `generated/`, `tests/`, and `report/` next to these files.

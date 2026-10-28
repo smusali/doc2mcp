@@ -9,11 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
-- Verify calls every generated tool over stdio, replays cassettes, enforces a loopback allowlist, and writes `report/`. A known gap exits 3. `doc2mcp record` writes scrubbed cassettes from a sandbox.
+- Verify calls every generated tool over stdio, replays cassettes, enforces a loopback allowlist, and writes `report/`. A known gap exits 3. `mcp4api record` writes scrubbed cassettes from a sandbox.
 - Emit writes a Python MCP server under `generated/` from `tools.yaml` and `endpoints.json`, with a hand-edit guard and `--force`.
 - Curation writes `tools.yaml` (`manifest-v1`) from `endpoints.json`, with an agent, a heuristic fallback, human overrides, and a budget.
 - Sample Shelf library API and in-memory reference server under `examples/sample-api`.
 - OpenAPI 3.0, 3.1, 3.2, and Swagger 2.0 ingest that writes a deterministic `endpoints.json` in the `endpoint-v1` model.
-- Installable `doc2mcp` package and command line interface, with stage commands, shared flags, and documented exit codes.
+- Installable `mcp4api` package and command line interface, with stage commands, shared flags, and documented exit codes.
 - Continuous integration for Python 3.11 through 3.15 on Linux, macOS, and Windows, including lint, format, strict typing, and offline tests.
 - Security policy, changelog check, and a bug report form.

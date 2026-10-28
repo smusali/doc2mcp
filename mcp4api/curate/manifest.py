@@ -13,7 +13,7 @@ from jsonschema import Draft202012Validator
 from jsonschema.exceptions import SchemaError, ValidationError
 from pydantic import BaseModel, ConfigDict, Field
 
-from doc2mcp.model import (
+from mcp4api.model import (
     ApiSpec,
     Endpoint,
     JsonObject,

@@ -3,7 +3,7 @@ jsonSchemaDialect: https://json-schema.org/draft/2020-12/schema
 info:
   title: Shelf
   version: "1.0.0"
-  description: Small library circulation API used as the doc2mcp sample.
+  description: Small library circulation API used as the mcp4api sample.
 servers:
   - url: http://127.0.0.1:8765
     description: In-memory reference server

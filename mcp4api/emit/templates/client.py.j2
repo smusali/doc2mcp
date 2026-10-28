@@ -223,7 +223,7 @@ def _secret(name: str) -> str:
 
 
 def _check_host(url: httpx2.URL) -> None:
-    raw = os.environ.get("DOC2MCP_ALLOWED_HOSTS")
+    raw = os.environ.get("MCP4API_ALLOWED_HOSTS")
     if raw is None:
         return
     allowed = {item.strip().lower() for item in raw.split(",") if item.strip()}

@@ -9,9 +9,9 @@ repos:
     rev: v2.4.0
     hooks:
       - id: mypy
-        files: ^doc2mcp/
+        files: ^mcp4api/
         pass_filenames: false
-        args: [--strict, doc2mcp]
+        args: [--strict, mcp4api]
         additional_dependencies:
           - anthropic==2.3.0
           - typer==0.27.3

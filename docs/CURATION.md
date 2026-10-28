@@ -46,7 +46,7 @@ Agent mode calls Claude. The default model is `claude-opus-5-5`. `--model` selec
 
 ## Budget and dry run
 
-The defaults are `--budget-tokens 200000` and `--budget-usd 5`. The token budget is the sum of input, output, cache-read, and cache-write tokens. `count_tokens` is free. Before each paid call, doc2mcp reserves the counted input plus 4096 output tokens and the matching USD. If the remainder cannot cover that reservation, later groups use the heuristic, those names are listed in `fallback_tools`, and their rationales start with `Heuristic fallback:`. A call that already returned is kept, even if it crosses the cap.
+The defaults are `--budget-tokens 200000` and `--budget-usd 5`. The token budget is the sum of input, output, cache-read, and cache-write tokens. `count_tokens` is free. Before each paid call, mcp4api reserves the counted input plus 4096 output tokens and the matching USD. If the remainder cannot cover that reservation, later groups use the heuristic, those names are listed in `fallback_tools`, and their rationales start with `Heuristic fallback:`. A call that already returned is kept, even if it crosses the cap.
 
 USD for `claude-opus-5-5` is `(input * 4 + cache_write * 5 + cache_read * 0.2 + output * 20) / 1000000`. `claude-sonnet-5-5` uses `(input * 2 + cache_write * 2.5 + cache_read * 0.1 + output * 10) / 1000000`. Any other model uses the Opus 5.5 table, and `--dry-run` prints `price_table: claude-opus-5-5`.
 
@@ -54,13 +54,13 @@ USD for `claude-opus-5-5` is `(input * 4 + cache_write * 5 + cache_read * 0.2 + 
 
 ## Hash reuse
 
-doc2mcp hashes `endpoints.json`, the criteria version, the model id, the doc2mcp `major.minor`, and the curation mode, include tags, max tools, and namespace. Budgets, `--dry-run`, `--recurate`, and `--offline` are not part of the hash.
+mcp4api hashes `endpoints.json`, the criteria version, the model id, the mcp4api `major.minor`, and the curation mode, include tags, max tools, and namespace. Budgets, `--dry-run`, `--recurate`, and `--offline` are not part of the hash.
 
-A matching hash and no `--recurate` makes no model call. The base manifest is `.doc2mcp/base-tools.yaml` when that file's hash matches, otherwise `tools.yaml` when `overrides.yaml` is absent. Overrides are applied to that base, so a second run does not apply them twice. `--recurate` ignores the match.
+A matching hash and no `--recurate` makes no model call. The base manifest is `.mcp4api/base-tools.yaml` when that file's hash matches, otherwise `tools.yaml` when `overrides.yaml` is absent. Overrides are applied to that base, so a second run does not apply them twice. `--recurate` ignores the match.
 
 ## Overrides
 
-`overrides.yaml` sits next to `tools.yaml`. doc2mcp never writes it. It is applied to a fresh base:
+`overrides.yaml` sits next to `tools.yaml`. mcp4api never writes it. It is applied to a fresh base:
 
 ```yaml
 renames:

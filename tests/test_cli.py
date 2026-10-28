@@ -5,15 +5,15 @@ import re
 from pathlib import Path
 
 import pytest
-from doc2mcp import __version__
-from doc2mcp.cli import ExitCode, main
+from mcp4api import __version__
+from mcp4api.cli import ExitCode, main
 
 _ANSI = re.compile(r"\x1b\[[0-9;]*m")
 
 
 def test_version(capsys: pytest.CaptureFixture[str]) -> None:
     assert main(["--version"]) == ExitCode.VERIFIED
-    assert capsys.readouterr().out.strip() == f"doc2mcp {__version__}"
+    assert capsys.readouterr().out.strip() == f"mcp4api {__version__}"
 
 
 def test_help_lists_stages(capsys: pytest.CaptureFixture[str]) -> None:

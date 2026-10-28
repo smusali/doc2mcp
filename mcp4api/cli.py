@@ -10,10 +10,10 @@ from typing import TYPE_CHECKING, Annotated, Literal, Protocol, TypedDict, runti
 
 import typer
 
-from doc2mcp import __version__
+from mcp4api import __version__
 
 if TYPE_CHECKING:
-    from doc2mcp.verify import VerifyOptions
+    from mcp4api.verify import VerifyOptions
 
 _DESCRIPTION = (
     "Turn API docs into a working MCP server, "
@@ -153,7 +153,7 @@ def main(argv: list[str] | None = None) -> int:
     """
     args = list(sys.argv[1:] if argv is None else argv)
     try:
-        app(args=_normalize_argv(args), standalone_mode=False, prog_name="doc2mcp")
+        app(args=_normalize_argv(args), standalone_mode=False, prog_name="mcp4api")
     except UsageError as exc:
         _emit_error(exc.message, ExitCode.USAGE, as_json=_json_requested(args))
         return ExitCode.USAGE
@@ -179,7 +179,7 @@ def main(argv: list[str] | None = None) -> int:
 def _print_version(value: bool) -> None:
     if not value:
         return
-    typer.echo(f"doc2mcp {__version__}")
+    typer.echo(f"mcp4api {__version__}")
     raise typer.Exit(code=ExitCode.VERIFIED)
 
 
@@ -422,8 +422,8 @@ def _options(ctx: typer.Context) -> RunOptions:
 
 
 def _ingest(spec: str, options: RunOptions) -> None:
-    from doc2mcp.ingest import ingest as load_spec
-    from doc2mcp.ingest import write_endpoints
+    from mcp4api.ingest import ingest as load_spec
+    from mcp4api.ingest import write_endpoints
 
     loaded = load_spec(
         spec,
@@ -434,7 +434,7 @@ def _ingest(spec: str, options: RunOptions) -> None:
 
 
 def _curate(options: RunOptions) -> None:
-    from doc2mcp.curate.agent import CurationOptions, CurationUpstream, CurationUsage, curate
+    from mcp4api.curate.agent import CurationOptions, CurationUpstream, CurationUsage, curate
 
     mode = _curation_mode(options.curation)
     try:
@@ -484,7 +484,7 @@ def _require_dir(path: Path) -> None:
 
 
 def _emit(options: RunOptions) -> None:
-    from doc2mcp.emit import EmitError, emit
+    from mcp4api.emit import EmitError, emit
 
     try:
         emit(options.out, force=options.force)
@@ -493,7 +493,7 @@ def _emit(options: RunOptions) -> None:
 
 
 def _verify(options: RunOptions) -> None:
-    from doc2mcp.verify import VerifyUpstream, VerifyUsage, verify
+    from mcp4api.verify import VerifyUpstream, VerifyUsage, verify
 
     try:
         outcome = verify(options.out, _verify_options(options))
@@ -506,8 +506,8 @@ def _verify(options: RunOptions) -> None:
 
 
 def _record(options: RunOptions) -> None:
-    from doc2mcp.verify import VerifyUpstream, VerifyUsage
-    from doc2mcp.verify import record as record_cassettes
+    from mcp4api.verify import VerifyUpstream, VerifyUsage
+    from mcp4api.verify import record as record_cassettes
 
     if not options.sandbox:
         raise UsageError("record needs --sandbox")
@@ -520,7 +520,7 @@ def _record(options: RunOptions) -> None:
 
 
 def _verify_options(options: RunOptions) -> VerifyOptions:
-    from doc2mcp.verify import VerifyOptions as Options
+    from mcp4api.verify import VerifyOptions as Options
 
     return Options(
         offline=options.offline,

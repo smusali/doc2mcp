@@ -58,7 +58,7 @@ jobs:
 
       - name: Types
         run: |
-          uv run mypy --strict doc2mcp
+          uv run mypy --strict mcp4api
           uv run mypy --strict examples/sample-api/generated/shelf_mcp
 
       - name: Test
@@ -109,14 +109,14 @@ jobs:
           set -euo pipefail
           cp -a examples/sample-api "$RUNNER_TEMP/out"
           set +e
-          uv run doc2mcp examples/sample-api/openapi.yaml --offline --deterministic --out "$RUNNER_TEMP/out"
+          uv run mcp4api examples/sample-api/openapi.yaml --offline --deterministic --out "$RUNNER_TEMP/out"
           code=$?
           set -e
           if [ "$code" -ne 3 ]; then
             echo "expected exit 3, got $code"
             exit 1
           fi
-          diff -r --exclude=.doc2mcp examples/sample-api "$RUNNER_TEMP/out"
+          diff -r --exclude=.mcp4api examples/sample-api "$RUNNER_TEMP/out"
 
   determinism:
     name: determinism
@@ -145,7 +145,7 @@ jobs:
             rm -rf "$dest"
             cp -a examples/sample-api "$dest"
             set +e
-            uv run doc2mcp examples/sample-api/openapi.yaml --offline --deterministic --out "$dest"
+            uv run mcp4api examples/sample-api/openapi.yaml --offline --deterministic --out "$dest"
             code=$?
             set -e
             if [ "$code" -ne 3 ]; then
@@ -155,4 +155,4 @@ jobs:
           }
           run_once "$RUNNER_TEMP/one"
           run_once "$RUNNER_TEMP/two"
-          diff -r --exclude=.doc2mcp "$RUNNER_TEMP/one" "$RUNNER_TEMP/two"
+          diff -r --exclude=.mcp4api "$RUNNER_TEMP/one" "$RUNNER_TEMP/two"

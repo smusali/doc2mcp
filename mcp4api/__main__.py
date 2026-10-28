@@ -1,5 +1,5 @@
 import sys
 
-from doc2mcp.cli import main
+from mcp4api.cli import main
 
 sys.exit(main())

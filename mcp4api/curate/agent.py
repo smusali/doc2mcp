@@ -9,8 +9,8 @@ from typing import TYPE_CHECKING, Literal, Protocol
 
 from pydantic import BaseModel, ValidationError
 
-from doc2mcp import __version__
-from doc2mcp.curate.manifest import (
+from mcp4api import __version__
+from mcp4api.curate.manifest import (
     CurationMode,
     DetailDecision,
     Excluded,
@@ -39,7 +39,7 @@ from doc2mcp.curate.manifest import (
     validation_errors,
     zero_usage,
 )
-from doc2mcp.model import ApiSpec, Endpoint, JsonObject, JsonValue, bundle_schema, expect_json
+from mcp4api.model import ApiSpec, Endpoint, JsonObject, JsonValue, bundle_schema, expect_json
 
 if TYPE_CHECKING:
     from anthropic.types.beta import BetaTextBlockParam, BetaUserMessageParam
@@ -219,7 +219,7 @@ def estimate_cost(
 
 def system_prompt() -> str:
     criteria = (
-        importlib.resources.files("doc2mcp.curate")
+        importlib.resources.files("mcp4api.curate")
         .joinpath("criteria.md")
         .read_text(encoding="utf-8")
     )
@@ -327,7 +327,7 @@ def _manual(out: Path, spec: ApiSpec, options: CurationOptions, digest: str) -> 
     if not path.is_file():
         raise CurationUsage(f"not found: {path}")
     current = _read_manifest(path)
-    cache = _read_manifest(out / ".doc2mcp" / "base-tools.yaml")
+    cache = _read_manifest(out / ".mcp4api" / "base-tools.yaml")
     base = cache if cache is not None else current
     if base is None:
         raise CurationUsage("invalid tools.yaml")
@@ -380,7 +380,7 @@ def _publish(
         previous = _names(_read_manifest(out / "tools.yaml"))
     overrides = _read_overrides(out / "overrides.yaml")
     final, warnings = apply_overrides(base, overrides, spec)
-    _write(out / ".doc2mcp" / "base-tools.yaml", dump_manifest(base))
+    _write(out / ".mcp4api" / "base-tools.yaml", dump_manifest(base))
     _write(out / "tools.yaml", dump_manifest(final))
     notes = list(warnings)
     if previous is not None:
@@ -715,7 +715,7 @@ def _with_errors(request: CurationRequest, errors: list[str]) -> CurationRequest
 
 
 def _matching_base(out: Path, digest: str) -> Manifest | None:
-    cache = _read_manifest(out / ".doc2mcp" / "base-tools.yaml")
+    cache = _read_manifest(out / ".mcp4api" / "base-tools.yaml")
     if cache is not None and cache.curation.input_hash == digest:
         return cache
     if (out / "overrides.yaml").is_file():

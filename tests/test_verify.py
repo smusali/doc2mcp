@@ -14,18 +14,18 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 import pytest
-from doc2mcp.cli import ExitCode, main
-from doc2mcp.curate.agent import CurationOptions, curate
-from doc2mcp.curate.manifest import Manifest, dump_manifest, load_manifest
-from doc2mcp.emit import emit
-from doc2mcp.ingest import ingest
-from doc2mcp.model import JsonObject, dump_endpoints
-from doc2mcp.report import published_report_schema_text
-from doc2mcp.suite import Proxy
-from doc2mcp.verify import VerifyOptions, isolate_prefix, record, verify
 from jsonschema import Draft202012Validator
 from mcp import ClientSession, StdioServerParameters, stdio_client
 from mcp.client._probe import negotiate_auto
+from mcp4api.cli import ExitCode, main
+from mcp4api.curate.agent import CurationOptions, curate
+from mcp4api.curate.manifest import Manifest, dump_manifest, load_manifest
+from mcp4api.emit import emit
+from mcp4api.ingest import ingest
+from mcp4api.model import JsonObject, dump_endpoints
+from mcp4api.report import published_report_schema_text
+from mcp4api.suite import Proxy
+from mcp4api.verify import VerifyOptions, isolate_prefix, record, verify
 
 _ROOT = Path(__file__).resolve().parents[1]
 _SCHEMA = _ROOT / "docs" / "schemas" / "report-v1.json"
@@ -280,7 +280,7 @@ def test_integer_page_count_clears_the_sample_gap(tmp_path: Path) -> None:
 
 
 @pytest.mark.enable_socket
-def test_one_tool_suite_passes_without_doc2mcp(tmp_path: Path) -> None:
+def test_one_tool_suite_passes_without_mcp4api(tmp_path: Path) -> None:
     out = tmp_path / "suite"
     _curate(out, _ping_document("https://example.test"))
     verify(out, VerifyOptions(deterministic=True, quiet=True))
@@ -288,7 +288,7 @@ def test_one_tool_suite_passes_without_doc2mcp(tmp_path: Path) -> None:
     venv = tmp_path / "venv"
     python = _venv(venv)
     completed = subprocess.run(
-        [str(python), "-c", "import doc2mcp"],
+        [str(python), "-c", "import mcp4api"],
         cwd=out,
         capture_output=True,
         text=True,
@@ -310,7 +310,7 @@ def test_one_tool_suite_passes_without_doc2mcp(tmp_path: Path) -> None:
             imported.update(alias.name.split(".", 1)[0] for alias in node.names)
         elif isinstance(node, ast.ImportFrom) and node.module is not None:
             imported.add(node.module.split(".", 1)[0])
-    assert "doc2mcp" not in imported
+    assert "mcp4api" not in imported
 
 
 def _copy_sample(tmp_path: Path) -> Path:
@@ -318,7 +318,7 @@ def _copy_sample(tmp_path: Path) -> Path:
     shutil.copytree(
         _SAMPLE,
         dest,
-        ignore=shutil.ignore_patterns("__pycache__", "*.pyc", ".doc2mcp"),
+        ignore=shutil.ignore_patterns("__pycache__", "*.pyc", ".mcp4api"),
     )
     return dest
 
@@ -329,7 +329,7 @@ def _tree(root: Path) -> dict[str, bytes]:
         if not path.is_file():
             continue
         relative = path.relative_to(root)
-        if any(part in {".doc2mcp", "__pycache__"} for part in relative.parts):
+        if any(part in {".mcp4api", "__pycache__"} for part in relative.parts):
             continue
         if path.suffix == ".pyc":
             continue
@@ -400,7 +400,7 @@ def _failure(report: JsonObject, tool: str) -> JsonObject:
 
 def _call_arguments(out: Path, tool: str) -> JsonObject:
     path = out / "tests" / "suite.py"
-    spec = importlib.util.spec_from_file_location("doc2mcp_verify_suite", path)
+    spec = importlib.util.spec_from_file_location("mcp4api_verify_suite", path)
     if spec is None or spec.loader is None:
         raise RuntimeError("suite could not be loaded")
     module = importlib.util.module_from_spec(spec)
@@ -673,7 +673,7 @@ def _call_ping(generated: Path, proxy: str) -> str:
             "PYTHONDONTWRITEBYTECODE": "1",
             "HTTP_PROXY": proxy,
             "HTTPS_PROXY": proxy,
-            "DOC2MCP_ALLOWED_HOSTS": "127.0.0.1",
+            "MCP4API_ALLOWED_HOSTS": "127.0.0.1",
             "TINY_BASE_URL": "http://example.com",
         }
     )

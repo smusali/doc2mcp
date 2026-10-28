@@ -1,6 +1,6 @@
 # Limitations
 
-doc2mcp is not a general code generator, an API gateway, or a hosted service.
+mcp4api is not a general code generator, an API gateway, or a hosted service.
 
 Ingest accepts OpenAPI 3.0, 3.1, and 3.2, and Swagger 2.0, as a local file or a URL. An HTML page is rejected. Pass the URL of the OpenAPI document itself.
 

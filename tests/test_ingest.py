@@ -7,9 +7,12 @@ import time
 from pathlib import Path
 
 import pytest
-from doc2mcp.cli import ExitCode, main
-from doc2mcp.ingest import _load_yaml, _normalize_schema, ingest
-from doc2mcp.model import (
+from hypothesis import given, settings
+from hypothesis import strategies as st
+from jsonschema import Draft202012Validator
+from mcp4api.cli import ExitCode, main
+from mcp4api.ingest import _load_yaml, _normalize_schema, ingest
+from mcp4api.model import (
     ApiSpec,
     JsonObject,
     JsonSchema,
@@ -18,9 +21,6 @@ from doc2mcp.model import (
     dump_endpoints,
     expect_json,
 )
-from hypothesis import given, settings
-from hypothesis import strategies as st
-from jsonschema import Draft202012Validator
 
 CORPUS = Path(__file__).resolve().parent / "corpus" / "openapi"
 SPECS = (
@@ -49,7 +49,7 @@ FINDING_CODES = frozenset(
     }
 )
 _IGNORED_HEADERS = frozenset({"accept", "content-type", "authorization"})
-_UPDATE = os.environ.get("DOC2MCP_UPDATE_GOLDENS") == "1"
+_UPDATE = os.environ.get("MCP4API_UPDATE_GOLDENS") == "1"
 
 
 def test_nullable_becomes_type_array() -> None:
@@ -758,7 +758,7 @@ def _source_schema(parameter: JsonObject, swagger: bool) -> JsonValue | None:
         return parameter["schema"]
     content = parameter.get("content")
     if isinstance(content, dict) and content:
-        from doc2mcp.ingest import _choose_media
+        from mcp4api.ingest import _choose_media
 
         media = _choose_media(content)
         entry = content.get(media) if media is not None else None
