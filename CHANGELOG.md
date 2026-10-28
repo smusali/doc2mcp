@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- README quickstart, an offline demo recording, and the 0.1.0 limitations.
 - Verify calls every generated tool over stdio, replays cassettes, enforces a loopback allowlist, and writes `report/`. A known gap exits 3. `mcp4api record` writes scrubbed cassettes from a sandbox.
 - Emit writes a Python MCP server under `generated/` from `tools.yaml` and `endpoints.json`, with a hand-edit guard and `--force`.
 - Curation writes `tools.yaml` (`manifest-v1`) from `endpoints.json`, with an agent, a heuristic fallback, human overrides, and a budget.
