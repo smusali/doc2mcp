@@ -22,7 +22,7 @@ def main(argv: list[str]) -> int:
         return 2
     version = _read_version()
     if version is None:
-        print("doc2mcp/__init__.py is missing __version__", file=sys.stderr)
+        print("mcp4api/__init__.py is missing __version__", file=sys.stderr)
         return 1
     changelog = (_ROOT / "CHANGELOG.md").read_text(encoding="utf-8")
     if len(argv) == 1:
@@ -42,7 +42,7 @@ def main(argv: list[str]) -> int:
 
 
 def _read_version() -> str | None:
-    text = (_ROOT / "doc2mcp" / "__init__.py").read_text(encoding="utf-8")
+    text = (_ROOT / "mcp4api" / "__init__.py").read_text(encoding="utf-8")
     match = re.search(r'(?m)^__version__ = "([^"]+)"', text)
     if match is None:
         return None

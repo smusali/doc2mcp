@@ -20,18 +20,18 @@ from pathlib import Path
 
 import pytest
 import uvicorn
-from doc2mcp.cli import ExitCode, main
-from doc2mcp.curate.agent import CurationOptions, curate
-from doc2mcp.curate.manifest import Manifest, load_manifest
-from doc2mcp.emit import EmitError, emit
-from doc2mcp.ingest import ingest
-from doc2mcp.model import JsonObject, dump_endpoints
 from hypothesis import given, settings
 from hypothesis import strategies as st
 from mcp import ClientSession, StdioServerParameters, stdio_client
 from mcp.client.client import negotiate_auto
 from mcp.client.streamable_http import streamable_http_client
 from mcp.types import CallToolResult
+from mcp4api.cli import ExitCode, main
+from mcp4api.curate.agent import CurationOptions, curate
+from mcp4api.curate.manifest import Manifest, load_manifest
+from mcp4api.emit import EmitError, emit
+from mcp4api.ingest import ingest
+from mcp4api.model import JsonObject, dump_endpoints
 from starlette.applications import Starlette
 from starlette.requests import Request
 from starlette.responses import JSONResponse, Response
@@ -40,8 +40,8 @@ from starlette.routing import Route
 _ROOT = Path(__file__).resolve().parents[1]
 _SAMPLE = _ROOT / "examples" / "sample-api"
 _CORPUS = _ROOT / "tests" / "corpus" / "openapi"
-_PETSTORE_3 = "e4fb447f4ee5a561f4f618d5de109953559408190705aef80dae826788b19d93"
-_PETSTORE_2 = "8f1fb7ee521b71a29585ce1b70b8b89f7b0c2a5af7a3cbd4f0c15602a8d482f6"
+_PETSTORE_3 = "51c98849abaf12b2ca6b16f7f2e09561de1db2bddcc7e80ac8928b9c0977e083"
+_PETSTORE_2 = "f6b832c243fbfe430b84069ca23e0212e2ceeeb339ede5cfa82c8f62f07a0e37"
 _KEY = "SENTINEL/key+9f3a"
 _TOKEN = "SENTINEL-token-9f3a"
 
@@ -98,7 +98,7 @@ def test_supported_schemas_import(suffix: str, kind: str, query: bool) -> None:
         assert [tool.name for tool in listed] == [tool.name for tool in manifest.tools]
 
 
-def test_generated_modules_do_not_import_doc2mcp_or_httpx() -> None:
+def test_generated_modules_do_not_import_mcp4api_or_httpx() -> None:
     for path in (_SAMPLE / "generated").rglob("*.py"):
         tree = ast.parse(path.read_text(encoding="utf-8"))
         for node in ast.walk(tree):
@@ -109,7 +109,7 @@ def test_generated_modules_do_not_import_doc2mcp_or_httpx() -> None:
             else:
                 continue
             for name in names:
-                assert name.split(".", 1)[0] not in {"doc2mcp", "httpx"}
+                assert name.split(".", 1)[0] not in {"mcp4api", "httpx"}
 
 
 def test_hand_edit_guard(tmp_path: Path) -> None:
@@ -323,7 +323,7 @@ def _tree_text(root: Path) -> str:
 
 
 def _record(generated: Path, rel: str, payload: bytes) -> None:
-    ledger = generated / ".doc2mcp-files.json"
+    ledger = generated / ".mcp4api-files.json"
     loaded = json.loads(ledger.read_text(encoding="utf-8"))
     if not isinstance(loaded, dict):
         raise TypeError("ledger is not an object")

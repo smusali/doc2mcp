@@ -4,9 +4,9 @@ import os
 from pathlib import Path
 
 import pytest
-from doc2mcp.curate.agent import CurationOptions, curate
-from doc2mcp.curate.manifest import Manifest, name_error
-from doc2mcp.model import ApiSpec
+from mcp4api.curate.agent import CurationOptions, curate
+from mcp4api.curate.manifest import Manifest, name_error
+from mcp4api.model import ApiSpec
 from pydantic import BaseModel, ConfigDict
 
 pytestmark = [

@@ -10,7 +10,7 @@ from pydantic import BaseModel, ConfigDict
 from rich.console import Console
 from rich.table import Table
 
-from doc2mcp.model import JsonObject, JsonObjectField, JsonValue, expect_json
+from mcp4api.model import JsonObject, JsonObjectField, JsonValue, expect_json
 
 REPORT_VERSION: Literal["report-v1"] = "report-v1"
 _FROZEN = ConfigDict(frozen=True, extra="forbid")
@@ -77,7 +77,7 @@ class Report(BaseModel):
     model_config = _FROZEN
 
     report_version: Literal["report-v1"] = REPORT_VERSION
-    doc2mcp: str
+    mcp4api: str
     source_uri: str
     source_sha256: str
     manifest_sha256: str
@@ -188,7 +188,7 @@ def _markdown(report: Report, *, deterministic: bool) -> str:
     lines = [
         "# Verification",
         "",
-        f"- doc2mcp: {report.doc2mcp}",
+        f"- mcp4api: {report.mcp4api}",
         f"- source: {report.source_uri} (`{report.source_sha256}`)",
         f"- manifest: `{report.manifest_sha256}`",
         f"- model: {report.model}",

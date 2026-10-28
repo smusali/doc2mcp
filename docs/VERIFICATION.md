@@ -1,6 +1,6 @@
 # Verification
 
-`doc2mcp verify` calls every generated tool through the MCP client over stdio and writes a report. The primary command does this after emit. `doc2mcp record` runs the same plan against a sandbox and writes cassettes.
+`mcp4api verify` calls every generated tool through the MCP client over stdio and writes a report. The primary command does this after emit. `mcp4api record` runs the same plan against a sandbox and writes cassettes.
 
 Verify emits the full server first, so a tool left out by an earlier failure is called again. It then runs the plan and applies `--on-failure`.
 
@@ -46,13 +46,13 @@ The default upstream is a fixture server on `127.0.0.1`. `{SLUG}_BASE_URL` point
 
 When a request has no cassette, the fixture builds a body from the response example, or from the response schema, and marks that call `synthesized`.
 
-`doc2mcp record --sandbox URL` runs the plan against that URL and writes cassettes. At record time the runner drops authorization, cookie, and API-key headers by not storing headers, and replaces secret values from the process environment plus bearer-shaped strings in bodies. `--offline` makes `record`, `--sandbox`, and `--live` exit 2 before any connection.
+`mcp4api record --sandbox URL` runs the plan against that URL and writes cassettes. At record time the runner drops authorization, cookie, and API-key headers by not storing headers, and replaces secret values from the process environment plus bearer-shaped strings in bodies. `--offline` makes `record`, `--sandbox`, and `--live` exit 2 before any connection.
 
 ## Allowlist
 
 The default allowlist is `127.0.0.1`. `--allow-host` adds hosts.
 
-The runner sets `DOC2MCP_ALLOWED_HOSTS`. The generated client refuses any other host before it sends. A local HTTP proxy is the second layer: it allows only those hosts, sets `HTTP_PROXY` and `HTTPS_PROXY`, and clears `NO_PROXY`. A rejected host is logged as `blocked-by-allowlist` and is not dialed.
+The runner sets `MCP4API_ALLOWED_HOSTS`. The generated client refuses any other host before it sends. A local HTTP proxy is the second layer: it allows only those hosts, sets `HTTP_PROXY` and `HTTPS_PROXY`, and clears `NO_PROXY`. A rejected host is logged as `blocked-by-allowlist` and is not dialed.
 
 The proxy can read HTTP request and response bodies, which is how status and body checks see the upstream exchange. An HTTPS `CONNECT` tunnel is checked against the allowlist, and the body inside the tunnel is not visible.
 
@@ -64,7 +64,7 @@ Under `--live`, a tool with `destructiveHint: true`, or with `idempotentHint: fa
 
 ## Report
 
-`report/verification.json` has `report_version: "report-v1"`. It includes the doc2mcp version, the source URI and sha256, the manifest sha256, the model, the curation mode, the evidence mode, the allowlist, summary counts, one row per tool, and for each failure the arguments, the expected and actual values, and a trimmed upstream body. It also lists exclusions, ingest findings, and curation tokens and cost.
+`report/verification.json` has `report_version: "report-v1"`. It includes the mcp4api version, the source URI and sha256, the manifest sha256, the model, the curation mode, the evidence mode, the allowlist, summary counts, one row per tool, and for each failure the arguments, the expected and actual values, and a trimmed upstream body. It also lists exclusions, ingest findings, and curation tokens and cost.
 
 `--deterministic` omits `started_at` and durations. Keys are sorted. The encoding is UTF-8 and newlines are LF.
 

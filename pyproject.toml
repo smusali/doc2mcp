@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "doc2mcp"
+name = "mcp4api"
 dynamic = ["version"]
 description = "Turn API docs into a working MCP server, then verify every generated tool against the real API."
 readme = "README.md"
@@ -71,24 +71,24 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/smusali/doc2mcp"
-Repository = "https://github.com/smusali/doc2mcp"
-Issues = "https://github.com/smusali/doc2mcp/issues"
-Changelog = "https://github.com/smusali/doc2mcp/blob/main/CHANGELOG.md"
+Homepage = "https://github.com/smusali/mcp4api"
+Repository = "https://github.com/smusali/mcp4api"
+Issues = "https://github.com/smusali/mcp4api/issues"
+Changelog = "https://github.com/smusali/mcp4api/blob/main/CHANGELOG.md"
 
 [project.scripts]
-doc2mcp = "doc2mcp.cli:main"
+mcp4api = "mcp4api.cli:main"
 
 [tool.hatch.version]
-path = "doc2mcp/__init__.py"
+path = "mcp4api/__init__.py"
 
 [tool.hatch.build.targets.wheel]
-packages = ["doc2mcp"]
+packages = ["mcp4api"]
 
 [tool.ruff]
 target-version = "py311"
 line-length = 100
-src = ["doc2mcp", "tests", "tools"]
+src = ["mcp4api", "tests", "tools"]
 
 [tool.ruff.lint]
 select = ["E", "F", "I", "UP", "B", "SIM", "ANN", "RUF"]
@@ -99,7 +99,7 @@ quote-style = "double"
 [tool.mypy]
 strict = true
 python_version = "3.11"
-files = ["doc2mcp"]
+files = ["mcp4api"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

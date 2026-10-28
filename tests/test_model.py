@@ -2,7 +2,8 @@ from __future__ import annotations
 
 from pathlib import Path
 
-from doc2mcp.model import (
+from jsonschema import Draft202012Validator
+from mcp4api.model import (
     ApiSpec,
     Endpoint,
     Parameter,
@@ -13,7 +14,6 @@ from doc2mcp.model import (
     dump_endpoints,
     published_schema_text,
 )
-from jsonschema import Draft202012Validator
 
 _SCHEMA_PATH = Path(__file__).resolve().parents[1] / "docs" / "schemas" / "endpoint-v1.json"
 

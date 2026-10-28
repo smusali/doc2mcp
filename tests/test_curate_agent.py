@@ -7,8 +7,8 @@ from typing import Protocol
 
 import pytest
 import yaml
-from doc2mcp.cli import ExitCode, main
-from doc2mcp.curate.agent import (
+from mcp4api.cli import ExitCode, main
+from mcp4api.curate.agent import (
     CurationOptions,
     CurationRequest,
     CurationUpstream,
@@ -18,7 +18,7 @@ from doc2mcp.curate.agent import (
     curate,
     request_body,
 )
-from doc2mcp.curate.manifest import (
+from mcp4api.curate.manifest import (
     DetailDecision,
     PlanDecision,
     dump_manifest,
@@ -27,7 +27,7 @@ from doc2mcp.curate.manifest import (
     name_error,
     validation_errors,
 )
-from doc2mcp.model import ApiSpec, JsonObject, expect_json
+from mcp4api.model import ApiSpec, JsonObject, expect_json
 from tests.test_curate import _body, _endpoint, _param, _spec, _write
 
 _FIXTURE = Path(__file__).resolve().parent / "curate_sample.json"
@@ -778,7 +778,7 @@ def test_adapter_sends_the_stream_shape_and_maps_failures(monkeypatch: pytest.Mo
             self.beta = Beta()
 
     monkeypatch.setattr("anthropic.Anthropic", Anthropic)
-    from doc2mcp.curate.agent import AnthropicCurationClient
+    from mcp4api.curate.agent import AnthropicCurationClient
 
     client = AnthropicCurationClient("claude-opus-5-5")
     request = CurationRequest(kind="plan", system="system", index="index", group="group")
@@ -879,7 +879,7 @@ def test_cli_maps_upstream(
     def boom(_out: Path, _options: CurationOptions, *, client: object = None) -> object:
         raise CurationUpstream("model failed")
 
-    monkeypatch.setattr("doc2mcp.curate.agent.curate", boom)
+    monkeypatch.setattr("mcp4api.curate.agent.curate", boom)
     code = main(["curate", "--out", str(tmp_path)])
     assert code == ExitCode.UPSTREAM
     assert "model failed" in capsys.readouterr().err

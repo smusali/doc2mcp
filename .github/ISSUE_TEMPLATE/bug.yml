@@ -11,9 +11,9 @@ body:
   - type: input
     id: version
     attributes:
-      label: doc2mcp version
-      description: Output of `doc2mcp --version`.
-      placeholder: doc2mcp 0.1.0
+      label: mcp4api version
+      description: Output of `mcp4api --version`.
+      placeholder: mcp4api 0.1.0
     validations:
       required: true
   - type: textarea

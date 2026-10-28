@@ -5,8 +5,10 @@ from pathlib import Path
 from typing import Literal
 
 import yaml
-from doc2mcp.curate.agent import CurationOptions, curate
-from doc2mcp.curate.manifest import (
+from hypothesis import given, settings
+from hypothesis import strategies as st
+from mcp4api.curate.agent import CurationOptions, curate
+from mcp4api.curate.manifest import (
     Manifest,
     Overrides,
     annotations_for,
@@ -24,8 +26,8 @@ from doc2mcp.curate.manifest import (
     validation_errors,
     zero_usage,
 )
-from doc2mcp.ingest import ingest
-from doc2mcp.model import (
+from mcp4api.ingest import ingest
+from mcp4api.model import (
     ApiSpec,
     Endpoint,
     Parameter,
@@ -36,8 +38,6 @@ from doc2mcp.model import (
     Source,
     dump_endpoints,
 )
-from hypothesis import given, settings
-from hypothesis import strategies as st
 
 _SCHEMA_PATH = Path(__file__).resolve().parents[1] / "docs" / "schemas" / "manifest-v1.json"
 _SAMPLE = Path(__file__).resolve().parents[1] / "examples" / "sample-api"

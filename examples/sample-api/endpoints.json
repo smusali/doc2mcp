@@ -3092,7 +3092,7 @@
   ],
   "source": {
     "kind": "openapi",
-    "sha256": "10b6233ec3ce6f2e8b0b0d8248836ce1e78986f3e6fffc5b362f228c12e8f5e2",
+    "sha256": "f675b645e7dcbcbb5c368ac9cda37338c57849e10fc14abc4dfe40f3e91edc96",
     "uri": "openapi.yaml"
   },
   "title": "Shelf",

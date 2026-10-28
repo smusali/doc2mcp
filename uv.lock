@@ -351,69 +351,6 @@ wheels = [
 ]
 
 [[package]]
-name = "doc2mcp"
-source = { editable = "." }
-dependencies = [
-    { name = "anthropic" },
-    { name = "httpx2" },
-    { name = "hypothesis" },
-    { name = "hypothesis-jsonschema" },
-    { name = "jinja2" },
-    { name = "jsonschema" },
-    { name = "jsonschema-rs" },
-    { name = "mcp" },
-    { name = "openapi-spec-validator" },
-    { name = "pydantic" },
-    { name = "pyyaml" },
-    { name = "rich" },
-    { name = "typer" },
-]
-
-[package.optional-dependencies]
-dev = [
-    { name = "build" },
-    { name = "hypothesis" },
-    { name = "mypy" },
-    { name = "pre-commit" },
-    { name = "pytest" },
-    { name = "pytest-socket" },
-    { name = "ruff" },
-    { name = "starlette" },
-    { name = "types-jsonschema" },
-    { name = "types-pyyaml" },
-    { name = "uvicorn" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "anthropic", specifier = ">=2.2.0,<3" },
-    { name = "build", marker = "extra == 'dev'", specifier = ">=1.6.1,<2" },
-    { name = "httpx2", specifier = ">=2.16.0,<3" },
-    { name = "hypothesis", specifier = ">=6.170.8,<7" },
-    { name = "hypothesis", marker = "extra == 'dev'", specifier = ">=6.170.8,<7" },
-    { name = "hypothesis-jsonschema", specifier = ">=0.23.1,<1" },
-    { name = "jinja2", specifier = ">=3.1.6,<4" },
-    { name = "jsonschema", specifier = ">=4.26.0,<5" },
-    { name = "jsonschema-rs", specifier = ">=0.60,<1" },
-    { name = "mcp", specifier = ">=2.3,<3" },
-    { name = "mypy", marker = "extra == 'dev'", specifier = ">=2.4,<3" },
-    { name = "openapi-spec-validator", specifier = ">=0.9.0,<1" },
-    { name = "pre-commit", marker = "extra == 'dev'", specifier = ">=4.7.0,<5" },
-    { name = "pydantic", specifier = ">=2.14.1,<3" },
-    { name = "pytest", marker = "extra == 'dev'", specifier = ">=9.1.1,<10" },
-    { name = "pytest-socket", marker = "extra == 'dev'", specifier = ">=0.8.1,<1" },
-    { name = "pyyaml", specifier = ">=6.0.3,<7" },
-    { name = "rich", specifier = ">=15.0.0,<16" },
-    { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.17.2,<1" },
-    { name = "starlette", marker = "extra == 'dev'", specifier = ">=1.10.0,<2" },
-    { name = "typer", specifier = ">=0.27.3,<1" },
-    { name = "types-jsonschema", marker = "extra == 'dev'", specifier = ">=4.26.0,<5" },
-    { name = "types-pyyaml", marker = "extra == 'dev'", specifier = ">=6.0.12,<7" },
-    { name = "uvicorn", marker = "extra == 'dev'", specifier = ">=0.54.0,<1" },
-]
-provides-extras = ["dev"]
-
-[[package]]
 name = "docstring-parser"
 version = "0.18.0"
 source = { registry = "https://pypi.org/simple" }
@@ -1181,6 +1118,69 @@ sdist = { url = "https://files.pythonhosted.org/packages/9e/2d/7c251e34207f6c510
 wheels = [
     { url = "https://files.pythonhosted.org/packages/ce/48/32583066b155bb5d4507e7887dc88ee23118cc4de8e2a12870c49719e2a8/mcp_types-2.3.0-py3-none-any.whl", hash = "sha256:968efdbdaedfab06adae40d378a34395f1090c5921d4be3c9cde283aaf76d91d", size = 69108, upload-time = "2026-10-02T22:06:54.099Z" },
 ]
+
+[[package]]
+name = "mcp4api"
+source = { editable = "." }
+dependencies = [
+    { name = "anthropic" },
+    { name = "httpx2" },
+    { name = "hypothesis" },
+    { name = "hypothesis-jsonschema" },
+    { name = "jinja2" },
+    { name = "jsonschema" },
+    { name = "jsonschema-rs" },
+    { name = "mcp" },
+    { name = "openapi-spec-validator" },
+    { name = "pydantic" },
+    { name = "pyyaml" },
+    { name = "rich" },
+    { name = "typer" },
+]
+
+[package.optional-dependencies]
+dev = [
+    { name = "build" },
+    { name = "hypothesis" },
+    { name = "mypy" },
+    { name = "pre-commit" },
+    { name = "pytest" },
+    { name = "pytest-socket" },
+    { name = "ruff" },
+    { name = "starlette" },
+    { name = "types-jsonschema" },
+    { name = "types-pyyaml" },
+    { name = "uvicorn" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "anthropic", specifier = ">=2.2.0,<3" },
+    { name = "build", marker = "extra == 'dev'", specifier = ">=1.6.1,<2" },
+    { name = "httpx2", specifier = ">=2.16.0,<3" },
+    { name = "hypothesis", specifier = ">=6.170.8,<7" },
+    { name = "hypothesis", marker = "extra == 'dev'", specifier = ">=6.170.8,<7" },
+    { name = "hypothesis-jsonschema", specifier = ">=0.23.1,<1" },
+    { name = "jinja2", specifier = ">=3.1.6,<4" },
+    { name = "jsonschema", specifier = ">=4.26.0,<5" },
+    { name = "jsonschema-rs", specifier = ">=0.60,<1" },
+    { name = "mcp", specifier = ">=2.3,<3" },
+    { name = "mypy", marker = "extra == 'dev'", specifier = ">=2.4,<3" },
+    { name = "openapi-spec-validator", specifier = ">=0.9.0,<1" },
+    { name = "pre-commit", marker = "extra == 'dev'", specifier = ">=4.7.0,<5" },
+    { name = "pydantic", specifier = ">=2.14.1,<3" },
+    { name = "pytest", marker = "extra == 'dev'", specifier = ">=9.1.1,<10" },
+    { name = "pytest-socket", marker = "extra == 'dev'", specifier = ">=0.8.1,<1" },
+    { name = "pyyaml", specifier = ">=6.0.3,<7" },
+    { name = "rich", specifier = ">=15.0.0,<16" },
+    { name = "ruff", marker = "extra == 'dev'", specifier = ">=0.17.2,<1" },
+    { name = "starlette", marker = "extra == 'dev'", specifier = ">=1.10.0,<2" },
+    { name = "typer", specifier = ">=0.27.3,<1" },
+    { name = "types-jsonschema", marker = "extra == 'dev'", specifier = ">=4.26.0,<5" },
+    { name = "types-pyyaml", marker = "extra == 'dev'", specifier = ">=6.0.12,<7" },
+    { name = "uvicorn", marker = "extra == 'dev'", specifier = ">=0.54.0,<1" },
+]
+provides-extras = ["dev"]
 
 [[package]]
 name = "mdurl"

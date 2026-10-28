@@ -7,12 +7,12 @@ from pathlib import Path
 import yaml
 from pydantic import ValidationError
 
-from doc2mcp.curate.manifest import Manifest, load_manifest
-from doc2mcp.emit.render import EmitError as EmitError
-from doc2mcp.emit.render import render_files
-from doc2mcp.model import ApiSpec
+from mcp4api.curate.manifest import Manifest, load_manifest
+from mcp4api.emit.render import EmitError as EmitError
+from mcp4api.emit.render import render_files
+from mcp4api.model import ApiSpec
 
-_LEDGER = ".doc2mcp-files.json"
+_LEDGER = ".mcp4api-files.json"
 _GENERATED = "generated"
 
 
@@ -194,5 +194,5 @@ def _refuse(paths: list[str]) -> str:
         "refusing to overwrite edited files:",
         *[f"{_GENERATED}/{path}" for path in sorted(paths)],
     ]
-    lines.append("Change tools.yaml or overrides.yaml and run doc2mcp again, or pass --force.")
+    lines.append("Change tools.yaml or overrides.yaml and run mcp4api again, or pass --force.")
     return "\n".join(lines)

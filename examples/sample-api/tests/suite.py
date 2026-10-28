@@ -833,7 +833,7 @@ def _child_env(plan: _Plan, proxy_url: str, base_url: str) -> dict[str, str]:
     env["all_proxy"] = proxy_url
     env.pop("NO_PROXY", None)
     env.pop("no_proxy", None)
-    env["DOC2MCP_ALLOWED_HOSTS"] = ",".join(plan.allowlist)
+    env["MCP4API_ALLOWED_HOSTS"] = ",".join(plan.allowlist)
     env[plan.base_url_env] = base_url
     env[plan.timeout_env] = _number(plan.timeout_seconds)
     if plan.upstream == "fixture":
