@@ -156,3 +156,80 @@ jobs:
           run_once "$RUNNER_TEMP/one"
           run_once "$RUNNER_TEMP/two"
           diff -r --exclude=.mcp4api "$RUNNER_TEMP/one" "$RUNNER_TEMP/two"
+
+  readme:
+    name: readme
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        with:
+          persist-credentials: false
+
+      - uses: astral-sh/setup-uv@07a047e608db84b3d8c06cd9a7c7dcc9c355c18e  # v10.3.2
+        with:
+          python-version: "3.15"
+          enable-cache: true
+
+      - name: No placeholders
+        shell: bash
+        run: |
+          set -euo pipefail
+          if grep -riE "coming soon|\bTBD\b|\bWIP\b" README.md docs/; then
+            echo "placeholder wording"
+            exit 1
+          fi
+
+      - name: Install
+        run: uv sync --frozen --extra dev
+
+      - name: README snippets
+        run: uv run python tools/check_readme_snippets.py
+
+      - name: README links
+        run: uv run python tools/check_pypi_readme.py
+
+      - name: Build
+        run: uv build
+
+      - name: Twine
+        run: uvx twine check dist/*
+
+      - name: Quickstart
+        shell: bash
+        run: |
+          set -euo pipefail
+          start=$(date +%s)
+          set +e
+          env -u ANTHROPIC_API_KEY uvx --from . mcp4api examples/sample-api/openapi.yaml --offline --out examples/sample-api
+          code=$?
+          set -e
+          cat examples/sample-api/report/verification.md
+          end=$(date +%s)
+          elapsed=$((end - start))
+          echo "elapsed ${elapsed}s"
+          if [ "$code" -ne 3 ]; then
+            echo "expected exit 3, got $code"
+            exit 1
+          fi
+          if [ "$elapsed" -ge 60 ]; then
+            echo "quickstart took ${elapsed}s"
+            exit 1
+          fi
+          uv run python - <<'PY'
+          import json
+          from pathlib import Path
+
+          report = json.loads(
+              Path("examples/sample-api/report/verification.json").read_text(encoding="utf-8")
+          )
+          summary = report["summary"]
+          if summary["generated"] != 15 or summary["verified"] != 14 or summary["gaps"] != 1:
+              raise SystemExit(f"unexpected summary: {summary}")
+          if report["excluded"] != ["get_book"]:
+              raise SystemExit(f"unexpected excluded: {report['excluded']}")
+          failures = report["failures"]
+          if not failures or any(
+              item["tool"] != "get_book" or item["field"] != "page_count" for item in failures
+          ):
+              raise SystemExit("expected only get_book page_count failures")
+          PY
