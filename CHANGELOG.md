@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.0] - 2026-10-28
+
 ### Added
 
 - `mcp4api SPEC` runs ingest, curate, emit, and verify on an OpenAPI 3.0, 3.1, 3.2, or Swagger 2.0 document.
