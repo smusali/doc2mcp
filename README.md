@@ -9,8 +9,6 @@ mcp4api turns your API docs into a working MCP server, then calls every generate
 
 ![Offline run against the Shelf sample, from ingest through the verification summary](https://raw.githubusercontent.com/smusali/mcp4api/main/examples/demo.gif)
 
-[Recording](https://github.com/smusali/mcp4api/blob/main/examples/demo.cast)
-
 ## Install
 
 ```bash
